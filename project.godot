@@ -10,6 +10,6 @@ config_version=5
 
 [application]
 
-config/name="Cutting-plane-game-2"
+config/name="cutting-plane-game-2"
 config/features=PackedStringArray("4.2", "Forward Plus")
 config/icon="res://icon.svg"
