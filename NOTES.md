@@ -15,3 +15,15 @@ I have until 2024-07-8 (final report deadline). Ideally, that report should be i
 Also, I know I'm pretty late to this, but this past month has been ROUGH. Hopefully I can keep up the pace.
 
 Thankfully next week's recess. I'll have more time then. Even so, I should really get to implementing ASAP. Not today though, I'm very tired.
+
+## THU 2024-06-13
+
+As much as I would like to stay up late today doing research, I have a lot of work to do tomorrow morning, so I'll just mess around with Godot for a bit and then go to bed.
+
+I've been messing around with the Godot draw functions and figured out some kinks already. Since I'm going for a vector graphics aesthetic I need to move away from rasterized images and use draw functions and SVG's. Luckily Godot 4 supports SVG's. I'm guessing any logos would have to be made with that in mind. Hell, I may end up making the logo in Godot itself.
+
+...On second thought maybe I can work something out with shaders. I'll get there when I get there. For now, I need to focus on the basics. I'll see if I can programatically make the lattice points.
+
+I need to start thinking about how to structure what a Polygon is. Naturally, A polygon will be a Node2D, right? I'm thinking that the list of points that make it up will all be children of that node. That way, I can make a Point Scene that will have it's own _draw() function in which I can draw a little circle. Seems like a good idea.
+
+I'll start with that tomorrow. I'm going to do a bit of exercise now and then go to bed. I have important work to do in the morning.

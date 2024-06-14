@@ -13,3 +13,8 @@ config_version=5
 config/name="cutting-plane-game-2"
 config/features=PackedStringArray("4.2", "Forward Plus")
 config/icon="res://icon.svg"
+
+[display]
+
+window/size/viewport_width=960
+window/size/viewport_height=720
