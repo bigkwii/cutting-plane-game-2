@@ -27,3 +27,9 @@ I've been messing around with the Godot draw functions and figured out some kink
 I need to start thinking about how to structure what a Polygon is. Naturally, A polygon will be a Node2D, right? I'm thinking that the list of points that make it up will all be children of that node. That way, I can make a Point Scene that will have it's own _draw() function in which I can draw a little circle. Seems like a good idea.
 
 I'll start with that tomorrow. I'm going to do a bit of exercise now and then go to bed. I have important work to do in the morning.
+
+## TUE 2024-06-18
+
+So, it's been a few days. I haven't made much actual implementation, but I have decided a bunch of other stuff, such as art direction, and how I'm going to structure the project.
+
+Also, The clock is ticking until 8th of July for the draft of the final report. I need to show the draft to my supervisor at that date at the very latest. The final report is due on the 15th of July. Lots to do. As for the actual game, on the report, I need to have *something* to show. This work should bw roughly equivalent to 35 hours of work. This means that I more or less need to work 2 hours a day on this project on average. I can totally do that. See you tomorrow.
