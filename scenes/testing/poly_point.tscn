@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://73u01oqmgx6x"]
+
+[ext_resource type="Script" path="res://scenes/testing/poly_point.gd" id="1_7b6x1"]
+
+[node name="vertex" type="Node2D"]
+script = ExtResource("1_7b6x1")
