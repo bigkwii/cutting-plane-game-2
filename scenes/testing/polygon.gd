@@ -1,9 +1,11 @@
 extends Node2D
-
-# a polygon is made from a list of vertices
+## A polygon. Made out of PolyPoint nodes.
 
 # -- vars --
-# vertices node
+## The color of the polygon. Borders are solid, fill is semi-transparent.
+@export var color: Color = Color(1, 0, 0)
+
+# -- child nodes --
 @onready var verts = $verts
 
 # -- preloaded scenes --

@@ -14,10 +14,15 @@ config/name="cutting-plane-game-2"
 config/features=PackedStringArray("4.2", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+Debug="*res://autoload/debug.gd"
+
 [display]
 
 window/size/viewport_width=1024
 window/size/viewport_height=768
+window/stretch/mode="viewport"
 
 [rendering]
 

@@ -45,3 +45,13 @@ A few things of note:
 - Should the polygon itself have data about the points that make it up? Or should I go fetch that data from the child Point scenes? The ladder seems cleaner.
 
 It's getting late, I'll continue tomorrow.
+
+## THU 2024-06-20
+
+A better name for the in-game coordinates would be good. I've been using simply `pos`. Maybe `lattice_position`? As in the position of a point relative to the lattice grid's origin? Seems about right.
+
+I made a Debug autoload script so I don't have to look at the console everytime. I'll use it a lot, probably.
+
+In order to change things that were drawn with the _draw() function, I need to call the queue_draw() function to reflect the changes. Keep that in mind.
+
+I've also adjusted the spacing of the grid to match the demo. I probably won't keep it this way forever, but for the first iteration, again, I want to replicate the original demo as closely as possible (save for the aesthetic).
