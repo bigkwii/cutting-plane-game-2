@@ -55,3 +55,14 @@ I made a Debug autoload script so I don't have to look at the console everytime.
 In order to change things that were drawn with the _draw() function, I need to call the queue_draw() function to reflect the changes. Keep that in mind.
 
 I've also adjusted the spacing of the grid to match the demo. I probably won't keep it this way forever, but for the first iteration, again, I want to replicate the original demo as closely as possible (save for the aesthetic).
+
+## FRI 2024-06-21
+
+I'm starting super late today. I'm not planning to do much today, but I'll mess around with the Polygon. Let's see if I can build a Polygon from a list of points.
+
+The experiment was a success. There are a few things of note:
+
+- The lattice grid DIMENSION, SCALE_FACTOR and OFFSET may be better off as global constants. It would be a good idea to move them to an autoload script.
+- Just so i don't forget, the order of execution is: load(), _init(), _ready(), _draw().
+
+That's all for today. I'll be more productive tomorrow.

@@ -16,7 +16,7 @@ func _ready():
 func _process(delta):
 	pass
 
-func _draw():
+func _draw() -> void:
 	# little white circle on top of itself
 	draw_circle(Vector2.ZERO, radius, color)
 

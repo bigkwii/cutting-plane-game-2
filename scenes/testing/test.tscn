@@ -1,9 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://clrnwpok4we7c"]
+[gd_scene load_steps=4 format=3 uid="uid://clrnwpok4we7c"]
 
 [ext_resource type="Script" path="res://scenes/testing/test.gd" id="1_ue41n"]
 [ext_resource type="PackedScene" uid="uid://dgb3ubanl7ucn" path="res://scenes/testing/lattice_grid.tscn" id="2_jog8d"]
+[ext_resource type="PackedScene" uid="uid://dnibem6i2pwss" path="res://scenes/testing/polygon.tscn" id="3_dbcd7"]
 
 [node name="test" type="Node2D"]
 script = ExtResource("1_ue41n")
 
 [node name="lattice_grid" parent="." instance=ExtResource("2_jog8d")]
+
+[node name="polygon" parent="." instance=ExtResource("3_dbcd7")]
+vertices = Array[Vector2]([Vector2(1, 1), Vector2(2, 3), Vector2(3.5, 2.25)])
