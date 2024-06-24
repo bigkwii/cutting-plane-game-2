@@ -61,3 +61,14 @@ func _make_polygon():
 	DEBUG.log("making polygon with vertices: " + str(vertices))
 	for vert in vertices:
 		_add_new_vertex(vert)
+
+## deletes itself and all children
+func delete_polygon():
+	queue_free()
+
+## checks if the polygon is integral. (if all vertices are integers)
+func is_integral() -> bool:
+	for vert in VERTS.get_children():
+		if not vert.is_integral():
+			return false
+	return true

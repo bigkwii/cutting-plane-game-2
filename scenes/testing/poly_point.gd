@@ -20,3 +20,13 @@ func _process(delta):
 # draw the vertex as a little red circle
 func _draw():
 	draw_circle(Vector2.ZERO, radius, color)
+
+## deletes itself
+func delete_poly_point():
+	queue_free()
+
+## checks if the poly point is integral (i.e. lattice position is an integer)
+## [br][br]
+## TODO: WATCH OUT FOR FLOATING POINT ERRORS! MAKE SURE THE CUTTING PROCESS HAS SOME TOLERANCE AND CAN CORRECT SUCH IMPRECISIONS
+func is_integral() -> bool:
+	return lattice_position.x == int(lattice_position.x) and lattice_position.y == int(lattice_position.y)

@@ -66,3 +66,11 @@ The experiment was a success. There are a few things of note:
 - Just so i don't forget, the order of execution is: load(), _init(), _ready(), _draw().
 
 That's all for today. I'll be more productive tomorrow.
+
+## SUN 2024-06-23
+
+I didn't do any coding yesterday, but I did do some other miscellaneous stuff, such as taking a look at the way levels are structured in the original demo. I notices that the original's first column of lattice points actually corresponded to x=-1 for some reason. I'll have to keep that in mind when porting the levels, to +1 the x coordinate of each point.
+
+Other than that, My system for creating polygons works as intended. Now it's time to cut them. I've been reading up on how to do this and there's about a gazillion ways I could go about it.
+
+I'll continue tomorrow.
