@@ -74,3 +74,11 @@ I didn't do any coding yesterday, but I did do some other miscellaneous stuff, s
 Other than that, My system for creating polygons works as intended. Now it's time to cut them. I've been reading up on how to do this and there's about a gazillion ways I could go about it.
 
 I'll continue tomorrow.
+
+## MON 2024-06-24
+
+What a day... I'll only be able to mess around for a bit today, it's already 2 AM. I'll try to make the simples possible slice of the polygon.
+
+Also, I've been thinking, In the future, I may want to have levels with more lattice points. So, in order to accomodate for that, first of all, DIMENTIONS, SCALING_FACTOR and OFFSET should absolutely be in an autoload (or maybe, since this should be on a level per level basis, on the level scene?). Second, I need to be able to calculate the SCALING_FACTOR and OFFSET based on DIMENTIONS and the resolution of the game. I'll keep that in mind.
+
+As for cutting... I have some ideas for experimenting. Note to self: Finish implementing them tomorrow.
