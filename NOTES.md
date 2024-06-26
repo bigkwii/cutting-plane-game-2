@@ -82,3 +82,21 @@ What a day... I'll only be able to mess around for a bit today, it's already 2 A
 Also, I've been thinking, In the future, I may want to have levels with more lattice points. So, in order to accomodate for that, first of all, DIMENTIONS, SCALING_FACTOR and OFFSET should absolutely be in an autoload (or maybe, since this should be on a level per level basis, on the level scene?). Second, I need to be able to calculate the SCALING_FACTOR and OFFSET based on DIMENTIONS and the resolution of the game. I'll keep that in mind.
 
 As for cutting... I have some ideas for experimenting. Note to self: Finish implementing them tomorrow.
+
+## TUE 2024-06-25
+
+First of all, for testing purposes, I implemented a way to calculate the polygon's centroid.
+
+I've taken note that Godot has a bunch of functions for doing geometry, including calculating convex hulls and what not. The thing is, they don't use Arrays of Vector2's, they use PackedVector2Array. However, PackedVector2Array's are not too friendly for initializing a polygon from the editor. So, I'll have an export var Array of Vector2's for initializing, and a normal var PackedVector2Array that gets initialized on _ready(). I'll rename the vars accordingly (I needed to rename them anyway, the names were getting confusing).
+
+I ended up not doing anything in regards to cutting the polygon. But, I did manage to calculate the convex hull of the polygon!
+
+A lot was learned today.
+
+For starters, the reason this was relatively easy to do was thanks to the Geometry functions Godot provides. But that raises some problems.
+
+All the Geometry functions expect PackedVector2Array's. This isn't bad, I mean, the _draw functions expect this too, but, they come with a few limitations.
+
+For example, I can't simply multiply a PackedVector2Array by a float or add (+) a Vector2 to it. This messes with the way I'm scaling things up from lattice coords to game coords. As a result, I need to convert to packed and unpacked depending on the operation.
+
+Because of this, I'm starting to debate whether or not it's worth it to keep a packed copy of the polygon's points. It may be better to just convert to packed when needed. On the other hand, thay may lead to messier code. I'll have to think about it.

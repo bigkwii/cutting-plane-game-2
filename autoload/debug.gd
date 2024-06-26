@@ -5,17 +5,21 @@ extends Node
 
 func _ready() -> void:
 	# do NOT show debug on release builds
-	if !OS.is_debug_build():
+	if not is_enabled():
 		return
 	add_child(canvas_layer)
 	canvas_layer.layer = 1_000_000 # on top of everything
 	canvas_layer.add_child(container)
 
+## TRUE IF DEBUG MODE IS ENABLED
+func is_enabled() -> bool:
+	return OS.is_debug_build()
+
 ## DEBUG LOGGING [br]
 ## Prints a message on the top left corner of the screen for a specified amount of time
 func log(message: Variant, seconds: float = 2) -> void:
 	# do NOT show debug on release builds
-	if !OS.is_debug_build():
+	if not is_enabled():
 		return
 	var label = Label.new() # message label
 	label.text = str(message)
