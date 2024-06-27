@@ -100,3 +100,9 @@ All the Geometry functions expect PackedVector2Array's. This isn't bad, I mean, 
 For example, I can't simply multiply a PackedVector2Array by a float or add (+) a Vector2 to it. This messes with the way I'm scaling things up from lattice coords to game coords. As a result, I need to convert to packed and unpacked depending on the operation.
 
 Because of this, I'm starting to debate whether or not it's worth it to keep a packed copy of the polygon's points. It may be better to just convert to packed when needed. On the other hand, thay may lead to messier code. I'll have to think about it.
+
+## WED 2024-06-26
+
+I'm so eepy. So very eepy. I wanna go to bed. I'll just implement a node for the convex integer hull and the centroid, update the kanban, and go to bed.
+
+It went well. REMEMBER TO MAKE THAT AUTOLOAD FOR THE CONSTANTS!!!

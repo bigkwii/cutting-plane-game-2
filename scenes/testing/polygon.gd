@@ -18,11 +18,10 @@ extends Node2D
 ## packed version of the vertices array for easy geometry calculations
 var packed_vertices: PackedVector2Array = []
 
-## convex integer hull inside the polygon
-var convex_integer_hull: PackedVector2Array = []
-
 # -- child nodes --
 @onready var VERTS = $verts
+@onready var CENTROID = $centroid
+@onready var CONVEX_INTEGER_HULL = $convex_integer_hull
 
 # -- preloaded scenes --
 var POLY_POINT_SCENE = preload("res://scenes/testing/poly_point.tscn")
@@ -33,18 +32,8 @@ func _ready():
 		DEBUG.log("polygon._ready: Polygon must have at least 3 vertices! %s given." % initial_vertices.size())
 		return
 	_make_polygon()
-	if DEBUG.is_enabled():
-		# draw centroid
-		var centroid_coords = centroid()
-		var centroid_node = POLY_POINT_SCENE.instantiate()
-		centroid_node.lattice_position = centroid_coords
-		centroid_node.position = centroid_coords * SCALING + OFFSET
-		centroid_node.color = Color(0, 1, 0)
-		centroid_node.name = "centroid"
-		add_child(centroid_node)
+	calculate_centroid()
 	calculate_convex_integer_hull()
-	DEBUG.log("convex integer hull: " + str(convex_integer_hull), 10)
-
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -63,13 +52,6 @@ func _draw():
 
 	points.append(points[0]) # complete round trip
 	draw_polyline(points, Color(color, 1), 2) # solid border
-
-	# draw convex integer hull
-	if convex_integer_hull.size() > 2:
-		points = []
-		for vert in convex_integer_hull:
-			points.append( vert * SCALING + OFFSET ) # this is why we need to go from packed -> array -> packed
-		draw_polyline(points, Color(0, 0, 1), 2) # solid border
 
 ## Instantiates a PolyPoint node for a given lattice position.
 func _add_new_vertex(lattice_pos: Vector2):
@@ -98,13 +80,19 @@ func is_integral() -> bool:
 	return true
 
 ## Calculates the centroid of the polygon.
-func centroid() -> Vector2:
+## TODO: is it necessary to return the centroid if we save it in the CENTROID node?
+func calculate_centroid() -> Vector2:
 	var sum: Vector2 = Vector2(0, 0)
 	for vert in VERTS.get_children():
 		sum += vert.lattice_position
-	return sum / VERTS.get_child_count()
+	var centroid_lattice_pos = sum / VERTS.get_child_count()
+	# draw centroid
+	CENTROID.lattice_position = centroid_lattice_pos
+	CENTROID.position = centroid_lattice_pos * SCALING + OFFSET
+	CENTROID.color = Color(0, 1, 0)
+	return centroid_lattice_pos
 
-## Gets all the integer lattice points inside the polygon.
+## Calculates the convex integer hull of the polygon and stores it in the CONVEX_INTEGER_HULL node for drawing.
 func calculate_convex_integer_hull() -> void:
 	var hull: PackedVector2Array = []
 	# PackedVector2Array doesn't support reduce, sadly.
@@ -124,4 +112,4 @@ func calculate_convex_integer_hull() -> void:
 				hull.append(Vector2(x, y))
 	# get the convex hull of the points
 	hull = Geometry2D.convex_hull(hull)
-	convex_integer_hull = PackedVector2Array(hull)
+	CONVEX_INTEGER_HULL.convex_integer_hull = PackedVector2Array(hull)

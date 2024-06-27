@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cmslkpm8c6211"]
+
+[ext_resource type="Script" path="res://scenes/testing/convex_integer_hull.gd" id="1_qoipr"]
+
+[node name="convex_integer_hull" type="Node2D"]
+script = ExtResource("1_qoipr")
