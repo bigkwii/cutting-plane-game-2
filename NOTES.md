@@ -63,7 +63,7 @@ I'm starting super late today. I'm not planning to do much today, but I'll mess 
 The experiment was a success. There are a few things of note:
 
 - The lattice grid DIMENSION, SCALE_FACTOR and OFFSET may be better off as global constants. It would be a good idea to move them to an autoload script.
-- Just so i don't forget, the order of execution is: load(), _init(), _ready(), _draw().
+- Just so i don't forget, the order of execution is: load, init, ready, draw.
 
 That's all for today. I'll be more productive tomorrow.
 

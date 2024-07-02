@@ -34,7 +34,7 @@ func _ready():
 	calculate_convex_integer_hull()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(_delta):
 	pass
 
 func _draw():

@@ -22,7 +22,7 @@ func _ready():
 	_make_lattice_grid()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(_delta):
 	pass
 
 ## Adds a new lattice point at a given position (relative to grid origin)
