@@ -2,12 +2,10 @@ extends Node2D
 ## A polygon. Made out of PolyPoint nodes.
 
 # -- vars --
-## Scaling factor for the lattice points. To convert from lattice coordinates to screen coordinates. (Default value chosen to match demo)
-@export var SCALING: int = 142
-## Offset from the game origin to the grid origin. (Default value chosen to match demo)
-@export var OFFSET: Vector2 = Vector2(16, 28)
-# TODO: please just make them global variables
-
+## Scaling factor for the lattice points. To convert from lattice coordinates to screen coordinates.
+@export var SCALING: int = DEFAULTS.SCALING
+## Offset from the game origin to the grid origin.
+@export var OFFSET: Vector2 = DEFAULTS.OFFSET
 ## The color of the polygon. Borders are solid, fill is semi-transparent.
 @export var color: Color = Color(1, 0, 0)
 

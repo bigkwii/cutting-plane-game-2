@@ -5,12 +5,11 @@ extends Node2D
 
 # -- vars --
 ## Dimensions of the grid. How many rows and columns of lattice points.
-@export var DIMENTIONS: Vector2 = Vector2(8, 6)
-## Scaling factor for the lattice points. To convert from lattice coordinates to screen coordinates. (Default value chosen to match demo)
-@export var SCALING: int = 142
-## Offset from the game origin to the grid origin. (Default value chosen to match demo)
-@export var OFFSET: Vector2 = Vector2(16, 28)
-# TODO: MAYBE MAKE THESE VARIABLES GLOBAL? AN AUTOLOAD SCRIPT WITH THE VARS AND FUNCTIONS TO CONVERT BETWEEN LATTICE AND SCREEN COORDINATES?
+@export var DIMENTIONS: Vector2 = DEFAULTS.DIMENTIONS
+## Scaling factor for the lattice points. To convert from lattice coordinates to screen coordinates.
+@export var SCALING: int = DEFAULTS.SCALING
+## Offset from the game origin to the grid origin.
+@export var OFFSET: Vector2 = DEFAULTS.OFFSET
 
 # -- preloaded scenes --
 @onready var LATTICE_POINT_SCENE = preload("res://scenes/testing/lattice_point.tscn")

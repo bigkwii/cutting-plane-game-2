@@ -106,3 +106,21 @@ Because of this, I'm starting to debate whether or not it's worth it to keep a p
 I'm so eepy. So very eepy. I wanna go to bed. I'll just implement a node for the convex integer hull and the centroid, update the kanban, and go to bed.
 
 It went well. REMEMBER TO MAKE THAT AUTOLOAD FOR THE CONSTANTS!!!
+
+## MON 2024-07-01
+
+It's been a while. This is the "final" week. As in, it may as well be the final week. Hoo boy...
+
+First up, I'll make that autoload. I'll call it defaults.gd, since these constants will probably change at some point. For now, they get set on the variable definition. Change this to be done on _ready(), along with a check to see if a value was given on the editor (i.e: if set to -1, set to default value). !!! REMEMBER TO DO THIS LATER !!!
+
+For now, let's take a look at that cutting logic.
+
+Since this is all very experimental still, I'll use a test scene called test.tscn. After all of this goes well, I'll move on to actually making this in a way that makes sense and is scalable. This is why I'm not worrying about the way I'm setting the default values yet.
+
+First up, let0's try to do a very simple cut. Let's click on the polygon and perform a horizontal split.
+
+In order to do that, I started messing around with input events to get the mouse working. It's going well. Good thing I autoloaded those vars.
+
+Also: consider changing the name of that autoload. Currently it's called defaults.gd, it may be better to call it utils.gd or simply global.gd, since I'm thinking I may need to add functions to it in the future.
+
+Continuing tomorrow.

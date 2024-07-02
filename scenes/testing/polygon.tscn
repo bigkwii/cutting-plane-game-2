@@ -6,10 +6,6 @@
 
 [node name="polygon" type="Node2D"]
 script = ExtResource("1_f3ty0")
-SCALING = null
-OFFSET = null
-color = null
-initial_vertices = null
 
 [node name="verts" type="Node2D" parent="."]
 

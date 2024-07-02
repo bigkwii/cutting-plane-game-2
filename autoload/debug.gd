@@ -1,4 +1,5 @@
 extends Node
+## Debug logging and other utilities.
 
 @onready var canvas_layer  = CanvasLayer.new()
 @onready var container = VBoxContainer.new()

@@ -6,13 +6,10 @@ extends Node2D
 ## The vertices of the convex integer hull, in lattice coords.
 @export var convex_integer_hull: PackedVector2Array = []
 
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-# !!! TODO: SERIOUSLY, PUT THESE IN AN AUTOLOAD  !!!
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ## The scaling factor for the hull.
-var SCALING: int = 142
+var SCALING: int = DEFAULTS.SCALING
 ## The offset for the hull.
-var OFFSET: Vector2 = Vector2(16, 28)
+var OFFSET: Vector2 = DEFAULTS.OFFSET
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
