@@ -1,6 +1,6 @@
 # Notes
 
-I'm kinda forgetful, so this is to save my thoughts and headspace into secondary storage.
+I'm kinda forgetful, so this .md is here for me to save my thoughts and headspace into secondary storage.
 
 ## WED 2024-06-12
 
@@ -124,3 +124,31 @@ In order to do that, I started messing around with input events to get the mouse
 Also: consider changing the name of that autoload. Currently it's called defaults.gd, it may be better to call it utils.gd or simply global.gd, since I'm thinking I may need to add functions to it in the future.
 
 Continuing tomorrow.
+
+## TUE 2024-07-02
+
+Time to cut. I'll try to click on the screen and make a horizontal cut at that height.
+
+First of all, I need to be able to get the intersection between 2 lines. Godot's Geometry2D class has the function `line_intersects_line()`, however, it doesn't take start and end points, but a start point and a direction. I'll have to wrap this.
+
+NEVERMIND! `segment_intersects_segment()` is what I need. I'm using that instead.
+
+Not going well. The intersection is easy. But, rebuilding polygons correctly... I'll need to rethink this. The problems seems to be that some Geometry2D functions expect a polygon to be a closed loop, i.e: repeating the first point at the end. It seems some do, and other don't? It's very weird, I feel like I'm missing something. I'll continue tomorrow.
+
+## WED 2024-07-03
+
+Having a hard time concentrating right now. Lots of things to do and so little time.
+
+There's lots to rethink. This will be my mission for tonight.
+
+Good think I took a nap, my brain is working now. I found out that the issue I was having was that I wasn't getting rid of child nodes properly.
+
+I can make cuts now, let's move on to better cuts.
+
+Note: the code is starting to get ugly, but i'll just keep going as is for now. I'll make a big refactor after turning in the draft. I'm still doing everything in the "testing" folder after all.
+
+Next, up, I've been using line segments this entire time, I'm I'm thinking that it would be better to use lines instead. Segments are determined by 2 points, while lines are determined by a point and a direction. Segments are generally better behaved, but lines are easier to work with in this case, since I get the point for free as any intersection point and the direction will can be determined more directly than choosing 2 arbitrary points. I'll try to make the switch.
+
+One thing that's kinda annoying in Godot is that static return types can't be asigned as something that could be null (something like Vector2? or Vector2 | void). This could be a cool new feature in the future, but I've read that it's not currently planned. What a shame. Anyways, you can get around this by returning a Vector2 with an imposible value or just removing the return type. I'll do the latter for these kind of functions. Although I should rethink this, too.
+
+Back to the changing to lines thing, it was a success. I'll continue tomorrow. G'night!

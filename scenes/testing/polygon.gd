@@ -41,8 +41,8 @@ func _draw():
 	if packed_vertices.size() < 3:
 		DEBUG.log("polygon._draw: Polygon must have at least 3 vertices! %s given." % packed_vertices.size())
 		return
-	var points: PackedVector2Array = []
-	var colors: PackedColorArray = []
+	var points: PackedVector2Array = PackedVector2Array()
+	var colors: PackedColorArray = PackedColorArray()
 	for vert in VERTS.get_children():
 		points.append( vert.position ) # actual position
 		colors.append( Color(color, 0.2) ) # semi-transparent fill
@@ -62,14 +62,25 @@ func _add_new_vertex(lattice_pos: Vector2):
 ## Instantiates all PolyPoint nodes for the given vertices.
 func _make_polygon() -> void:
 	DEBUG.log("making polygon with vertices: " + str(initial_vertices))
-	for vert in initial_vertices:
-		_add_new_vertex(vert)
 	packed_vertices = PackedVector2Array(initial_vertices)
+	for vert in packed_vertices:
+		_add_new_vertex(vert)
 
 ## Deletes itself and all children
 func delete_polygon() -> void:
 	queue_free()
 
+## Rebuilds the polygon given new vertices in a Array[Vector2].
+func rebuild_polygon(new_vertices: PackedVector2Array) -> void:
+	for vert in VERTS.get_children():
+		VERTS.remove_child(vert) # TODO: maybe make a function for this (?)
+		vert.queue_free()
+	DEBUG.log("VERT count: %s" % VERTS.get_child_count())
+	packed_vertices = new_vertices
+	for vert in packed_vertices:
+		_add_new_vertex(vert)
+	queue_redraw()
+	
 ## Checks if the polygon is integral. (if all vertices are integers)
 func is_integral() -> bool:
 	for vert in VERTS.get_children():
@@ -90,6 +101,10 @@ func calculate_centroid() -> Vector2:
 	CENTROID.color = Color(0, 1, 0)
 	return centroid_lattice_pos
 
+## Determines if a given points is inside the polygon, given its lattice position.
+func is_point_inside_polygon(lattice_pos: Vector2) -> bool:
+	return Geometry2D.is_point_in_polygon(lattice_pos, packed_vertices)
+
 ## Calculates the convex integer hull of the polygon and stores it in the CONVEX_INTEGER_HULL node for drawing.
 func calculate_convex_integer_hull() -> void:
 	var hull: PackedVector2Array = []
@@ -106,7 +121,7 @@ func calculate_convex_integer_hull() -> void:
 	# find all lattice points inside the bounding box
 	for x in range(min_x, max_x + 1):
 		for y in range(min_y, max_y + 1):
-			if Geometry2D.is_point_in_polygon(Vector2(x, y), packed_vertices): # we need to use the packed version for this
+			if is_point_inside_polygon(Vector2(x, y)): # we need to use the packed version for this
 				hull.append(Vector2(x, y))
 	# get the convex hull of the points
 	hull = Geometry2D.convex_hull(hull)
