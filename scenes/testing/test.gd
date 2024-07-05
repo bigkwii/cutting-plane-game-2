@@ -9,6 +9,7 @@ var GEOMETRY_EPSILON = 0.00001
 # -- child nodes --
 @onready var LATTICE_GRID = $lattice_grid
 @onready var POLYGON = $polygon
+@onready var CAMERA = $Camera
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -24,13 +25,12 @@ func _input(event):
 	if event.is_action_pressed("reset"):
 		DEBUG.log("Reloading scene...")
 		get_tree().reload_current_scene()
-	# print click position
 	if event.is_action_pressed("mouse1"):
 		if event.pressed:
 			var clicked_lattice_pos = snapped( (get_global_mouse_position() - DEFAULTS.OFFSET) / DEFAULTS.SCALING , Vector2(CLICK_EPSILON, CLICK_EPSILON) )
 			DEBUG.log( "Clicked @ lattice pos: " + str( clicked_lattice_pos ) )
-			# split the polygon horizontally at the clicked height
-			cut_polygon(Vector2(clicked_lattice_pos.x, clicked_lattice_pos.y), Vector2(0.5,0.5))
+			# split the polygon at the given position and at a hard-coded direction
+			cut_polygon(Vector2(clicked_lattice_pos.x, clicked_lattice_pos.y), Vector2(1,1))
 		
 ## determines if a given point is on a segment
 ## [br][br]
@@ -88,7 +88,7 @@ func split_polygon(polygon: PackedVector2Array, line_point: Vector2, line_dir: V
 		var intersection = line_intersects_segment(line_point, line_dir, start_point, end_point)
 		if intersection:
 			intersection_points.append(intersection)
-	if intersection_points.size() != 2:
+	if intersection_points.size() == 0 or intersection_points.size() % 2 != 0: # TODO: not sure about the 2nd condition
 		DEBUG.log("split_polygon: Invalid number of intersection points: %s" % intersection_points.size())
 		return []
 	var is_upper = is_point_above_line(polygon[0], line_point, line_dir)
@@ -126,7 +126,8 @@ func cut_polygon(line_start: Vector2, line_end: Vector2) -> void:
 		return
 	if Geometry2D.is_point_in_polygon(centroid, new_polygons[0]):
 		POLYGON.rebuild_polygon(new_polygons[0])
-		DEBUG.log("poly 0: %s" % new_polygons[0], 100)
 	else:
 		POLYGON.rebuild_polygon(new_polygons[1])
-		DEBUG.log("poly 1: %s" % new_polygons[1], 100)
+
+
+# -- camera stuff --

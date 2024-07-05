@@ -152,3 +152,11 @@ Next, up, I've been using line segments this entire time, I'm I'm thinking that 
 One thing that's kinda annoying in Godot is that static return types can't be asigned as something that could be null (something like Vector2? or Vector2 | void). This could be a cool new feature in the future, but I've read that it's not currently planned. What a shame. Anyways, you can get around this by returning a Vector2 with an imposible value or just removing the return type. I'll do the latter for these kind of functions. Although I should rethink this, too.
 
 Back to the changing to lines thing, it was a success. I'll continue tomorrow. G'night!
+
+## THU 2024-07-04
+
+I added a camera and added zooming and panning. I needed this to aid is testing precision when cutting. Speaking of, I found a bug, a cut won't be perfomed when the line is perfectly on top of a lattice line. ...Or so it seems. I'll investigate this further. I fixed it, I had a check to validate the amound of intersections a cut would make, and I was checking for exactly 2, when I should've been checking for != 0 and modulo 2 != 0. Actually, i'm not sure if the 2nd condition is necessary, but it's there for now.
+
+With this, I should have a good base for implementing the types of cuts from the original demo. I'll start with the horizontal cut. I'll continue tomorrow morning.
+
+Also, now that I can zoom in, I think the convex hull is slightly off (?) I'll have to investigate this further.
