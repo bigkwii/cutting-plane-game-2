@@ -80,6 +80,8 @@ func rebuild_polygon(new_vertices: PackedVector2Array) -> void:
 	for vert in packed_vertices:
 		_add_new_vertex(vert)
 	queue_redraw()
+	calculate_centroid()
+	calculate_convex_integer_hull(true) # for testing purposes, remove this later, recalculating the hull is expensive and unnecessary
 	
 ## Checks if the polygon is integral. (if all vertices are integers)
 func is_integral() -> bool:
@@ -106,7 +108,7 @@ func is_point_inside_polygon(lattice_pos: Vector2) -> bool:
 	return Geometry2D.is_point_in_polygon(lattice_pos, packed_vertices)
 
 ## Calculates the convex integer hull of the polygon and stores it in the CONVEX_INTEGER_HULL node for drawing.
-func calculate_convex_integer_hull() -> void:
+func calculate_convex_integer_hull(redraw: bool = false) -> void:
 	var hull: PackedVector2Array = []
 	# PackedVector2Array doesn't support reduce, sadly.
 	var min_x: float = packed_vertices[0].x
@@ -126,3 +128,6 @@ func calculate_convex_integer_hull() -> void:
 	# get the convex hull of the points
 	hull = Geometry2D.convex_hull(hull)
 	CONVEX_INTEGER_HULL.convex_integer_hull = PackedVector2Array(hull)
+	# if a redraw was requested, queue it
+	if redraw:
+		CONVEX_INTEGER_HULL.queue_redraw()

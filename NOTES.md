@@ -160,3 +160,11 @@ I added a camera and added zooming and panning. I needed this to aid is testing 
 With this, I should have a good base for implementing the types of cuts from the original demo. I'll start with the horizontal cut. I'll continue tomorrow morning.
 
 Also, now that I can zoom in, I think the convex hull is slightly off (?) I'll have to investigate this further.
+
+## FRI 2024-07-05
+
+Alright, time to implement those cuts. Hopefully I can get them all done before sunday, that way I can brag about them on the draft.
+
+It occurred to me that i still needed a bunch of stuff to aid in debugging and testing. I added a simple HUD, including a button for each cut, plus a debug cut button and line edit to choose a cut direction. I also added a button to show/hide the convex hull. That last one is in the original demo, of course. I ran into some issues when clicking the buttons, since clicking them also registered as clicking the screen, thus making a cut, I managed to patch this by checking if the pouse just clicked on top of the button container before making a cut. I'm honestly not to happy with that, all this has been implemented very hastily, but no worries, a big refactor is underway after the draft.
+
+That's enough for today. Night!

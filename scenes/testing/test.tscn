@@ -15,3 +15,52 @@ position = Vector2(1, 0)
 initial_vertices = Array[Vector2]([Vector2(1.7, 1), Vector2(2, 0.7), Vector2(5, 0.7), Vector2(5.3, 1), Vector2(5.3, 4), Vector2(5, 4.3), Vector2(2, 4.3), Vector2(1.7, 4)])
 
 [node name="Camera" parent="." instance=ExtResource("4_ig2q3")]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="HUD" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="buttons" type="VBoxContainer" parent="CanvasLayer/HUD"]
+layout_mode = 0
+offset_left = 888.0
+offset_top = 504.0
+offset_right = 992.0
+offset_bottom = 745.0
+metadata/_edit_group_ = true
+
+[node name="debug_cut" type="Button" parent="CanvasLayer/HUD/buttons"]
+layout_mode = 2
+text = "debug cut
+"
+
+[node name="debug_cut_input" type="LineEdit" parent="CanvasLayer/HUD/buttons"]
+layout_mode = 2
+text = "0"
+placeholder_text = "degrees"
+
+[node name="circle" type="Button" parent="CanvasLayer/HUD/buttons"]
+layout_mode = 2
+text = "circle"
+
+[node name="gomory" type="Button" parent="CanvasLayer/HUD/buttons"]
+layout_mode = 2
+text = "gomory"
+
+[node name="h_split" type="Button" parent="CanvasLayer/HUD/buttons"]
+layout_mode = 2
+text = "h split"
+
+[node name="v_split" type="Button" parent="CanvasLayer/HUD/buttons"]
+layout_mode = 2
+text = "v split"
+
+[node name="show_hull" type="Button" parent="CanvasLayer/HUD/buttons"]
+layout_mode = 2
+focus_mode = 0
+action_mode = 0
+keep_pressed_outside = true
+text = "CONV. HULL"

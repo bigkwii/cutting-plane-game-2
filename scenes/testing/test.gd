@@ -1,15 +1,33 @@
 extends Node2D
+## testing scene for various things
+## [br][br]
+## !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+## !!! TODO: A LOT OF THIS NEED TO EITHER BE MOVED TO POLYGON, AN AUTOLOAD, OR A NEW "LEVEL" SCENE !!!
+## !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 # -- vars --
 ## epsilon for snapping to grid
 var CLICK_EPSILON = 0.01
 ## epsilon for geometric calculations
 var GEOMETRY_EPSILON = 0.00001
+# - debug -
+var debug_cut_direction = Vector2(1, 0)
 
 # -- child nodes --
 @onready var LATTICE_GRID = $lattice_grid
 @onready var POLYGON = $polygon
 @onready var CAMERA = $Camera
+# - hud elements -
+@onready var HUD = $CanvasLayer/HUD
+@onready var BUTTONS_CONTAINER = $CanvasLayer/HUD/buttons
+@onready var SHOW_HULL_BUTTON = $CanvasLayer/HUD/buttons/show_hull
+@onready var CIRCLE_CUT_BUTTON = $CanvasLayer/HUD/buttons/circle
+@onready var GOMORY_CUT_BUTTON = $CanvasLayer/HUD/buttons/gomory
+@onready var H_SPLIT_CUT_BUTTON = $CanvasLayer/HUD/buttons/h_split
+@onready var V_SPLIT_CUT_BUTTON = $CanvasLayer/HUD/buttons/v_split
+# - debug cut button and input -
+@onready var DEBUG_CUT_BUTTON = $CanvasLayer/HUD/buttons/debug_cut
+@onready var DEBUG_CUT_INPUT = $CanvasLayer/HUD/buttons/debug_cut_input
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -18,19 +36,33 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
-	pass
+	# TODO: checking for this every frame is ugly. make it event-based later
+	if SHOW_HULL_BUTTON.is_pressed():
+		POLYGON.CONVEX_INTEGER_HULL.visible = true
+	else:
+		POLYGON.CONVEX_INTEGER_HULL.visible = false
+	if DEBUG_CUT_BUTTON.is_pressed():
+		var degrees = float(DEBUG_CUT_INPUT.text)
+		if degrees != null:
+			debug_cut_direction = Vector2(cos(deg_to_rad(degrees)), sin(deg_to_rad(degrees)))
+		else:
+			DEBUG.log("Invalid angle: %s" % degrees)
 
 func _input(event):
 	# reload scene if reset input is pressed
 	if event.is_action_pressed("reset"):
 		DEBUG.log("Reloading scene...")
 		get_tree().reload_current_scene()
-	if event.is_action_pressed("mouse1"):
-		if event.pressed:
+	# handle clicking with mouse 1
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			# if on the show hull button, do nothing
+			if BUTTONS_CONTAINER.get_global_rect().has_point(event.position): # !!! TODO !!!: this is hacky, i don't like it, figure out a cleaner way
+				return
 			var clicked_lattice_pos = snapped( (get_global_mouse_position() - DEFAULTS.OFFSET) / DEFAULTS.SCALING , Vector2(CLICK_EPSILON, CLICK_EPSILON) )
 			DEBUG.log( "Clicked @ lattice pos: " + str( clicked_lattice_pos ) )
 			# split the polygon at the given position and at a hard-coded direction
-			cut_polygon(Vector2(clicked_lattice_pos.x, clicked_lattice_pos.y), Vector2(1,1))
+			cut_polygon(Vector2(clicked_lattice_pos.x, clicked_lattice_pos.y), debug_cut_direction)
 		
 ## determines if a given point is on a segment
 ## [br][br]
@@ -130,4 +162,8 @@ func cut_polygon(line_start: Vector2, line_end: Vector2) -> void:
 		POLYGON.rebuild_polygon(new_polygons[1])
 
 
-# -- camera stuff --
+## extends 2 horizontal lines upwards and downwards until one of the lines clashes with the lattice points.
+## once it does, if one of the lines intersects the polygon, it performs a cut.
+func h_split_cut(clicked_lattice_pos: Vector2) -> void:
+	# todo
+	pass
