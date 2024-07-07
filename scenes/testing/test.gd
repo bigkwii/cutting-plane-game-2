@@ -10,6 +10,9 @@ extends Node2D
 var CLICK_EPSILON = 0.01
 ## epsilon for geometric calculations
 var GEOMETRY_EPSILON = 0.00001
+# - cut mode stuff -
+enum CUT_MODES { DEBUG_CUT, CIRCLE_CUT, GOMORY_CUT, H_SPLIT_CUT, V_SPLIT_CUT }
+var cut_mode = CUT_MODES.DEBUG_CUT
 # - debug -
 var debug_cut_direction = Vector2(1, 0)
 
@@ -17,6 +20,7 @@ var debug_cut_direction = Vector2(1, 0)
 @onready var LATTICE_GRID = $lattice_grid
 @onready var POLYGON = $polygon
 @onready var CAMERA = $Camera
+@onready var CUT_VFX = $vfx/cut_vfx
 # - hud elements -
 @onready var HUD = $CanvasLayer/HUD
 @onready var BUTTONS_CONTAINER = $CanvasLayer/HUD/buttons
@@ -41,12 +45,25 @@ func _process(_delta):
 		POLYGON.CONVEX_INTEGER_HULL.visible = true
 	else:
 		POLYGON.CONVEX_INTEGER_HULL.visible = false
-	if DEBUG_CUT_BUTTON.is_pressed():
+	if DEBUG_CUT_BUTTON.is_pressed(): # TODO: don't do this like this, make it event-based
 		var degrees = float(DEBUG_CUT_INPUT.text)
 		if degrees != null:
-			debug_cut_direction = Vector2(cos(deg_to_rad(degrees)), sin(deg_to_rad(degrees)))
+			debug_cut_direction = Vector2(cos(deg_to_rad(degrees)), -sin(deg_to_rad(degrees)))
 		else:
 			DEBUG.log("Invalid angle: %s" % degrees)
+			DEBUG_CUT_INPUT.text = "0"
+			debug_cut_direction = Vector2(1, 0)
+		cut_mode = CUT_MODES.DEBUG_CUT
+		DEBUG.log("DEBUG_CUT selected")
+	if CIRCLE_CUT_BUTTON.is_pressed(): # BAD! don't do this like this
+		cut_mode = CUT_MODES.CIRCLE_CUT
+		DEBUG.log("CIRCLE_CUT selected")
+	if H_SPLIT_CUT_BUTTON.is_pressed(): # AGAIN, BAD!
+		cut_mode = CUT_MODES.H_SPLIT_CUT
+		DEBUG.log("H_SPLIT_CUT selected")
+	if V_SPLIT_CUT_BUTTON.is_pressed(): # AGAIN, BAD!
+		cut_mode = CUT_MODES.V_SPLIT_CUT
+		DEBUG.log("V_SPLIT_CUT selected")
 
 func _input(event):
 	# reload scene if reset input is pressed
@@ -55,14 +72,21 @@ func _input(event):
 		get_tree().reload_current_scene()
 	# handle clicking with mouse 1
 	if event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		if event.button_index == MOUSE_BUTTON_LEFT and not event.pressed: # not event.pressed = released
 			# if on the show hull button, do nothing
 			if BUTTONS_CONTAINER.get_global_rect().has_point(event.position): # !!! TODO !!!: this is hacky, i don't like it, figure out a cleaner way
 				return
 			var clicked_lattice_pos = snapped( (get_global_mouse_position() - DEFAULTS.OFFSET) / DEFAULTS.SCALING , Vector2(CLICK_EPSILON, CLICK_EPSILON) )
 			DEBUG.log( "Clicked @ lattice pos: " + str( clicked_lattice_pos ) )
-			# split the polygon at the given position and at a hard-coded direction
-			cut_polygon(Vector2(clicked_lattice_pos.x, clicked_lattice_pos.y), debug_cut_direction)
+			if cut_mode == CUT_MODES.DEBUG_CUT:
+				# split the polygon at the given position and at a hard-coded direction
+				cut_polygon(Vector2(clicked_lattice_pos.x, clicked_lattice_pos.y), debug_cut_direction)
+			elif cut_mode == CUT_MODES.CIRCLE_CUT:
+				circle_cut(clicked_lattice_pos)
+			elif cut_mode == CUT_MODES.H_SPLIT_CUT:
+				h_split_cut(clicked_lattice_pos)
+			elif cut_mode == CUT_MODES.V_SPLIT_CUT:
+				v_split_cut(clicked_lattice_pos)
 		
 ## determines if a given point is on a segment
 ## [br][br]
@@ -97,20 +121,32 @@ func line_intersects_segment(line_point: Vector2, line_direction: Vector2, segme
 ## Determines if a given point is "above" a given line segment. Really just used to determine which half of a polygon the centroid is in.
 ## [br][br]
 ## point: Vector2 the point to check
-## line_start, line_end: start and end points of the line segment
+## line_point, line_dir: point and direction of the line
 func is_point_above_line(point: Vector2, line_point: Vector2, line_dir: Vector2) -> bool:
 	return (line_dir.x) * (point.y - line_point.y) > (line_dir.y) * (point.x - line_point.x)
+
+## Calculates the area of a polygon represented by a PackedVector2Array
+## [br][br]
+## polygon: PackedVector2Array the polygon to calculate the area of
+func polygon_area(polygon: PackedVector2Array) -> float:
+	var area = 0.0
+	for i in range(polygon.size()):
+		var current_point = polygon[i]
+		var next_point = polygon[(i + 1) % polygon.size()]
+		area += current_point.x * next_point.y - next_point.x * current_point.y
+	return area / 2
 
 ## splits a polygon in two halves given a line
 ## [br][br]
 ## polygon: PackedVector2Array the polygon to be split
-## line_start, line_end: start and end points of the line
+## line_point, line_dir: point and direction of the line
 ## [br][br]
 ## !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ## !!! TODO: this function is kinda ugly and probably does a bunch of unnecesaary stuff.    !!!
 ## !!! Plus: it should be in the polygon.gd script. Same goes for the cut_polygon function. !!!
+## !!! Also, confusing names (split and cut? sounds like the same thing)                    !!!
 ## !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-func split_polygon(polygon: PackedVector2Array, line_point: Vector2, line_dir: Vector2) -> Array:
+func split_polygon(polygon: PackedVector2Array, line_point: Vector2, line_dir: Vector2) -> Array[PackedVector2Array]:
 	var new_poly_1 = PackedVector2Array()
 	var new_poly_2 = PackedVector2Array()
 	var intersection_points = []
@@ -120,9 +156,10 @@ func split_polygon(polygon: PackedVector2Array, line_point: Vector2, line_dir: V
 		var intersection = line_intersects_segment(line_point, line_dir, start_point, end_point)
 		if intersection:
 			intersection_points.append(intersection)
-	if intersection_points.size() == 0 or intersection_points.size() % 2 != 0: # TODO: not sure about the 2nd condition
+	if intersection_points.size() < 2: # TODO: does this make sense? idk, think about it harder some other time.
 		DEBUG.log("split_polygon: Invalid number of intersection points: %s" % intersection_points.size())
 		return []
+	DEBUG.log("split_polygon: Found %s intersection points: %s" % [intersection_points.size(), intersection_points])
 	var is_upper = is_point_above_line(polygon[0], line_point, line_dir)
 	var added_intersection_1 = false
 	var added_intersection_2 = false
@@ -144,26 +181,81 @@ func split_polygon(polygon: PackedVector2Array, line_point: Vector2, line_dir: V
 				new_poly_2.append(intersection)
 				added_intersection_2 = true
 			is_upper = not is_upper
+	# area check. if any of the new polygons has an area of 0, it's invalid
+	if polygon_area(new_poly_1) < GEOMETRY_EPSILON or polygon_area(new_poly_2) < GEOMETRY_EPSILON:
+		DEBUG.log("split_polygon: 0-area polygon detected, invalidated.")
+		return []
 	return [new_poly_1, new_poly_2]
 	
 ## cuts the polygon, given a line, and keeps the half that contains the centroid of the original.
 ## [br][br]
-## line_start, line_end: start and end points of the line
-func cut_polygon(line_start: Vector2, line_end: Vector2) -> void:
+## line_point, line_dir: point and direction of the line
+func cut_polygon(line_point: Vector2, line_dir: Vector2) -> void:
 	var centroid: Vector2 = POLYGON.CENTROID.lattice_position
 	var polygon_verts = POLYGON.packed_vertices
-	var new_polygons = split_polygon(polygon_verts, line_start, line_end)
+	var new_polygons = split_polygon(polygon_verts, line_point, line_dir)
 	if new_polygons.size() == 0:
 		DEBUG.log("cut_polygon: No new polygons found.")
 		return
+	# move cut_vfx to this position, rotate it to match this direction and hit play
+	CUT_VFX.global_position = line_point * DEFAULTS.SCALING + DEFAULTS.OFFSET
+	CUT_VFX.rotation = line_dir.angle()
+	CUT_VFX.play()
 	if Geometry2D.is_point_in_polygon(centroid, new_polygons[0]):
 		POLYGON.rebuild_polygon(new_polygons[0])
 	else:
 		POLYGON.rebuild_polygon(new_polygons[1])
 
+## returns true if a cut made with this line WOULD cut the polygon
+## [br][br]
+## line_point, line_dir: point and direction of the line
+func would_cut_polygon(line_point: Vector2, line_dir: Vector2) -> bool:
+	var polygon_verts = POLYGON.packed_vertices
+	var new_polygons = split_polygon(polygon_verts, line_point, line_dir)
+	if new_polygons.size() == 0:
+		return false
+	return true
 
-## extends 2 horizontal lines upwards and downwards until one of the lines clashes with the lattice points.
-## once it does, if one of the lines intersects the polygon, it performs a cut.
+## returns all the intersection points of a line with a polygon
+## [br][br]
+## polygon: PackedVector2Array the polygon to check
+## line_point, line_dir: point and direction of the line
+func line_intersects_polygon(polygon: PackedVector2Array, line_point: Vector2, line_dir: Vector2):
+	var intersection_points = []
+	for i in range(polygon.size()):
+		var start_point = polygon[i]
+		var end_point = polygon[(i + 1) % polygon.size()]
+		var intersection = line_intersects_segment(line_point, line_dir, start_point, end_point)
+		if intersection:
+			intersection_points.append(intersection)
+	return intersection_points
+
+## returns all the intersection points of a circle with a polygon
+## [br][br]
+## polygon: PackedVector2Array the polygon to check
+## circle_center: center of the circle
+## circle_radius: radius of the circle
+func circle_intersects_polygon(polygon: PackedVector2Array, circle_center: Vector2, circle_radius: float):
+	var intersection_points = []
+	for i in range(polygon.size()):
+		var start_point = polygon[i]
+		var end_point = polygon[(i + 1) % polygon.size()]
+		var intersection = Geometry2D.segment_intersects_circle(start_point, end_point, circle_center, circle_radius)
+		if intersection:
+			intersection_points.append(intersection)
+	return intersection_points
+
+## the circle cut. makes the biggest circle that fits inside the lattice square where the click happened, and if that circle intersects the polygon in 2 points, cuts it.
+## [br][br]
+## clicked_lattice_pos: Vector2 the lattice position where the click happened
+func circle_cut(clicked_lattice_pos: Vector2) -> void:
+	DEBUG.log("Circle cut not implemented yet.")
+
 func h_split_cut(clicked_lattice_pos: Vector2) -> void:
-	# todo
-	pass
+	DEBUG.log("H split cut not implemented yet.")
+
+func v_split_cut(clicked_lattice_pos: Vector2) -> void:
+	DEBUG.log("V split cut not implemented yet.")
+
+func gomory_cut(clicked_lattice_pos: Vector2) -> void:
+	DEBUG.log("Gomory cut not implemented yet.")

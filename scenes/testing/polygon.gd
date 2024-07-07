@@ -75,7 +75,6 @@ func rebuild_polygon(new_vertices: PackedVector2Array) -> void:
 	for vert in VERTS.get_children():
 		VERTS.remove_child(vert) # TODO: maybe make a function for this (?)
 		vert.queue_free()
-	DEBUG.log("VERT count: %s" % VERTS.get_child_count())
 	packed_vertices = new_vertices
 	for vert in packed_vertices:
 		_add_new_vertex(vert)

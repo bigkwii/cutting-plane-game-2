@@ -168,3 +168,21 @@ Alright, time to implement those cuts. Hopefully I can get them all done before 
 It occurred to me that i still needed a bunch of stuff to aid in debugging and testing. I added a simple HUD, including a button for each cut, plus a debug cut button and line edit to choose a cut direction. I also added a button to show/hide the convex hull. That last one is in the original demo, of course. I ran into some issues when clicking the buttons, since clicking them also registered as clicking the screen, thus making a cut, I managed to patch this by checking if the pouse just clicked on top of the button container before making a cut. I'm honestly not to happy with that, all this has been implemented very hastily, but no worries, a big refactor is underway after the draft.
 
 That's enough for today. Night!
+
+## SAT 2024-07-06
+
+Time to implement those cuts. Look, there's very little time left, and I probably won't have them all working by tomorrow, but I'll try to get as much work done as possible.
+
+I got distracted and made an animation for the cut. It looks pretty good. I think this is a good way of making animations. I expect to make most if not all animations the same way in the future.
+
+I'm starting to think what I have is impressive enough for a draft. I'll keep going for a little bit anyways, it would be cool to at least have the horizontal and vertical cuts done. Gomory is considerably more difficult to implement, anyways, since, for one, the implementation is pretty confusing, and for two, I need to implement clickable hitboxes for the vertices of the polygon.
+
+Ok so i found a strange bug, if you keep spamming the click button at the same exact spot, weird things start happening. A cut keeps being made on each click even tho we're right on the edge of the polygon, the centroid starts shifting away, and sometimes the cut (which is usually a cut that doesn't do anything) will actually cut the polygon diagonally for no apparent reason. Very strange. Grantes, this shouldn't be a problem if you only use the actual cuts, the only way this could happen is with the debug cut, since that's the only one that allows you to click on the same spot multiple times, but this merits being fixed. I'll look into it.
+
+I managed to patch this by being less strict when checking the number of intersections. Instead of checking for exactly 0 when determining when not to cut, I'm checking for <= 2. Apparently, when a cut is colinear, `line_intersects_line()` will spit out exactly 1 intersection point. What is that point? It seems to be kinda unpredictable, probably has something to do with the order in which the lines are passed and there may or may not be funky floating point arithmetic badness going on. Either way, avoiding such cases is good practice regardless. I can still sometimes keep clicking on the same spot and perform multiple cuts that do nothing, seems to be a float thing. I'll see what I can do.
+
+Ok so, whenever this bug happens, split_polygon, which spits out the 2 the same exact polygon, unchanged, plus a polygon that really isn't a polygon at all, but an infinitely small line segment mascarading as a polygon. An area check should fix this.
+
+Easy, tho I needed to implement a function to calculate the area of a polygon. Noted for the refactor.
+
+The cuts themselves... have proven to be pretty difficult. I'll just leave them as TODO's. I need to move on to the draft. Sad day.
