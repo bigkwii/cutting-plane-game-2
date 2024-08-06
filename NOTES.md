@@ -186,3 +186,7 @@ Ok so, whenever this bug happens, split_polygon, which spits out the 2 the same 
 Easy, tho I needed to implement a function to calculate the area of a polygon. Noted for the refactor.
 
 The cuts themselves... have proven to be pretty difficult. I'll just leave them as TODO's. I need to move on to the draft. Sad day.
+
+## MON 2024-08-05
+
+I'm back. The draft was a success, development has officially resumed. First things first, I need to refactor this mess. There's typos to fix, comments to add, things to move around and directories to reorganize.

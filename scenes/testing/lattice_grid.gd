@@ -5,7 +5,7 @@ extends Node2D
 
 # -- vars --
 ## Dimensions of the grid. How many rows and columns of lattice points.
-@export var DIMENTIONS: Vector2 = DEFAULTS.DIMENTIONS
+@export var DIMENSIONS: Vector2 = DEFAULTS.DIMENSIONS
 ## Scaling factor for the lattice points. To convert from lattice coordinates to screen coordinates.
 @export var SCALING: int = DEFAULTS.SCALING
 ## Offset from the game origin to the grid origin.
@@ -34,9 +34,9 @@ func _add_new_lattice_point(lattice_pos: Vector2) -> void:
 
 ## Makes the grid
 func _make_lattice_grid() -> void:
-	for x in range(DIMENTIONS.x):
-		for y in range(DIMENTIONS.y):
+	for x in range(DIMENSIONS.x):
+		for y in range(DIMENSIONS.y):
 			_add_new_lattice_point(Vector2(x, y))
-	DEBUG.log("Lattice grid created:\nDIMENTIONS: %s\nSCALING: %s\nOFFSET: %s"
-			  % [DIMENTIONS, SCALING, OFFSET])
+	DEBUG.log("Lattice grid created:\nDIMENSIONS: %s\nSCALING: %s\nOFFSET: %s"
+			  % [DIMENSIONS, SCALING, OFFSET])
 
