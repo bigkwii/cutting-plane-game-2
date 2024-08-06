@@ -190,3 +190,5 @@ The cuts themselves... have proven to be pretty difficult. I'll just leave them 
 ## MON 2024-08-05
 
 I'm back. The draft was a success, development has officially resumed. First things first, I need to refactor this mess. There's typos to fix, comments to add, things to move around and directories to reorganize.
+
+The test.gd scene should be used as a base for the level scene. And most of it's logic should be moved to the Polygon scene. That'll be the first step.
