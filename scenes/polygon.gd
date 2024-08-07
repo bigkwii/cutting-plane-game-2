@@ -22,7 +22,7 @@ var packed_vertices: PackedVector2Array = []
 @onready var CONVEX_INTEGER_HULL = $convex_integer_hull
 
 # -- preloaded scenes --
-var POLY_POINT_SCENE = preload("res://scenes/testing/poly_point.tscn")
+var POLY_POINT_SCENE = preload("res://scenes/poly_point.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

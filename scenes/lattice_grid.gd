@@ -12,7 +12,7 @@ extends Node2D
 @export var OFFSET: Vector2 = DEFAULTS.OFFSET
 
 # -- preloaded scenes --
-@onready var LATTICE_POINT_SCENE = preload("res://scenes/testing/lattice_point.tscn")
+@onready var LATTICE_POINT_SCENE = preload("res://scenes/lattice_point.tscn")
 
 # -- nodes --
 @onready var LATTICE_POINTS = $lattice_points

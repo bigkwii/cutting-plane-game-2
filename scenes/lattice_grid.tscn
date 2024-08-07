@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dgb3ubanl7ucn"]
 
-[ext_resource type="Script" path="res://scenes/testing/lattice_grid.gd" id="1_362c2"]
+[ext_resource type="Script" path="res://scenes/lattice_grid.gd" id="1_362c2"]
 
 [node name="lattice_grid" type="Node2D"]
 script = ExtResource("1_362c2")
