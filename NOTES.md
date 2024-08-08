@@ -196,3 +196,20 @@ The test.gd scene should be used as a base for the level scene. And most of it's
 ## TUE 2024-08-06
 
 Going well, I'll finish the level scene tomorrow morning.
+
+## WED 2024-08-07
+
+I'm now working on loading levels from a file. I decided .json is a good format for storing the data. Ideally, the data has to be loaded by the level scene, and said data must be passed to the Polygon scene. However, I would be nice to do this efficiently. For what I can tell, the order of `_init` goes from parent to child, but the order of `_ready` goes from child to parent. This makes things a little tricky. Of course, I could just call `rebuild_polygon()` on level's `_ready`, but that seems so ugly. Working on it.
+
+According to docs, the order goes: `_init`, `_enter_tree`, `_ready`, `_process`, where `_ready` is the only one that runs from child to parent. I may be able to use `_enter_tree` to make the level initialization efficient... Nope! this won't work because POLYGON is an onready var. I'll just call `rebuild_polygon()` on `_ready` for now.
+
+I decided to start remaking some of the levels from the original demo, to aid in this i defined the function
+
+```py
+def rgb_to_hex(r: int, g: int, b: int) -> str:
+    return "#{:02x}{:02x}{:02x}".format(int(r * 255), int(g * 255), int(b * 255))
+```
+
+since the demo had RGB floats for its levels. Note, the coordinates of the demo has 0,0 on the bottom left, while I have them on the top left. I'll have to make an important decision here. Do I change the coordinates of each level to match the game's, or do I change the game's coordinates to match the levels? I think the 2nd, while it would certainly make porting the levels easier, it would also be more trouble than it's worth, since I would have to change the way the game handles clicking and stuff. I'll take on the greuling task of changing the levels vertices to match mine.
+
+All levels on the original demo has different dimensionf for the lattice grid, however, they get calculated based on the vertices. This is unnecesarry, and as such, I'll include the lattice grid dimension in the level file. Therefore, I'll need to work on that. (This refactor keeps getting bigger and bigger...)
