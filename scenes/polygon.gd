@@ -29,10 +29,8 @@ var POLY_POINT_SCENE = preload("res://scenes/poly_point.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	if initial_vertices.size() < 3:
-		DEBUG.log("polygon._ready: Polygon must have at least 3 vertices! %s given." % initial_vertices.size())
-		return
-	build_polygon()
+	# build_polygon() # commenting this out because the level scene will handle the creation of the polygon
+	pass
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -64,6 +62,9 @@ func _add_new_vertex(lattice_pos: Vector2):
 ## [br][br]
 ## To be called when first loading a level.
 func build_polygon() -> void:
+	if initial_vertices.size() < 3:
+		DEBUG.log("polygon._ready: Polygon must have at least 3 vertices! %s given." % initial_vertices.size())
+		return
 	DEBUG.log("making polygon with vertices: " + str(initial_vertices))
 	packed_vertices = PackedVector2Array(initial_vertices)
 	for vert in packed_vertices:
@@ -180,7 +181,7 @@ func line_intersects_segment(line_point: Vector2, line_direction: Vector2, segme
 func is_point_above_line(point: Vector2, line_point: Vector2, line_dir: Vector2) -> bool:
 	return (line_dir.x) * (point.y - line_point.y) > (line_dir.y) * (point.x - line_point.x)
 
-## Calculates the area of a polygon represented by a PackedVector2Array
+## Calculates the area of a polygon represented by a PackedVector2Array. Works for both CW and CCW winding orders.
 ## [br][br]
 ## polygon: PackedVector2Array the polygon to calculate the area of
 func polygon_area(polygon: PackedVector2Array) -> float:
@@ -188,10 +189,13 @@ func polygon_area(polygon: PackedVector2Array) -> float:
 	for i in range(polygon.size()):
 		var current_point = polygon[i]
 		var next_point = polygon[(i + 1) % polygon.size()]
-		area += current_point.x * next_point.y - next_point.x * current_point.y
-	return area / 2
+		area += (current_point.x * next_point.y - next_point.x * current_point.y)
+	area /= 2
+	return abs(area)
 
 ## Splits a polygon in two halves given a line, and returns BOTH halves' vertices in a Array[PackedVector2Array]
+## [br][br]
+## If something goes wrong, returns an empty array.
 ## [br][br]
 ## Not to be confused with the cut_polygon function, which keeps the half that contains the centroid.
 ## [br][br]
@@ -234,7 +238,7 @@ func split_polygon(polygon: PackedVector2Array, line_point: Vector2, line_dir: V
 				added_intersection_2 = true
 			is_upper = not is_upper
 	# area check. if any of the new polygons has an area of 0, it's invalid
-	if polygon_area(new_poly_1) < GLOBALS.GEOMETRY_EPSILON or polygon_area(new_poly_2) < GLOBALS.GEOMETRY_EPSILON:
+	if polygon_area(new_poly_1) < GLOBALS.GEOMETRY_EPSILON_SQ or polygon_area(new_poly_2) < GLOBALS.GEOMETRY_EPSILON_SQ:
 		DEBUG.log("split_polygon: 0-area polygon detected, invalidated.")
 		return []
 	return [new_poly_1, new_poly_2]

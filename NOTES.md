@@ -225,3 +225,7 @@ In any case, the test scene is now completely clean. This means I can just mess 
 Should I change the GLOBALS script to GLOBAL? Which one makes more sense? I'll keep GLOBALS for now, but I'll probably change my mind later.
 
 Level 1 works fine, as always, but level 2 keeps complaining that one of the 2 halves has 0 area. Very strange. I'll investigate this further.
+
+The problem was super simple, my area checked returned negative numbers when a polygon is refined in CW order. I've upgraded the area check to return the absolute value of the area.
+
+With that, the refactor is complete.

@@ -23,3 +23,4 @@ var DEFAULT_LEVEL = "default"
 var CLICK_EPSILON = 0.01
 ## epsilon for geometric calculations
 var GEOMETRY_EPSILON = 0.00001
+var GEOMETRY_EPSILON_SQ = GEOMETRY_EPSILON * GEOMETRY_EPSILON
