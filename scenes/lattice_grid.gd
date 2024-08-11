@@ -5,11 +5,11 @@ extends Node2D
 
 # -- vars --
 ## Dimensions of the grid. How many rows and columns of lattice points.
-@export var DIMENSIONS: Vector2 = DEFAULTS.DIMENSIONS
+@export var DIMENSIONS: Vector2 = GLOBALS.DEFAULT_DIMENSIONS
 ## Scaling factor for the lattice points. To convert from lattice coordinates to screen coordinates.
-@export var SCALING: int = DEFAULTS.SCALING
+@export var SCALING: int = GLOBALS.DEFAULT_SCALING
 ## Offset from the game origin to the grid origin.
-@export var OFFSET: Vector2 = DEFAULTS.OFFSET
+@export var OFFSET: Vector2 = GLOBALS.DEFAULT_OFFSET
 
 # -- preloaded scenes --
 @onready var LATTICE_POINT_SCENE = preload("res://scenes/lattice_point.tscn")

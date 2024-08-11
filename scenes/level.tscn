@@ -1,18 +1,18 @@
-[gd_scene load_steps=6 format=3 uid="uid://xkjk8b3j283s"]
+[gd_scene load_steps=5 format=3 uid="uid://xkjk8b3j283s"]
 
 [ext_resource type="Script" path="res://scenes/level.gd" id="1_7muqx"]
 [ext_resource type="PackedScene" uid="uid://dgb3ubanl7ucn" path="res://scenes/lattice_grid.tscn" id="2_4qubn"]
 [ext_resource type="PackedScene" uid="uid://dnibem6i2pwss" path="res://scenes/polygon.tscn" id="3_b5vrg"]
 [ext_resource type="PackedScene" uid="uid://lotaw6d6q6u5" path="res://scenes/camera.tscn" id="4_oqnx0"]
-[ext_resource type="PackedScene" uid="uid://btapwk71vhkxa" path="res://scenes/cut_vfx.tscn" id="5_gv0rw"]
 
 [node name="level" type="Node2D"]
 script = ExtResource("1_7muqx")
-level_json_filename = "demo/2"
 
 [node name="lattice_grid" parent="." instance=ExtResource("2_4qubn")]
 
 [node name="polygon" parent="." instance=ExtResource("3_b5vrg")]
+color = null
+initial_vertices = null
 
 [node name="camera" parent="." instance=ExtResource("4_oqnx0")]
 
@@ -64,7 +64,3 @@ focus_mode = 0
 action_mode = 0
 keep_pressed_outside = true
 text = "CONV. HULL"
-
-[node name="vfx" type="Node2D" parent="."]
-
-[node name="cut_vfx" parent="vfx" instance=ExtResource("5_gv0rw")]

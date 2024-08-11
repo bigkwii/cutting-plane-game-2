@@ -1,14 +1,22 @@
-[gd_scene load_steps=4 format=3 uid="uid://dnibem6i2pwss"]
+[gd_scene load_steps=5 format=3 uid="uid://dnibem6i2pwss"]
 
 [ext_resource type="Script" path="res://scenes/polygon.gd" id="1_f3ty0"]
 [ext_resource type="PackedScene" uid="uid://cmslkpm8c6211" path="res://scenes/convex_integer_hull.tscn" id="2_7mll7"]
 [ext_resource type="PackedScene" uid="uid://73u01oqmgx6x" path="res://scenes/poly_point.tscn" id="3_f2xql"]
+[ext_resource type="PackedScene" uid="uid://btapwk71vhkxa" path="res://scenes/cut_vfx.tscn" id="4_bmyr5"]
 
 [node name="polygon" type="Node2D"]
 script = ExtResource("1_f3ty0")
+color = null
+initial_vertices = null
 
 [node name="verts" type="Node2D" parent="."]
 
 [node name="convex_integer_hull" parent="." instance=ExtResource("2_7mll7")]
+convex_integer_hull = null
 
 [node name="centroid" parent="." instance=ExtResource("3_f2xql")]
+
+[node name="vfx" type="Node2D" parent="."]
+
+[node name="cut_vfx" parent="vfx" instance=ExtResource("4_bmyr5")]

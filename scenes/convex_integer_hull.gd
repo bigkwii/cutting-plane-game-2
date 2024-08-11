@@ -7,9 +7,9 @@ extends Node2D
 @export var convex_integer_hull: PackedVector2Array = []
 
 ## The scaling factor for the hull.
-var SCALING: int = DEFAULTS.SCALING
+var SCALING: int = GLOBALS.DEFAULT_SCALING
 ## The offset for the hull.
-var OFFSET: Vector2 = DEFAULTS.OFFSET
+var OFFSET: Vector2 = GLOBALS.DEFAULT_OFFSET
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

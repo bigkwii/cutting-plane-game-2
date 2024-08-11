@@ -11,13 +11,14 @@ config_version=5
 [application]
 
 config/name="cutting-plane-game-2"
+run/main_scene="res://scenes/testing/test.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
 DEBUG="*res://autoload/debug.gd"
-DEFAULTS="*res://autoload/defaults.gd"
+GLOBALS="*res://autoload/globals.gd"
 
 [display]
 

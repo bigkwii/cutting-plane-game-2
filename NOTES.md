@@ -213,3 +213,15 @@ def rgb_to_hex(r: int, g: int, b: int) -> str:
 since the demo had RGB floats for its levels. Note, the coordinates of the demo has 0,0 on the bottom left, while I have them on the top left. I'll have to make an important decision here. Do I change the coordinates of each level to match the game's, or do I change the game's coordinates to match the levels? I think the 2nd, while it would certainly make porting the levels easier, it would also be more trouble than it's worth, since I would have to change the way the game handles clicking and stuff. I'll take on the greuling task of changing the levels vertices to match mine.
 
 All levels on the original demo has different dimensionf for the lattice grid, however, they get calculated based on the vertices. This is unnecesarry, and as such, I'll include the lattice grid dimension in the level file. Therefore, I'll need to work on that. (This refactor keeps getting bigger and bigger...)
+
+## SAT 2024-08-10
+
+I haven't been taking notes these past couple of days because I keep forgetting, but there are a lot of things I've refactored. DEFAULTS is now GLOBALS, and the DIMENSIONS, SCALING and OFFSET are now DEFAULT_DIMENSIONS and so on. the EPSILON variables are also Globals now.
+
+I've also moved all the logic regarding cutting polygons to where it belongs, in the polygon scene, along with the util functions, although, should they be there too? Should they be global? It doesn't matter for now, but I'll keep that in mind. Doing this also necessitates moving the vfx scene to the polygon scene as a child. Does this make sense? i'd argue it does, it should be the polygon that's responsible for it's own vfx.
+
+In any case, the test scene is now completely clean. This means I can just mess around more with it.
+
+Should I change the GLOBALS script to GLOBAL? Which one makes more sense? I'll keep GLOBALS for now, but I'll probably change my mind later.
+
+Level 1 works fine, as always, but level 2 keeps complaining that one of the 2 halves has 0 area. Very strange. I'll investigate this further.
