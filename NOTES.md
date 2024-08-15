@@ -229,3 +229,7 @@ Level 1 works fine, as always, but level 2 keeps complaining that one of the 2 h
 The problem was super simple, my area checked returned negative numbers when a polygon is refined in CW order. I've upgraded the area check to return the absolute value of the area.
 
 With that, the refactor is complete.
+
+## THU 2024-08-15
+
+Godot has updated to version 4.3! This version doesn't affect any of the work done so far and adds a couple of features that could be useful. As such, I've updated the project to this version.
