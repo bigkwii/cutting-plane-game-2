@@ -22,7 +22,9 @@ var packed_vertices: PackedVector2Array = []
 @onready var VERTS = $verts
 @onready var CENTROID = $centroid
 @onready var CONVEX_INTEGER_HULL = $convex_integer_hull
+# - vfx -
 @onready var CUT_VFX = $vfx/cut_vfx
+@onready var CIRCLE_VFX = $vfx/circle_vfx
 
 # -- preloaded scenes --
 var POLY_POINT_SCENE = preload("res://scenes/poly_point.tscn")
@@ -257,10 +259,8 @@ func cut_polygon(line_point: Vector2, line_dir: Vector2) -> void:
 	if new_polygons.size() == 0:
 		DEBUG.log("cut_polygon: No new polygons found.")
 		return
-	# move cut_vfx to this position, rotate it to match this direction and hit play
-	CUT_VFX.global_position = line_point * GLOBALS.DEFAULT_SCALING + GLOBALS.DEFAULT_OFFSET
-	CUT_VFX.rotation = line_dir.angle()
-	CUT_VFX.play()
+	# play the cut animation
+	_play_cut_animation(line_point, line_dir)
 	if Geometry2D.is_point_in_polygon(centroid, new_polygons[0]):
 		rebuild_polygon(new_polygons[0])
 	else:
@@ -300,16 +300,55 @@ func circle_intersects_polygon(polygon: PackedVector2Array, circle_center: Vecto
 	for i in range(polygon.size()):
 		var start_point = polygon[i]
 		var end_point = polygon[(i + 1) % polygon.size()]
-		var intersection = Geometry2D.segment_intersects_circle(start_point, end_point, circle_center, circle_radius)
-		if intersection:
+		var intersection_parameter = Geometry2D.segment_intersects_circle(start_point, end_point, circle_center, circle_radius)
+		# intersection_parameter is a value between 0 and 1. convert to the actual position of the intersection
+		if intersection_parameter != -1:
+			var intersection = start_point + intersection_parameter * (end_point - start_point)
 			intersection_points.append(intersection)
 	return intersection_points
 
-## the circle cut. makes the biggest circle that fits inside the lattice square where the click happened, and if that circle intersects the polygon in 2 points, cuts it.
+# -- the cut functions --
+# these are the functions to be called when clicking on the screen with the respective cut mode selected on the level scene
+
+## grows a circle until it intersects a lattice point. once it does, it checks if it intersects the polygon on 2 points.
+## [br][br]
+## if it does, cuts in the direction described by the intersection points.
 ## [br][br]
 ## clicked_lattice_pos: Vector2 the lattice position where the click happened
 func circle_cut(clicked_lattice_pos: Vector2) -> void:
-	DEBUG.log("Circle cut not implemented yet.")
+	var circle_center = clicked_lattice_pos
+	# get the closest point with integer coordinates to the circle center
+	# !!! TODO: optimize this !!!
+	var candidates: Array[Vector2] = []
+	candidates.append(Vector2(floor(circle_center.x), floor(circle_center.y)))
+	candidates.append(Vector2(floor(circle_center.x), ceil(circle_center.y)))
+	candidates.append(Vector2(ceil(circle_center.x), floor(circle_center.y)))
+	candidates.append(Vector2(ceil(circle_center.x), ceil(circle_center.y)))
+	var closest_lattice_point = candidates[0]
+	for candidate in candidates:
+		if (candidate - circle_center).length_squared() < (closest_lattice_point - circle_center).length_squared():
+			closest_lattice_point = candidate
+	# the radius of the circle will be the distance to the closest lattice point
+	var circle_radius = (closest_lattice_point - circle_center).length()
+	var intersection_points = circle_intersects_polygon(packed_vertices, circle_center, circle_radius)
+	#if intersection_points.size() < 2:
+	#	DEBUG.log("circle_cut: Invalid number of intersection points: %s" % intersection_points.size())
+	#	return
+	var is_cut_successful = intersection_points.size() >= 2
+
+	# placeholder circle animation. TODO: when the real animations are done, this function should AWAIT the grow animation to finish
+	_play_circle_animation(circle_center, circle_radius, is_cut_successful)
+	# wait for the animation to finish
+	# !!! TODO !!! await is probably not the best here.
+	# the function should really end here and there should be another function that gets triggered by the signal that performs the cut
+	await CIRCLE_VFX.animation_finished
+
+	if !is_cut_successful:
+		return
+
+	var line_point = intersection_points[0]
+	var line_dir = intersection_points[1] - intersection_points[0]
+	cut_polygon(line_point, line_dir)
 
 func h_split_cut(clicked_lattice_pos: Vector2) -> void:
 	DEBUG.log("H split cut not implemented yet.")
@@ -317,5 +356,19 @@ func h_split_cut(clicked_lattice_pos: Vector2) -> void:
 func v_split_cut(clicked_lattice_pos: Vector2) -> void:
 	DEBUG.log("V split cut not implemented yet.")
 
-func gomory_cut(clicked_lattice_pos: Vector2) -> void:
+func gomory_cut(clicked_lattice_pos: Vector2) -> void: # Note: this one doesn't depend on the clicked lattice position, of course
 	DEBUG.log("Gomory cut not implemented yet.")
+
+# -- placeholder cut animations --
+# TODO: make real animations
+
+func _play_cut_animation(line_point: Vector2, line_dir: Vector2) -> void:
+	CUT_VFX.global_position = line_point * GLOBALS.DEFAULT_SCALING + GLOBALS.DEFAULT_OFFSET
+	CUT_VFX.rotation = line_dir.angle()
+	CUT_VFX.play()
+
+func _play_circle_animation(circle_center: Vector2, circle_radius: float, success: bool) -> void:
+	CIRCLE_VFX.global_position = circle_center * GLOBALS.DEFAULT_SCALING + GLOBALS.DEFAULT_OFFSET
+	CIRCLE_VFX.radius = circle_radius * GLOBALS.DEFAULT_SCALING
+	CIRCLE_VFX.successful_cut = success
+	CIRCLE_VFX.play_grow()

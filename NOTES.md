@@ -233,3 +233,21 @@ With that, the refactor is complete.
 ## THU 2024-08-15
 
 Godot has updated to version 4.3! This version doesn't affect any of the work done so far and adds a couple of features that could be useful. As such, I've updated the project to this version.
+
+## TUE 2024-08-20
+
+I've had kind of a mental block the past few days, however, I have been studying the demo's cutting logic (however messing it may be) and reading about these algorithms.
+
+Still, I need to keep up the pace. I changed the logic of the buttons to actually be signal based (about damn time!), and the time has come to actually implement the cuts.
+
+In the demo the cuts were driven by their animations. I think the best approach would be for the calculation to be done first, and the animation to be played after, simply to illustrate the cut.
+
+Circle cut is the simplest, just grow the biggest circle you can from the clicked point until you hit a lattice point, and if that circle intersects 2 points on the poly's edges, cut! I'll start with that.
+
+Circle cut works. No animations for it yet, though. I'll leave a quick placeholder animation for it for now and move on to the split cuts.
+
+Note: in the original demo, you can cancel a cut early by clicking while the animation is playing. This should be implemented too. Which means I need to rework a bunch of stuff.
+
+Should I keep that behavior? Or should I disable clicking while the animation is playing? I'll disable it for now and work on the other cuts.
+
+I left a bunch of TODO's in the code. I'll get to them tomorrow.

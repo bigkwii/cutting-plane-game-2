@@ -73,7 +73,10 @@ func _input(event):
 			if cut_mode == CUT_MODES.DEBUG_CUT:
 				# split the polygon at the given position and at a hard-coded direction
 				POLYGON.cut_polygon(clicked_lattice_pos, debug_cut_direction)
-			elif cut_mode == CUT_MODES.CIRCLE_CUT:
+			# !!! TODO !!! in the demo, cut animations can be cancelled early, with the cut being made at that point
+			# should this be implemented as well? or should clicking be disabled during the animation?
+			# !!! THINK ABOUT IT !!!
+			elif cut_mode == CUT_MODES.CIRCLE_CUT: 
 				POLYGON.circle_cut(clicked_lattice_pos)
 			elif cut_mode == CUT_MODES.H_SPLIT_CUT:
 				POLYGON.h_split_cut(clicked_lattice_pos)
@@ -98,22 +101,23 @@ func _on_debug_cut_input_text_changed(new_text:String):
 	var degrees = float(new_text) # if the angle is invalid, it will be 0
 	debug_cut_direction = Vector2(cos(deg_to_rad(degrees)), -sin(deg_to_rad(degrees)))
 
-# when the circle cut button is PRESSED, set the cut mode to DEBUG_CUT
+# when the circle cut button is PRESSED, set the cut mode to CIRCLE_CUT
 func _on_circle_pressed():
 	cut_mode = CUT_MODES.CIRCLE_CUT
 	DEBUG.log("CIRCLE_CUT selected")
 
-# when the gomory cut button is PRESSED, set the cut mode to DEBUG_CUT
+# when the gomory cut button is PRESSED, set the cut mode to GOMORY_CUT
 func _on_gomory_pressed():
+	# Note: this one has to change the polygon such that the vertices are clickable
 	cut_mode = CUT_MODES.GOMORY_CUT
 	DEBUG.log("GOMORY_CUT selected")
 
-# when the h split cut button is PRESSED, set the cut mode to DEBUG_CUT
+# when the h split cut button is PRESSED, set the cut mode to H_SPLIT_CUT
 func _on_h_split_pressed():
 	cut_mode = CUT_MODES.H_SPLIT_CUT
 	DEBUG.log("H_SPLIT_CUT selected")
 
-# when the v split cut button is PRESSED, set the cut mode to DEBUG_CUT
+# when the v split cut button is PRESSED, set the cut mode to V_SPLIT_CUT
 func _on_v_split_pressed():
 	cut_mode = CUT_MODES.V_SPLIT_CUT
 	DEBUG.log("V_SPLIT_CUT selected")
