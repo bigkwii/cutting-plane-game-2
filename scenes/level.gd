@@ -54,31 +54,9 @@ func _ready():
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
-	# TODO: checking for this every frame is ugly. make it event-based later
-	if SHOW_HULL_BUTTON.is_pressed():
-		POLYGON.CONVEX_INTEGER_HULL.visible = true
-	else:
-		POLYGON.CONVEX_INTEGER_HULL.visible = false
-	if DEBUG_CUT_BUTTON.is_pressed(): # TODO: don't do this like this, make it event-based
-		var degrees = float(DEBUG_CUT_INPUT.text)
-		if degrees != null:
-			debug_cut_direction = Vector2(cos(deg_to_rad(degrees)), -sin(deg_to_rad(degrees)))
-		else:
-			DEBUG.log("Invalid angle: %s" % degrees)
-			DEBUG_CUT_INPUT.text = "0"
-			debug_cut_direction = Vector2(1, 0)
-		cut_mode = CUT_MODES.DEBUG_CUT
-		DEBUG.log("DEBUG_CUT selected")
-	if CIRCLE_CUT_BUTTON.is_pressed(): # BAD! don't do this like this
-		cut_mode = CUT_MODES.CIRCLE_CUT
-		DEBUG.log("CIRCLE_CUT selected")
-	if H_SPLIT_CUT_BUTTON.is_pressed(): # AGAIN, BAD!
-		cut_mode = CUT_MODES.H_SPLIT_CUT
-		DEBUG.log("H_SPLIT_CUT selected")
-	if V_SPLIT_CUT_BUTTON.is_pressed(): # AGAIN, BAD!
-		cut_mode = CUT_MODES.V_SPLIT_CUT
-		DEBUG.log("V_SPLIT_CUT selected")
+	pass
 
+# handle inputs here! not in _process!
 func _input(event):
 	# reload scene if reset input is pressed
 	if event.is_action_pressed("reset"):
@@ -101,4 +79,42 @@ func _input(event):
 				POLYGON.h_split_cut(clicked_lattice_pos)
 			elif cut_mode == CUT_MODES.V_SPLIT_CUT:
 				POLYGON.v_split_cut(clicked_lattice_pos)
-		
+
+# -- button callbacks --
+# when the show hull button is HELD, show the convex hull
+func _on_show_hull_button_down():
+	POLYGON.CONVEX_INTEGER_HULL.visible = true
+
+func _on_show_hull_button_up():
+	POLYGON.CONVEX_INTEGER_HULL.visible = false
+
+# when the debug cut button is PRESSED, set the cut mode to DEBUG_CUT
+func _on_debug_cut_pressed():
+	cut_mode = CUT_MODES.DEBUG_CUT
+	DEBUG.log("DEBUG_CUT selected")
+
+# updates the debug cut angle when the input text changes
+func _on_debug_cut_input_text_changed(new_text:String):
+	var degrees = float(new_text) # if the angle is invalid, it will be 0
+	debug_cut_direction = Vector2(cos(deg_to_rad(degrees)), -sin(deg_to_rad(degrees)))
+
+# when the circle cut button is PRESSED, set the cut mode to DEBUG_CUT
+func _on_circle_pressed():
+	cut_mode = CUT_MODES.CIRCLE_CUT
+	DEBUG.log("CIRCLE_CUT selected")
+
+# when the gomory cut button is PRESSED, set the cut mode to DEBUG_CUT
+func _on_gomory_pressed():
+	cut_mode = CUT_MODES.GOMORY_CUT
+	DEBUG.log("GOMORY_CUT selected")
+
+# when the h split cut button is PRESSED, set the cut mode to DEBUG_CUT
+func _on_h_split_pressed():
+	cut_mode = CUT_MODES.H_SPLIT_CUT
+	DEBUG.log("H_SPLIT_CUT selected")
+
+# when the v split cut button is PRESSED, set the cut mode to DEBUG_CUT
+func _on_v_split_pressed():
+	cut_mode = CUT_MODES.V_SPLIT_CUT
+	DEBUG.log("V_SPLIT_CUT selected")
+

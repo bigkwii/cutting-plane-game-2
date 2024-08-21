@@ -62,3 +62,12 @@ focus_mode = 0
 action_mode = 0
 keep_pressed_outside = true
 text = "CONV. HULL"
+
+[connection signal="pressed" from="CanvasLayer/HUD/buttons/debug_cut" to="." method="_on_debug_cut_pressed"]
+[connection signal="text_changed" from="CanvasLayer/HUD/buttons/debug_cut_input" to="." method="_on_debug_cut_input_text_changed"]
+[connection signal="pressed" from="CanvasLayer/HUD/buttons/circle" to="." method="_on_circle_pressed"]
+[connection signal="pressed" from="CanvasLayer/HUD/buttons/gomory" to="." method="_on_gomory_pressed"]
+[connection signal="pressed" from="CanvasLayer/HUD/buttons/h_split" to="." method="_on_h_split_pressed"]
+[connection signal="pressed" from="CanvasLayer/HUD/buttons/v_split" to="." method="_on_v_split_pressed"]
+[connection signal="button_down" from="CanvasLayer/HUD/buttons/show_hull" to="." method="_on_show_hull_button_down"]
+[connection signal="button_up" from="CanvasLayer/HUD/buttons/show_hull" to="." method="_on_show_hull_button_up"]

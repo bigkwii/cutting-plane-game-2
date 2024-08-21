@@ -13,6 +13,7 @@ initial_vertices = null
 [node name="verts" type="Node2D" parent="."]
 
 [node name="convex_integer_hull" parent="." instance=ExtResource("2_7mll7")]
+visible = false
 
 [node name="centroid" parent="." instance=ExtResource("3_f2xql")]
 
