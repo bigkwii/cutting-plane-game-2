@@ -207,13 +207,7 @@ func polygon_area(polygon: PackedVector2Array) -> float:
 func split_polygon(polygon: PackedVector2Array, line_point: Vector2, line_dir: Vector2) -> Array[PackedVector2Array]:
 	var new_poly_1 = PackedVector2Array()
 	var new_poly_2 = PackedVector2Array()
-	var intersection_points = []
-	for i in range(polygon.size()):
-		var start_point = polygon[i]
-		var end_point = polygon[(i + 1) % polygon.size()]
-		var intersection = line_intersects_segment(line_point, line_dir, start_point, end_point)
-		if intersection:
-			intersection_points.append(intersection)
+	var intersection_points = line_intersects_polygon(polygon, line_point, line_dir)
 	if intersection_points.size() < 2: # TODO: does this make sense? idk, think about it harder some other time.
 		DEBUG.log("split_polygon: Invalid number of intersection points: %s" % intersection_points.size())
 		return []
@@ -252,19 +246,22 @@ func split_polygon(polygon: PackedVector2Array, line_point: Vector2, line_dir: V
 ## Not to be confused with the split_polygon function, which is used in this function.
 ## [br][br]
 ## line_point, line_dir: point and direction of the line
-func cut_polygon(line_point: Vector2, line_dir: Vector2) -> void:
+## [br][br]
+## returns true if the cut was successful, false otherwise
+func cut_polygon(line_point: Vector2, line_dir: Vector2) -> bool:
 	var centroid: Vector2 = CENTROID.lattice_position
 	var polygon_verts = packed_vertices
 	var new_polygons = split_polygon(polygon_verts, line_point, line_dir)
 	if new_polygons.size() == 0:
 		DEBUG.log("cut_polygon: No new polygons found.")
-		return
+		return false
 	# play the cut animation
 	_play_cut_animation(line_point, line_dir)
 	if Geometry2D.is_point_in_polygon(centroid, new_polygons[0]):
 		rebuild_polygon(new_polygons[0])
 	else:
 		rebuild_polygon(new_polygons[1])
+	return true
 
 ## returns true if a cut made with this line WOULD cut the polygon
 ## [br][br]
@@ -286,7 +283,7 @@ func line_intersects_polygon(polygon: PackedVector2Array, line_point: Vector2, l
 		var start_point = polygon[i]
 		var end_point = polygon[(i + 1) % polygon.size()]
 		var intersection = line_intersects_segment(line_point, line_dir, start_point, end_point)
-		if intersection:
+		if intersection and not intersection in intersection_points:
 			intersection_points.append(intersection)
 	return intersection_points
 
@@ -312,7 +309,7 @@ func circle_intersects_polygon(polygon: PackedVector2Array, circle_center: Vecto
 
 ## grows a circle until it intersects a lattice point. once it does, it checks if it intersects the polygon on 2 points.
 ## [br][br]
-## if it does, cuts in the direction described by the intersection points.
+## if it intersects, cuts in the direction described by the intersection points.
 ## [br][br]
 ## clicked_lattice_pos: Vector2 the lattice position where the click happened
 func circle_cut(clicked_lattice_pos: Vector2) -> void:
@@ -334,10 +331,10 @@ func circle_cut(clicked_lattice_pos: Vector2) -> void:
 	#if intersection_points.size() < 2:
 	#	DEBUG.log("circle_cut: Invalid number of intersection points: %s" % intersection_points.size())
 	#	return
-	var is_cut_successful = intersection_points.size() >= 2
+	var is_cut_successful = intersection_points.size() >= 2 # TODO: check with would_cut_polygon ?
 
 	# placeholder circle animation. TODO: when the real animations are done, this function should AWAIT the grow animation to finish
-	_play_circle_animation(circle_center, circle_radius, is_cut_successful)
+	_play_circle_animation(circle_center, circle_radius, is_cut_successful) # TODO: The success of the cut should be determined AFTER cut_polygon
 	# wait for the animation to finish
 	# !!! TODO !!! await is probably not the best here.
 	# the function should really end here and there should be another function that gets triggered by the signal that performs the cut
@@ -350,11 +347,75 @@ func circle_cut(clicked_lattice_pos: Vector2) -> void:
 	var line_dir = intersection_points[1] - intersection_points[0]
 	cut_polygon(line_point, line_dir)
 
+## extends 2 parallel lines from the clicked lattice position until one of the hits the lattice grid.
+## [br][br]
+## once it does, check if the lines intersect the polygon.
+## [br][br]
+## if only one of the lines intersects the polygon, cut in that direction.
+## [br][br]
+## if both lines intersect the polygon, cut in the direction as position described by the intersection of the polygon with the first line and the intersection with the other line.
+## [br][br]
+## note: there may be 2 of these. In which case, make both cuts and award bonus points.
+## [br][br]
+## clicked_lattice_pos: Vector2 the lattice position where the click happened
+## is_horizontal: bool if the cut is horizontal or vertical
+func _base_split_cut(clicked_lattice_pos: Vector2, is_horizontal: bool) -> void:
+	# temporary way to find the closest lattice point
+	var line_point_1: Vector2
+	var line_dir_1: Vector2
+	var line_point_2: Vector2
+	var line_dir_2: Vector2
+	if is_horizontal:
+		line_point_1 = Vector2(0, floor(clicked_lattice_pos.y))
+		line_dir_1 = Vector2(1, 0)
+		line_point_2 = Vector2(0, ceil(clicked_lattice_pos.y))
+		line_dir_2 = Vector2(1, 0)
+	else:
+		line_point_1 = Vector2(floor(clicked_lattice_pos.x), 0)
+		line_dir_1 = Vector2(0, 1)
+		line_point_2 = Vector2(ceil(clicked_lattice_pos.x), 0)
+		line_dir_2 = Vector2(0, 1)
+
+	# check if the lines intersect the polygon
+	var intersection_points_1 = line_intersects_polygon(packed_vertices, line_point_1, line_dir_1)
+	var intersection_points_2 = line_intersects_polygon(packed_vertices, line_point_2, line_dir_2)
+
+	# if only line 1 intersects the polygon, cut in the direction of line 1
+	if intersection_points_1.size() > 0 and intersection_points_2.size() == 0:
+		DEBUG.log("_base_split_cut: Cutting in the direction of line 1.", 100)
+		DEBUG.log("_base_split_cut: line_point_1: %s" % line_point_1, 100)
+		DEBUG.log("_base_split_cut: line_point_2: %s" % line_point_2, 100)
+		DEBUG.log("_base_split_cut: Intersection points 1: %s" % [intersection_points_1], 100)
+		DEBUG.log("_base_split_cut: Intersection points 2: %s" % [intersection_points_2], 100)
+		cut_polygon(line_point_1, line_dir_1)
+		return
+	# if only line 2 intersects the polygon, cut in the direction of line 2
+	if intersection_points_1.size() == 0 and intersection_points_2.size() > 0:
+		DEBUG.log("_base_split_cut: Cutting in the direction of line 2.", 100)
+		DEBUG.log("_base_split_cut: Intersection points 1: %s" % [intersection_points_1], 100)
+		DEBUG.log("_base_split_cut: Intersection points 2: %s" % [intersection_points_2], 100)
+		cut_polygon(line_point_2, line_dir_2)
+		return
+	# if both lines intersect the polygon, cut in the direction described by the intersection points
+	if intersection_points_1.size() > 0 and intersection_points_2.size() > 0:
+		DEBUG.log("_base_split_cut: Cutting in the direction described by both lines' intersections.", 100)
+		DEBUG.log("_base_split_cut: Intersection points 1: %s" % [intersection_points_1], 100)
+		DEBUG.log("_base_split_cut: Intersection points 2: %s" % [intersection_points_2], 100)
+		var line_point = intersection_points_1[0]
+		var line_dir = intersection_points_2[0] - intersection_points_1[0]
+		cut_polygon(line_point, line_dir)
+		return
+	# if neither line intersects the polygon, do nothing
+	DEBUG.log("_base_split_cut: No intersection points found.")
+	DEBUG.log("_base_split_cut: Intersection points 1: %s" % [intersection_points_1], 100)
+	DEBUG.log("_base_split_cut: Intersection points 2: %s" % [intersection_points_2], 100)
+
+
 func h_split_cut(clicked_lattice_pos: Vector2) -> void:
-	DEBUG.log("H split cut not implemented yet.")
+	_base_split_cut(clicked_lattice_pos, true)
 
 func v_split_cut(clicked_lattice_pos: Vector2) -> void:
-	DEBUG.log("V split cut not implemented yet.")
+	_base_split_cut(clicked_lattice_pos, false)
 
 func gomory_cut(clicked_lattice_pos: Vector2) -> void: # Note: this one doesn't depend on the clicked lattice position, of course
 	DEBUG.log("Gomory cut not implemented yet.")

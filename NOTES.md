@@ -251,3 +251,9 @@ Note: in the original demo, you can cancel a cut early by clicking while the ani
 Should I keep that behavior? Or should I disable clicking while the animation is playing? I'll disable it for now and work on the other cuts.
 
 I left a bunch of TODO's in the code. I'll get to them tomorrow.
+
+## SAT 2024-08-24
+
+Split cuts were easy enough. Gomory cuts are a bit more tricky. I feel like they can be optimized from the original demo's implementation, I'll se what I can come up with.
+
+I just found out you can add the @tool tag to a script to make it run in the editor. This is very useful for debugging the vfx!

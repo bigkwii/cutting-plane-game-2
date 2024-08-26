@@ -6,6 +6,8 @@ extends Node2D
 @export var level_json_filename: String
 ## level name
 var level_name: String
+## determines if a cut is currently being made
+var is_cutting = false
 # - cut mode stuff -
 enum CUT_MODES { DEBUG_CUT, CIRCLE_CUT, GOMORY_CUT, H_SPLIT_CUT, V_SPLIT_CUT }
 var cut_mode = CUT_MODES.DEBUG_CUT
@@ -64,7 +66,7 @@ func _input(event):
 		get_tree().reload_current_scene()
 	# handle clicking with mouse 1
 	if event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_LEFT and not event.pressed: # not event.pressed = released
+		if event.button_index == MOUSE_BUTTON_LEFT and not event.pressed and not is_cutting: # not event.pressed = released
 			# if on the show hull button, do nothing
 			if BUTTONS_CONTAINER.get_global_rect().has_point(event.position): # !!! TODO !!!: this is hacky, i don't like it, figure out a cleaner way
 				return
@@ -76,12 +78,20 @@ func _input(event):
 			# !!! TODO !!! in the demo, cut animations can be cancelled early, with the cut being made at that point
 			# should this be implemented as well? or should clicking be disabled during the animation?
 			# !!! THINK ABOUT IT !!!
-			elif cut_mode == CUT_MODES.CIRCLE_CUT: 
-				POLYGON.circle_cut(clicked_lattice_pos)
+			# these awaits are temporary, until animation cancelling is implemented.
+			# once it is, it should await a signal instead of the function call. something like "cut_finished"
+			elif cut_mode == CUT_MODES.CIRCLE_CUT:
+				is_cutting = true
+				await POLYGON.circle_cut(clicked_lattice_pos)
+				is_cutting = false
 			elif cut_mode == CUT_MODES.H_SPLIT_CUT:
-				POLYGON.h_split_cut(clicked_lattice_pos)
+				is_cutting = true
+				await POLYGON.h_split_cut(clicked_lattice_pos)
+				is_cutting = false
 			elif cut_mode == CUT_MODES.V_SPLIT_CUT:
-				POLYGON.v_split_cut(clicked_lattice_pos)
+				is_cutting = true
+				await POLYGON.v_split_cut(clicked_lattice_pos)
+				is_cutting = false
 
 # -- button callbacks --
 # when the show hull button is HELD, show the convex hull
