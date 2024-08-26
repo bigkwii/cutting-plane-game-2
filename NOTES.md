@@ -254,6 +254,10 @@ I left a bunch of TODO's in the code. I'll get to them tomorrow.
 
 ## SAT 2024-08-24
 
-Split cuts were easy enough. Gomory cuts are a bit more tricky. I feel like they can be optimized from the original demo's implementation, I'll se what I can come up with.
+Split cuts seem easy enough. Gomory cuts are a bit more tricky. I feel like they can be optimized from the original demo's implementation, I'll se what I can come up with.
 
 I just found out you can add the @tool tag to a script to make it run in the editor. This is very useful for debugging the vfx!
+
+TODO: the centorid is updating weird. May have something to do with queue_freeing the verts?
+
+TODO: also, rework the cut vfx such that more than one can be played at the same time.

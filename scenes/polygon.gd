@@ -366,15 +366,44 @@ func _base_split_cut(clicked_lattice_pos: Vector2, is_horizontal: bool) -> void:
 	var line_point_2: Vector2
 	var line_dir_2: Vector2
 	if is_horizontal:
-		line_point_1 = Vector2(0, floor(clicked_lattice_pos.y))
-		line_dir_1 = Vector2(1, 0)
-		line_point_2 = Vector2(0, ceil(clicked_lattice_pos.y))
-		line_dir_2 = Vector2(1, 0)
+		var closest_y = round(clicked_lattice_pos.y)
+		var ceil_y = ceil(clicked_lattice_pos.y)
+		var floor_y = floor(clicked_lattice_pos.y)
+		if abs(closest_y - ceil_y) < abs(closest_y - floor_y):
+			line_point_1 = Vector2( clicked_lattice_pos.x, closest_y + 2 * (clicked_lattice_pos.y - closest_y) )
+			line_dir_1 = Vector2(1, 0)
+			line_point_2 = Vector2( clicked_lattice_pos.x, closest_y )
+			line_dir_2 = Vector2(1, 0)
+		else:
+			line_point_1 = Vector2( clicked_lattice_pos.x, closest_y )
+			line_dir_1 = Vector2(1, 0)
+			line_point_2 = Vector2( clicked_lattice_pos.x, closest_y + 2 * (clicked_lattice_pos.y - closest_y ) )
+			line_dir_2 = Vector2(1, 0)
+			
+
+		# line_point_1 = Vector2( clicked_lattice_pos.x, floor(clicked_lattice_pos.y) )
+		# line_dir_1 = Vector2(1, 0)
+		# line_point_2 = Vector2( clicked_lattice_pos.x, ceil(clicked_lattice_pos.y) )
+		# line_dir_2 = Vector2(1, 0)
 	else:
-		line_point_1 = Vector2(floor(clicked_lattice_pos.x), 0)
-		line_dir_1 = Vector2(0, 1)
-		line_point_2 = Vector2(ceil(clicked_lattice_pos.x), 0)
-		line_dir_2 = Vector2(0, 1)
+		var closest_x = round(clicked_lattice_pos.x)
+		var ceil_x = ceil(clicked_lattice_pos.x)
+		var floor_x = floor(clicked_lattice_pos.x)
+		if abs(closest_x - ceil_x) < abs(closest_x - floor_x):
+			line_point_1 = Vector2( closest_x + 2 * (clicked_lattice_pos.x - closest_x), clicked_lattice_pos.y )
+			line_dir_1 = Vector2(0, 1)
+			line_point_2 = Vector2( closest_x, clicked_lattice_pos.y )
+			line_dir_2 = Vector2(0, 1)
+		else:
+			line_point_1 = Vector2( closest_x, clicked_lattice_pos.y )
+			line_dir_1 = Vector2(0, 1)
+			line_point_2 = Vector2( closest_x + 2 * (clicked_lattice_pos.x - closest_x ), clicked_lattice_pos.y )
+			line_dir_2 = Vector2(0, 1)
+
+		# line_point_1 = Vector2( floor(clicked_lattice_pos.x), clicked_lattice_pos.y )
+		# line_dir_1 = Vector2(0, 1)
+		# line_point_2 = Vector2( ceil(clicked_lattice_pos.x), clicked_lattice_pos.y )
+		# line_dir_2 = Vector2(0, 1)
 
 	# check if the lines intersect the polygon
 	var intersection_points_1 = line_intersects_polygon(packed_vertices, line_point_1, line_dir_1)
@@ -397,12 +426,12 @@ func _base_split_cut(clicked_lattice_pos: Vector2, is_horizontal: bool) -> void:
 		cut_polygon(line_point_2, line_dir_2)
 		return
 	# if both lines intersect the polygon, cut in the direction described by the intersection points
-	if intersection_points_1.size() > 0 and intersection_points_2.size() > 0:
+	if intersection_points_1.size() > 0 and intersection_points_2.size() > 0: # TODO! THIS DOESN'T WORK, HANDLE MULTIPLE INTERSECTIONS
 		DEBUG.log("_base_split_cut: Cutting in the direction described by both lines' intersections.", 100)
 		DEBUG.log("_base_split_cut: Intersection points 1: %s" % [intersection_points_1], 100)
 		DEBUG.log("_base_split_cut: Intersection points 2: %s" % [intersection_points_2], 100)
 		var line_point = intersection_points_1[0]
-		var line_dir = intersection_points_2[0] - intersection_points_1[0]
+		var line_dir = intersection_points_2[len(intersection_points_2) - 1] - intersection_points_1[0] # hack
 		cut_polygon(line_point, line_dir)
 		return
 	# if neither line intersects the polygon, do nothing
