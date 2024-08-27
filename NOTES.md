@@ -261,3 +261,7 @@ I just found out you can add the @tool tag to a script to make it run in the edi
 TODO: the centorid is updating weird. May have something to do with queue_freeing the verts?
 
 TODO: also, rework the cut vfx such that more than one can be played at the same time.
+
+## MON 2024-08-26
+
+Split cuts are kinda working. The code is very ugly and there seems to be some floating point badness going on, but they are almost working as intended. I'll fix them in the morning and move on to Gomory cuts ASAP.

@@ -411,18 +411,10 @@ func _base_split_cut(clicked_lattice_pos: Vector2, is_horizontal: bool) -> void:
 
 	# if only line 1 intersects the polygon, cut in the direction of line 1
 	if intersection_points_1.size() > 0 and intersection_points_2.size() == 0:
-		DEBUG.log("_base_split_cut: Cutting in the direction of line 1.", 100)
-		DEBUG.log("_base_split_cut: line_point_1: %s" % line_point_1, 100)
-		DEBUG.log("_base_split_cut: line_point_2: %s" % line_point_2, 100)
-		DEBUG.log("_base_split_cut: Intersection points 1: %s" % [intersection_points_1], 100)
-		DEBUG.log("_base_split_cut: Intersection points 2: %s" % [intersection_points_2], 100)
 		cut_polygon(line_point_1, line_dir_1)
 		return
 	# if only line 2 intersects the polygon, cut in the direction of line 2
 	if intersection_points_1.size() == 0 and intersection_points_2.size() > 0:
-		DEBUG.log("_base_split_cut: Cutting in the direction of line 2.", 100)
-		DEBUG.log("_base_split_cut: Intersection points 1: %s" % [intersection_points_1], 100)
-		DEBUG.log("_base_split_cut: Intersection points 2: %s" % [intersection_points_2], 100)
 		cut_polygon(line_point_2, line_dir_2)
 		return
 	# if both lines intersect the polygon, cut in the direction described by the intersection points
@@ -430,14 +422,49 @@ func _base_split_cut(clicked_lattice_pos: Vector2, is_horizontal: bool) -> void:
 		DEBUG.log("_base_split_cut: Cutting in the direction described by both lines' intersections.", 100)
 		DEBUG.log("_base_split_cut: Intersection points 1: %s" % [intersection_points_1], 100)
 		DEBUG.log("_base_split_cut: Intersection points 2: %s" % [intersection_points_2], 100)
-		var line_point = intersection_points_1[0]
-		var line_dir = intersection_points_2[len(intersection_points_2) - 1] - intersection_points_1[0] # hack
-		cut_polygon(line_point, line_dir)
+		# at most, there should be 2 intersection points per line (if there are more, something went terribly wrong).
+		# moreover, cuts cannot be done across the convex hull.
+		# we can check for this by checking if the points are "behind" or "in front" of the centroid.
+		# this, at most we'll have 2 cuts:
+		# 1. from the intersection from line 1 to the intersection from line 2, if both are behind the centroid
+		# 2. from the intersection from line 1 to the intersection from line 2, if both are in front of the centroid
+		var intersection_point_from_line_1_behind_centroid: Vector2
+		var intersection_point_from_line_2_behind_centroid: Vector2
+		var intersection_point_from_line_1_ahead_centroid: Vector2
+		var intersection_point_from_line_2_ahead_centroid: Vector2
+		if is_horizontal:
+			var centroid_x = CENTROID.lattice_position.x
+			for intersection_point in intersection_points_1:
+				if intersection_point.x < centroid_x:
+					intersection_point_from_line_1_behind_centroid = intersection_point
+				else:
+					intersection_point_from_line_1_ahead_centroid = intersection_point
+			for intersection_point in intersection_points_2:
+				if intersection_point.x < centroid_x:
+					intersection_point_from_line_2_behind_centroid = intersection_point
+				else:
+					intersection_point_from_line_2_ahead_centroid = intersection_point
+		else:
+			var centroid_y = CENTROID.lattice_position.y
+			for intersection_point in intersection_points_1:
+				if intersection_point.y < centroid_y:
+					intersection_point_from_line_1_behind_centroid = intersection_point
+				else:
+					intersection_point_from_line_1_ahead_centroid = intersection_point
+			for intersection_point in intersection_points_2:
+				if intersection_point.y < centroid_y:
+					intersection_point_from_line_2_behind_centroid = intersection_point
+				else:
+					intersection_point_from_line_2_ahead_centroid = intersection_point
+		# check if the points are valid
+		if intersection_point_from_line_1_behind_centroid and intersection_point_from_line_2_behind_centroid:
+			cut_polygon(intersection_point_from_line_1_behind_centroid, intersection_point_from_line_2_behind_centroid - intersection_point_from_line_1_behind_centroid)
+		if intersection_point_from_line_1_ahead_centroid and intersection_point_from_line_2_ahead_centroid:
+			cut_polygon(intersection_point_from_line_1_ahead_centroid, intersection_point_from_line_2_ahead_centroid - intersection_point_from_line_1_ahead_centroid)
 		return
 	# if neither line intersects the polygon, do nothing
 	DEBUG.log("_base_split_cut: No intersection points found.")
-	DEBUG.log("_base_split_cut: Intersection points 1: %s" % [intersection_points_1], 100)
-	DEBUG.log("_base_split_cut: Intersection points 2: %s" % [intersection_points_2], 100)
+	return
 
 
 func h_split_cut(clicked_lattice_pos: Vector2) -> void:

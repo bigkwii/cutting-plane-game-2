@@ -11,8 +11,6 @@ script = ExtResource("1_7muqx")
 [node name="lattice_grid" parent="." instance=ExtResource("2_4qubn")]
 
 [node name="polygon" parent="." instance=ExtResource("3_b5vrg")]
-color = Color(1, 0, 0, 1)
-initial_vertices = Array[Vector2]([])
 
 [node name="camera" parent="." instance=ExtResource("4_oqnx0")]
 
