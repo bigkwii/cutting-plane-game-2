@@ -176,12 +176,21 @@ func line_intersects_segment(line_point: Vector2, line_direction: Vector2, segme
 		return null
 	return intersection
 
-## Determines if a given point is "above" a given line segment. Really just used to determine which half of a polygon the centroid is in.
+## Determines if a given point is "above" a given line segment. Above being the line's normal.
 ## [br][br]
 ## point: Vector2 the point to check
 ## line_point, line_dir: point and direction of the line
 func is_point_above_line(point: Vector2, line_point: Vector2, line_dir: Vector2) -> bool:
 	return (line_dir.x) * (point.y - line_point.y) > (line_dir.y) * (point.x - line_point.x)
+
+## Determines if a given point is ON a given line segment. Above being the line's normal.
+## [br][br]
+## point: Vector2 the point to check
+## line_point, line_dir: point and direction of the line
+func is_point_on_line(point: Vector2, line_point: Vector2, line_dir: Vector2) -> bool:
+	var relative_pos = point - line_point
+	var cross_prod = relative_pos.cross(line_dir)
+	return abs(cross_prod) < GLOBALS.GEOMETRY_EPSILON
 
 ## Calculates the area of a polygon represented by a PackedVector2Array. Works for both CW and CCW winding orders.
 ## [br][br]
@@ -208,36 +217,47 @@ func split_polygon(polygon: PackedVector2Array, line_point: Vector2, line_dir: V
 	var new_poly_1 = PackedVector2Array()
 	var new_poly_2 = PackedVector2Array()
 	var intersection_points = line_intersects_polygon(polygon, line_point, line_dir)
-	if intersection_points.size() < 2: # TODO: does this make sense? idk, think about it harder some other time.
+	if intersection_points.size() < 2:
 		DEBUG.log("split_polygon: Invalid number of intersection points: %s" % intersection_points.size())
 		return []
 	DEBUG.log("split_polygon: Found %s intersection points: %s" % [intersection_points.size(), intersection_points])
-	var is_upper = is_point_above_line(polygon[0], line_point, line_dir)
 	var added_intersection_1 = false
 	var added_intersection_2 = false
 	for i in range(polygon.size()):
 		var current_point = polygon[i]
+		var next_point = polygon[(i + 1) % polygon.size()]
+
+		var current_on_line = is_point_on_line(current_point, line_point, line_dir)
+		var next_on_line = is_point_on_line(next_point, line_point, line_dir)
+
+		if current_on_line:
+			# If the current point lies on the line, add it to both polygons only once
+			if not added_intersection_1:
+				new_poly_1.append(current_point)
+				new_poly_2.append(current_point)
+				added_intersection_1 = true
+			elif not added_intersection_2:
+				new_poly_1.append(current_point)
+				new_poly_2.append(current_point)
+				added_intersection_2 = true
+			continue
+
 		if is_point_above_line(current_point, line_point, line_dir):
 			new_poly_1.append(current_point)
 		else:
 			new_poly_2.append(current_point)
-		var next_point = polygon[(i + 1) % polygon.size()]
-		if line_intersects_segment(line_point, line_dir, current_point, next_point):
-			var intersection = intersection_points.pop_front()
-			if not added_intersection_1:
-				new_poly_1.append(intersection)
-				new_poly_2.append(intersection)
-				added_intersection_1 = true
-			elif not added_intersection_2:
-				new_poly_1.append(intersection)
-				new_poly_2.append(intersection)
-				added_intersection_2 = true
-			is_upper = not is_upper
+		if not current_on_line and not next_on_line:
+			var intersection_candidate = line_intersects_segment(line_point, line_dir, current_point, next_point)
+			if intersection_candidate:
+				# Always add the intersection candidate to both polygons
+				new_poly_1.append(intersection_candidate)
+				new_poly_2.append(intersection_candidate)
 	# area check. if any of the new polygons has an area of 0, it's invalid
 	if polygon_area(new_poly_1) < GLOBALS.GEOMETRY_EPSILON_SQ or polygon_area(new_poly_2) < GLOBALS.GEOMETRY_EPSILON_SQ:
 		DEBUG.log("split_polygon: 0-area polygon detected, invalidated.")
 		return []
 	return [new_poly_1, new_poly_2]
+
 	
 ## Cuts the polygon, given a line, and keeps the half that contains the centroid of the original.
 ## [br][br]
@@ -249,6 +269,8 @@ func split_polygon(polygon: PackedVector2Array, line_point: Vector2, line_dir: V
 ## [br][br]
 ## returns true if the cut was successful, false otherwise
 func cut_polygon(line_point: Vector2, line_dir: Vector2) -> bool:
+	DEBUG.log("cut_polygon: # VERTS BEFORE CUT: %s" % packed_vertices.size(), 100)
+	DEBUG.log("cut_polygon: PACKED VERTS BEFORE: %s" % packed_vertices, 100)
 	var centroid: Vector2 = CENTROID.lattice_position
 	var polygon_verts = packed_vertices
 	var new_polygons = split_polygon(polygon_verts, line_point, line_dir)
@@ -261,6 +283,8 @@ func cut_polygon(line_point: Vector2, line_dir: Vector2) -> bool:
 		rebuild_polygon(new_polygons[0])
 	else:
 		rebuild_polygon(new_polygons[1])
+	DEBUG.log("cut_polygon: # VERTS AFTER CUT: %s" % packed_vertices.size(), 100)
+	DEBUG.log("cut_polygon: PACKED VERTS AFTER: %s" % packed_vertices, 100)
 	return true
 
 ## returns true if a cut made with this line WOULD cut the polygon
@@ -285,6 +309,9 @@ func line_intersects_polygon(polygon: PackedVector2Array, line_point: Vector2, l
 		var intersection = line_intersects_segment(line_point, line_dir, start_point, end_point)
 		if intersection and not intersection in intersection_points:
 			intersection_points.append(intersection)
+	# snap the intersection points with epsilons to avoid floating point badness !!! TODO: DOESNT SEEM TO WORK !!!
+	for intersection in intersection_points:
+		intersection = snapped( intersection, Vector2(GLOBALS.GEOMETRY_EPSILON, GLOBALS.GEOMETRY_EPSILON) )
 	return intersection_points
 
 ## returns all the intersection points of a circle with a polygon
@@ -358,9 +385,9 @@ func circle_cut(clicked_lattice_pos: Vector2) -> void:
 ## note: there may be 2 of these. In which case, make both cuts and award bonus points.
 ## [br][br]
 ## clicked_lattice_pos: Vector2 the lattice position where the click happened
+## [br]
 ## is_horizontal: bool if the cut is horizontal or vertical
 func _base_split_cut(clicked_lattice_pos: Vector2, is_horizontal: bool) -> void:
-	# temporary way to find the closest lattice point
 	var line_point_1: Vector2
 	var line_dir_1: Vector2
 	var line_point_2: Vector2
@@ -379,12 +406,6 @@ func _base_split_cut(clicked_lattice_pos: Vector2, is_horizontal: bool) -> void:
 			line_dir_1 = Vector2(1, 0)
 			line_point_2 = Vector2( clicked_lattice_pos.x, closest_y + 2 * (clicked_lattice_pos.y - closest_y ) )
 			line_dir_2 = Vector2(1, 0)
-			
-
-		# line_point_1 = Vector2( clicked_lattice_pos.x, floor(clicked_lattice_pos.y) )
-		# line_dir_1 = Vector2(1, 0)
-		# line_point_2 = Vector2( clicked_lattice_pos.x, ceil(clicked_lattice_pos.y) )
-		# line_dir_2 = Vector2(1, 0)
 	else:
 		var closest_x = round(clicked_lattice_pos.x)
 		var ceil_x = ceil(clicked_lattice_pos.x)
@@ -399,16 +420,9 @@ func _base_split_cut(clicked_lattice_pos: Vector2, is_horizontal: bool) -> void:
 			line_dir_1 = Vector2(0, 1)
 			line_point_2 = Vector2( closest_x + 2 * (clicked_lattice_pos.x - closest_x ), clicked_lattice_pos.y )
 			line_dir_2 = Vector2(0, 1)
-
-		# line_point_1 = Vector2( floor(clicked_lattice_pos.x), clicked_lattice_pos.y )
-		# line_dir_1 = Vector2(0, 1)
-		# line_point_2 = Vector2( ceil(clicked_lattice_pos.x), clicked_lattice_pos.y )
-		# line_dir_2 = Vector2(0, 1)
-
 	# check if the lines intersect the polygon
 	var intersection_points_1 = line_intersects_polygon(packed_vertices, line_point_1, line_dir_1)
 	var intersection_points_2 = line_intersects_polygon(packed_vertices, line_point_2, line_dir_2)
-
 	# if only line 1 intersects the polygon, cut in the direction of line 1
 	if intersection_points_1.size() > 0 and intersection_points_2.size() == 0:
 		cut_polygon(line_point_1, line_dir_1)
@@ -418,10 +432,10 @@ func _base_split_cut(clicked_lattice_pos: Vector2, is_horizontal: bool) -> void:
 		cut_polygon(line_point_2, line_dir_2)
 		return
 	# if both lines intersect the polygon, cut in the direction described by the intersection points
-	if intersection_points_1.size() > 0 and intersection_points_2.size() > 0: # TODO! THIS DOESN'T WORK, HANDLE MULTIPLE INTERSECTIONS
-		DEBUG.log("_base_split_cut: Cutting in the direction described by both lines' intersections.", 100)
-		DEBUG.log("_base_split_cut: Intersection points 1: %s" % [intersection_points_1], 100)
-		DEBUG.log("_base_split_cut: Intersection points 2: %s" % [intersection_points_2], 100)
+	if intersection_points_1.size() > 0 and intersection_points_2.size() > 0:
+		DEBUG.log("_base_split_cut: Cutting in the direction described by both lines' intersections.")
+		DEBUG.log("_base_split_cut: Intersection points 1: %s" % [intersection_points_1])
+		DEBUG.log("_base_split_cut: Intersection points 2: %s" % [intersection_points_2])
 		# at most, there should be 2 intersection points per line (if there are more, something went terribly wrong).
 		# moreover, cuts cannot be done across the convex hull.
 		# we can check for this by checking if the points are "behind" or "in front" of the centroid.
@@ -464,8 +478,6 @@ func _base_split_cut(clicked_lattice_pos: Vector2, is_horizontal: bool) -> void:
 		return
 	# if neither line intersects the polygon, do nothing
 	DEBUG.log("_base_split_cut: No intersection points found.")
-	return
-
 
 func h_split_cut(clicked_lattice_pos: Vector2) -> void:
 	_base_split_cut(clicked_lattice_pos, true)

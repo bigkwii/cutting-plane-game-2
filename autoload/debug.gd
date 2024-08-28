@@ -31,5 +31,20 @@ func log(message: Variant, seconds: float = 2) -> void:
 	container.move_child(label, 0)
 	# wait for the specified time, then erase the label
 	await get_tree().create_timer(seconds).timeout
-	container.remove_child(label)
-	label.queue_free()
+	if label in container.get_children(): # could have been deleted some other way
+		container.remove_child(label)
+		label.queue_free()
+
+## Clears the debug log
+func clear_log() -> void:
+	if not is_enabled():
+		return
+	for child in container.get_children():
+		container.remove_child(child)
+		child.queue_free()
+
+func _input(event):
+	if not is_enabled():
+		return
+	if event.is_action_pressed("DEBUG_clear_log"):
+		clear_log()

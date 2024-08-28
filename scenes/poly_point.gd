@@ -15,7 +15,8 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
-	pass
+	if DEBUG.is_enabled():
+		$debug_label.text = str(lattice_position)
 
 # draw the vertex as a little red circle
 func _draw():

@@ -19,8 +19,8 @@ extends Node
 var LEVELS_DIR = "res://levels/"
 ## default level file
 var DEFAULT_LEVEL = "default"
-## epsilon for snapping to grid !!! TODO: autoload? !!!
+## epsilon for snapping to grid when clicking
 var CLICK_EPSILON = 0.01
-## epsilon for geometric calculations
-var GEOMETRY_EPSILON = 0.00001
+## epsilons for geometric calculations
+var GEOMETRY_EPSILON = 0.0001
 var GEOMETRY_EPSILON_SQ = GEOMETRY_EPSILON * GEOMETRY_EPSILON

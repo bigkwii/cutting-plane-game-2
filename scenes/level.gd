@@ -17,8 +17,7 @@ var debug_cut_direction = Vector2(1, 0)
 # -- child nodes --
 @onready var LATTICE_GRID = $lattice_grid
 @onready var POLYGON = $polygon
-@onready var CAMERA = $Camera
-@onready var CUT_VFX = $vfx/cut_vfx
+@onready var CAMERA = $camera
 # - hud elements -
 @onready var HUD = $CanvasLayer/HUD
 @onready var BUTTONS_CONTAINER = $CanvasLayer/HUD/buttons

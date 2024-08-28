@@ -265,3 +265,17 @@ TODO: also, rework the cut vfx such that more than one can be played at the same
 ## MON 2024-08-26
 
 Split cuts are kinda working. The code is very ugly and there seems to be some floating point badness going on, but they are almost working as intended. I'll fix them in the morning and move on to Gomory cuts ASAP.
+
+## TUE 2024-08-27
+
+A catastrophic bug has appeared. split_polygon has a horrid bug where cuts break completely. This is going to set me back...
+
+It seems to have something to do with the way intersection points are added to the newly created polys. When this bug happens, vertices get duplicated and the order of the verts gets messed up. The bug is triggered when an intersection point IS ALSO a vertex. I'm having a very hard time fixing it.
+
+Also, added ctrl+l as a keybind for clearing the debug log, and added debug labels to the poly points to see their lattice coords.
+
+Also, note to self: debug messages can get in the way of clicking on buttons. Whoops!
+
+Floating point arithmetic, just the worst...
+
+I had to rethink and rewrite a lot. Good news: It works now! More good news: i simplified a lot of code. Less than good news: because I simplified so much code, there's a handful of functions that are now deprecated. Even worse news: There's a lot of residual Debug logs to get rid off and docs to add. Hoo, boy... Well That's a job for tomorrow me. 'Night.
