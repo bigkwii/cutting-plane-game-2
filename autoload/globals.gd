@@ -24,3 +24,5 @@ var CLICK_EPSILON = 0.01
 ## epsilons for geometric calculations
 var GEOMETRY_EPSILON = 0.0001
 var GEOMETRY_EPSILON_SQ = GEOMETRY_EPSILON * GEOMETRY_EPSILON
+## epsilon for correcting a new point that got "close enough" to being integral
+var FORGIVENESS_EPSILON = GEOMETRY_EPSILON * 5

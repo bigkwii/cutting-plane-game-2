@@ -6,7 +6,7 @@ extends Node2D
 ## Radius of the lattice point to be drawn
 @export var radius: float = 3
 ## Color of the lattice point
-@export var color: Color = Color(1, 1, 1)
+@export var color: Color = Color(1, 1, 1, .9)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

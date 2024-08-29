@@ -174,16 +174,35 @@ func line_intersects_segment(line_point: Vector2, line_direction: Vector2, segme
 		return null
 	if not is_point_on_segment(intersection, segment_start, segment_end):
 		return null
+	# snap the intersection to avoid floating point badness
+	intersection = snapped( intersection, Vector2(GLOBALS.GEOMETRY_EPSILON, GLOBALS.GEOMETRY_EPSILON) )
 	return intersection
 
-## Determines if a given point is "above" a given line segment. Above being the line's normal.
+## returns all the intersection points of a line with a polygon
+## [br][br]
+## polygon: PackedVector2Array the polygon to check
+## line_point, line_dir: point and direction of the line
+func line_intersects_polygon(polygon: PackedVector2Array, line_point: Vector2, line_dir: Vector2):
+	var intersection_points = []
+	for i in range(polygon.size()):
+		var start_point = polygon[i]
+		var end_point = polygon[(i + 1) % polygon.size()]
+		var intersection = line_intersects_segment(line_point, line_dir, start_point, end_point)
+		if intersection and not intersection in intersection_points:
+			intersection_points.append(intersection)
+	# snap the intersection points with epsilons to avoid floating point badness !!! TODO: DOESNT SEEM TO WORK !!!
+	for intersection in intersection_points:
+		intersection = snapped( intersection, Vector2(GLOBALS.GEOMETRY_EPSILON, GLOBALS.GEOMETRY_EPSILON) )
+	return intersection_points
+
+## Determines if a given point is "above" a given line. Above being the line's normal.
 ## [br][br]
 ## point: Vector2 the point to check
 ## line_point, line_dir: point and direction of the line
 func is_point_above_line(point: Vector2, line_point: Vector2, line_dir: Vector2) -> bool:
 	return (line_dir.x) * (point.y - line_point.y) > (line_dir.y) * (point.x - line_point.x)
 
-## Determines if a given point is ON a given line segment. Above being the line's normal.
+## Determines if a given point is ON a given line.
 ## [br][br]
 ## point: Vector2 the point to check
 ## line_point, line_dir: point and direction of the line
@@ -192,7 +211,7 @@ func is_point_on_line(point: Vector2, line_point: Vector2, line_dir: Vector2) ->
 	var cross_prod = relative_pos.cross(line_dir)
 	return abs(cross_prod) < GLOBALS.GEOMETRY_EPSILON
 
-## Calculates the area of a polygon represented by a PackedVector2Array. Works for both CW and CCW winding orders.
+## Calculates the UNSIGNED area of a polygon represented by a PackedVector2Array. Works for both CW and CCW winding orders.
 ## [br][br]
 ## polygon: PackedVector2Array the polygon to calculate the area of
 func polygon_area(polygon: PackedVector2Array) -> float:
@@ -241,7 +260,6 @@ func split_polygon(polygon: PackedVector2Array, line_point: Vector2, line_dir: V
 				new_poly_2.append(current_point)
 				added_intersection_2 = true
 			continue
-
 		if is_point_above_line(current_point, line_point, line_dir):
 			new_poly_1.append(current_point)
 		else:
@@ -254,7 +272,7 @@ func split_polygon(polygon: PackedVector2Array, line_point: Vector2, line_dir: V
 				new_poly_2.append(intersection_candidate)
 	# area check. if any of the new polygons has an area of 0, it's invalid
 	if polygon_area(new_poly_1) < GLOBALS.GEOMETRY_EPSILON_SQ or polygon_area(new_poly_2) < GLOBALS.GEOMETRY_EPSILON_SQ:
-		DEBUG.log("split_polygon: 0-area polygon detected, invalidated.")
+		DEBUG.log("split_polygon: 0-area polygon detected (%s and %s), invalidated." % [polygon_area(new_poly_1), polygon_area(new_poly_2)])
 		return []
 	return [new_poly_1, new_poly_2]
 
@@ -269,8 +287,6 @@ func split_polygon(polygon: PackedVector2Array, line_point: Vector2, line_dir: V
 ## [br][br]
 ## returns true if the cut was successful, false otherwise
 func cut_polygon(line_point: Vector2, line_dir: Vector2) -> bool:
-	DEBUG.log("cut_polygon: # VERTS BEFORE CUT: %s" % packed_vertices.size(), 100)
-	DEBUG.log("cut_polygon: PACKED VERTS BEFORE: %s" % packed_vertices, 100)
 	var centroid: Vector2 = CENTROID.lattice_position
 	var polygon_verts = packed_vertices
 	var new_polygons = split_polygon(polygon_verts, line_point, line_dir)
@@ -283,11 +299,9 @@ func cut_polygon(line_point: Vector2, line_dir: Vector2) -> bool:
 		rebuild_polygon(new_polygons[0])
 	else:
 		rebuild_polygon(new_polygons[1])
-	DEBUG.log("cut_polygon: # VERTS AFTER CUT: %s" % packed_vertices.size(), 100)
-	DEBUG.log("cut_polygon: PACKED VERTS AFTER: %s" % packed_vertices, 100)
 	return true
 
-## returns true if a cut made with this line WOULD cut the polygon
+## returns true if a cut made with this line WOULD cut the polygon TODO: deprecated?
 ## [br][br]
 ## line_point, line_dir: point and direction of the line
 func would_cut_polygon(line_point: Vector2, line_dir: Vector2) -> bool:
@@ -296,23 +310,6 @@ func would_cut_polygon(line_point: Vector2, line_dir: Vector2) -> bool:
 	if new_polygons.size() == 0:
 		return false
 	return true
-
-## returns all the intersection points of a line with a polygon
-## [br][br]
-## polygon: PackedVector2Array the polygon to check
-## line_point, line_dir: point and direction of the line
-func line_intersects_polygon(polygon: PackedVector2Array, line_point: Vector2, line_dir: Vector2):
-	var intersection_points = []
-	for i in range(polygon.size()):
-		var start_point = polygon[i]
-		var end_point = polygon[(i + 1) % polygon.size()]
-		var intersection = line_intersects_segment(line_point, line_dir, start_point, end_point)
-		if intersection and not intersection in intersection_points:
-			intersection_points.append(intersection)
-	# snap the intersection points with epsilons to avoid floating point badness !!! TODO: DOESNT SEEM TO WORK !!!
-	for intersection in intersection_points:
-		intersection = snapped( intersection, Vector2(GLOBALS.GEOMETRY_EPSILON, GLOBALS.GEOMETRY_EPSILON) )
-	return intersection_points
 
 ## returns all the intersection points of a circle with a polygon
 ## [br][br]
@@ -328,6 +325,8 @@ func circle_intersects_polygon(polygon: PackedVector2Array, circle_center: Vecto
 		# intersection_parameter is a value between 0 and 1. convert to the actual position of the intersection
 		if intersection_parameter != -1:
 			var intersection = start_point + intersection_parameter * (end_point - start_point)
+			# snapped to avoid floating point badness
+			intersection = snapped( intersection, Vector2(GLOBALS.GEOMETRY_EPSILON, GLOBALS.GEOMETRY_EPSILON) )
 			intersection_points.append(intersection)
 	return intersection_points
 

@@ -15,6 +15,7 @@ script = ExtResource("1_f3ty0")
 visible = false
 
 [node name="centroid" parent="." instance=ExtResource("3_f2xql")]
+clickable = false
 
 [node name="vfx" type="Node2D" parent="."]
 
