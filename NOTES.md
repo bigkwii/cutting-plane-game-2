@@ -291,3 +291,7 @@ Made some improvements to the level loading logic. TODO: error handling.
 Gomory cuts are hard to understand but relatively easy to implement. However, I need to figure out what logic to follow to click on poly verts. In the original demo, the clcking was very finicky and worked around 80% of the time. Specially when there where multiple verts very close to each other.
 
 I don't think it's a good idea to Make every vert a button with a circle shape that can be clicked. Instead, the level script should probably handle sending signals to the polygon, which in turn would send signals to the verts. This was I send the signal to turn `hover=true` based on the mouse's position. I'll give that a try.
+
+## FRI 2024-08-30
+
+Made vertices clickable and added effects. Gomory cuts are in development, finally. Note: Apparently splits are very broken under certain circumstances! It seems to be when one line intersects once, but the other twice. Hoo, boy...

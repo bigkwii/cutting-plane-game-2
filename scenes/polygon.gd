@@ -485,7 +485,7 @@ func v_split_cut(clicked_lattice_pos: Vector2) -> void:
 	_base_split_cut(clicked_lattice_pos, false)
 
 func gomory_cut(clicked_lattice_pos: Vector2) -> void:
-	# if no verts are closer than, say, 0.1 lattice units, do nothing (TODO, this shouldn't be hard-coded, add a GLOBAL GOMORY_CUT_CLICK_RANGE)
+	# vertex selection
 	var selected_index: int = -1
 	var closest_distance: float = INF
 	for i in range(packed_vertices.size()):
@@ -499,6 +499,48 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> void:
 		DEBUG.log("No vertex in range")
 		return
 	DEBUG.log("gomory_cut: selected vertex: %s" % packed_vertices[selected_index])
+	# gomory mixed integer cut algorithm (very hacked)
+	# WIP
+	var n: int = packed_vertices.size()
+	var prev_index = (selected_index - 1 + n) % n
+	var next_index = (selected_index + 1) % n
+	var V_s = packed_vertices[selected_index]
+	var V_p = packed_vertices[prev_index]
+	var V_n = packed_vertices[next_index]
+	# chose constrain 1
+	var edge = V_s - V_p
+	var a = edge.y
+	var b = edge.x
+	var d = a * V_s.x + b * V_s.y
+	# compute value
+	var s_s = d - (a * V_s.x + b * V_s.y)
+	# check if s_s is fractional
+	var f_s = s_s - floor(s_s)
+	if abs(f_s) < GLOBALS.GEOMETRY_EPSILON:
+		# add a small perturnation just in case
+		f_s = 0.5
+	# compute fractional coefs
+	var f_a = a - floor(a)
+	var f_b = b - floor(b)
+	# gmi cut inequality
+	var a_prime = f_a if a >= 0 else (1 - f_a)
+	var b_prime = f_b if b >= 0 else (1 - f_b)
+	# avoid 0 coefs
+	if abs(a_prime) < GLOBALS.GEOMETRY_EPSILON and abs(b_prime) < GLOBALS.GEOMETRY_EPSILON:
+		DEBUG.log("gomory_cut: invalid GMI cut coefs")
+		return
+	# define cut line
+	var line_point = Vector2()
+	if abs(b_prime) > GLOBALS.GEOMETRY_EPSILON:
+		line_point.x = 0
+		line_point.y = f_s / b_prime
+	else:
+		line_point.x = f_s / a_prime
+		line_point.y = 0
+	# direction
+	var line_dir = Vector2(-b_prime, a_prime).normalized()
+
+	cut_polygon(line_point, line_dir)
 
 # -- placeholder cut animations --
 # TODO: make real animations

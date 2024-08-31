@@ -114,12 +114,12 @@ func _on_show_hull_button_up():
 func _on_debug_cut_pressed():
 	cut_mode = CUT_MODES.DEBUG_CUT
 	DEBUG.log("DEBUG_CUT selected")
+	_handle_gomory_cut_selected(false)
 
 # updates the debug cut angle when the input text changes
 func _on_debug_cut_input_text_changed(new_text:String):
 	var degrees = float(new_text) # if the angle is invalid, it will be 0
 	debug_cut_direction = Vector2(cos(deg_to_rad(degrees)), -sin(deg_to_rad(degrees)))
-	_handle_gomory_cut_selected(false)
 
 # when the circle cut button is PRESSED, set the cut mode to CIRCLE_CUT
 func _on_circle_pressed():
@@ -150,7 +150,7 @@ func _on_v_split_pressed():
 # TODO: These function names SUCK
 
 ## call with true when selecting gomory cut, call with false when any other cut is selected
-func _handle_gomory_cut_selected(make_clickable: bool):
+func _handle_gomory_cut_selected(make_clickable: bool): # TODO: AFTER A CUT, THE EFFECT DISSAPEARS!
 	POLYGON.gomory_mode_selected(make_clickable)
 
 ## call in process. updates the mouse position for hover vfx
