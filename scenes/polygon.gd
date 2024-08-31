@@ -435,6 +435,9 @@ func _base_split_cut(clicked_lattice_pos: Vector2, is_horizontal: bool) -> void:
 		DEBUG.log("_base_split_cut: Cutting in the direction described by both lines' intersections.")
 		DEBUG.log("_base_split_cut: Intersection points 1: %s" % [intersection_points_1])
 		DEBUG.log("_base_split_cut: Intersection points 2: %s" % [intersection_points_2])
+		# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		# !!! TODO: BROKEN! SEEMS TO BE THE CASE WHEN 1 LINE INTERSECTS ONCE AND THE OTHER TWICE !!!
+		# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		# at most, there should be 2 intersection points per line (if there are more, something went terribly wrong).
 		# moreover, cuts cannot be done across the convex hull.
 		# we can check for this by checking if the points are "behind" or "in front" of the centroid.
@@ -500,7 +503,7 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> void:
 		return
 	DEBUG.log("gomory_cut: selected vertex: %s" % packed_vertices[selected_index])
 	# gomory mixed integer cut algorithm (very hacked)
-	# WIP
+	# TODO: THIS DOESN'T WORK !!!
 	var n: int = packed_vertices.size()
 	var prev_index = (selected_index - 1 + n) % n
 	var next_index = (selected_index + 1) % n
