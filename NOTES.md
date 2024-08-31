@@ -279,3 +279,15 @@ Also, note to self: debug messages can get in the way of clicking on buttons. Wh
 Floating point arithmetic, just the worst...
 
 I had to rethink and rewrite a lot. Good news: It works now! More good news: i simplified a lot of code. Less than good news: because I simplified so much code, there's a handful of functions that are now deprecated. Even worse news: There's a lot of residual Debug logs to get rid off and docs to add. Hoo, boy... Well That's a job for tomorrow me. 'Night.
+
+## WED 2024-08-28
+
+Did a lot of that said refactor and improved a bunch of visual stuff. Sorry for the nondescriptive notes, but I was too far in the zone to type here. Well, 'Night!
+
+## THU 2024-08-29
+
+Made some improvements to the level loading logic. TODO: error handling.
+
+Gomory cuts are hard to understand but relatively easy to implement. However, I need to figure out what logic to follow to click on poly verts. In the original demo, the clcking was very finicky and worked around 80% of the time. Specially when there where multiple verts very close to each other.
+
+I don't think it's a good idea to Make every vert a button with a circle shape that can be clicked. Instead, the level script should probably handle sending signals to the polygon, which in turn would send signals to the verts. This was I send the signal to turn `hover=true` based on the mouse's position. I'll give that a try.

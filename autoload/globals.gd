@@ -15,10 +15,6 @@ extends Node
 @export var DEFAULT_OFFSET: Vector2 = Vector2(16, 28)
 ## Default polygon grid color
 @export var DEFAULT_COLOR: Color = Color(0.8, 0.8, 0.8)
-## levels directory
-var LEVELS_DIR = "res://levels/"
-## default level file
-var DEFAULT_LEVEL = "default"
 ## epsilon for snapping to grid when clicking
 var CLICK_EPSILON = 0.01
 ## epsilons for geometric calculations

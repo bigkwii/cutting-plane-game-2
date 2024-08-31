@@ -8,9 +8,9 @@ extends Node2D
 ## Color of the poly point
 @export var color = Color(1, 0, 0)
 ## Clickable attribute
-@export var clickable = true
+@export var clickable = false
 ## if hovering over with mouse
-var hover: bool = false
+@export var hover: bool = false
 
 ## flag that determines if it's an integer point
 var is_integer: bool = false
@@ -24,14 +24,17 @@ func _ready():
 func _process(_delta):
 	if DEBUG.is_enabled():
 		$debug_label.text = str(lattice_position)
+	queue_redraw()
 
 # draw the vertex as a little red circle
 func _draw():
 	draw_circle(Vector2.ZERO, radius, color)
+	if clickable:
+		draw_circle(Vector2.ZERO, 0.1 * GLOBALS.DEFAULT_SCALING, Color(1, 0, 0, 0.5), false, 1) # TODO: replace 0.1 with global var
+	if hover:
+		draw_circle(Vector2.ZERO, radius, Color.RED, false, 2)
 	if is_integral():
 		draw_circle(Vector2.ZERO, radius, Color.GREEN, false, 2)
-	if clickable and hover:
-		draw_circle(Vector2.ZERO, radius, Color.RED, false, 2)
 
 ## deletes itself
 func delete_poly_point():

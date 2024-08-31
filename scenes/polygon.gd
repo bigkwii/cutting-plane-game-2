@@ -484,8 +484,21 @@ func h_split_cut(clicked_lattice_pos: Vector2) -> void:
 func v_split_cut(clicked_lattice_pos: Vector2) -> void:
 	_base_split_cut(clicked_lattice_pos, false)
 
-func gomory_cut(clicked_lattice_pos: Vector2) -> void: # Note: this one doesn't depend on the clicked lattice position, of course
-	DEBUG.log("Gomory cut not implemented yet.")
+func gomory_cut(clicked_lattice_pos: Vector2) -> void:
+	# if no verts are closer than, say, 0.1 lattice units, do nothing (TODO, this shouldn't be hard-coded, add a GLOBAL GOMORY_CUT_CLICK_RANGE)
+	var selected_index: int = -1
+	var closest_distance: float = INF
+	for i in range(packed_vertices.size()):
+		if packed_vertices[i].x == int(packed_vertices[i].x) and packed_vertices[i].y == int(packed_vertices[i].y):
+			continue
+		var distance = packed_vertices[i].distance_to(clicked_lattice_pos)
+		if distance < 0.1 and distance < closest_distance: # TODO: this!
+			closest_distance = distance
+			selected_index = i
+	if selected_index == -1:
+		DEBUG.log("No vertex in range")
+		return
+	DEBUG.log("gomory_cut: selected vertex: %s" % packed_vertices[selected_index])
 
 # -- placeholder cut animations --
 # TODO: make real animations
@@ -500,3 +513,23 @@ func _play_circle_animation(circle_center: Vector2, circle_radius: float, succes
 	CIRCLE_VFX.radius = circle_radius * GLOBALS.DEFAULT_SCALING
 	CIRCLE_VFX.successful_cut = success
 	CIRCLE_VFX.play_grow()
+
+# -- gomory cut mode vfx handling --
+func gomory_mode_selected(make_clickable: bool):
+	for vert in VERTS.get_children():
+		if vert.is_integral():
+			continue
+		vert.clickable = make_clickable
+
+func update_verts_hover_vfx(mouse_lattice_pos):
+	var closest_distance = INF
+	for vert in VERTS.get_children():
+		if vert.is_integral():
+			continue
+		var distance = vert.lattice_position.distance_to(mouse_lattice_pos)
+		if distance < 0.1 and distance < closest_distance: # TODO: same!
+			closest_distance = distance
+			if closest_distance < INF:
+				vert.hover = true
+		else:
+			vert.hover = false

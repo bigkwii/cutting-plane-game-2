@@ -28,7 +28,7 @@ func _process(_delta):
 ## Adds a new lattice point at a given position (relative to grid origin)
 func _add_new_lattice_point(lattice_pos: Vector2) -> void:
 	var new_lattice_point = LATTICE_POINT_SCENE.instantiate()
-	new_lattice_point.lattice_position = lattice_pos # save the position ralative to the grid origin
+	new_lattice_point.lattice_position = lattice_pos # save the position relative to the grid origin
 	new_lattice_point.position = lattice_pos * SCALING + OFFSET # scaling and offset from the game origin
 	LATTICE_POINTS.add_child(new_lattice_point)
 
