@@ -23,11 +23,12 @@ var packed_vertices: PackedVector2Array = []
 @onready var CENTROID = $centroid
 @onready var CONVEX_INTEGER_HULL = $convex_integer_hull
 # - vfx -
-@onready var CUT_VFX = $vfx/cut_vfx
+@onready var CUT_VFXS = $vfx/cut_vfxs
 @onready var CIRCLE_VFX = $vfx/circle_vfx
 
 # -- preloaded scenes --
 var POLY_POINT_SCENE = preload("res://scenes/poly_point.tscn")
+var CUT_VFX_SCENE = preload("res://scenes/cut_vfx.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -549,9 +550,11 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> void:
 # TODO: make real animations
 
 func _play_cut_animation(line_point: Vector2, line_dir: Vector2) -> void:
-	CUT_VFX.global_position = line_point * GLOBALS.DEFAULT_SCALING + GLOBALS.DEFAULT_OFFSET
-	CUT_VFX.rotation = line_dir.angle()
-	CUT_VFX.play()
+	var new_cut_vfx = CUT_VFX_SCENE.instantiate()
+	CUT_VFXS.add_child(new_cut_vfx)
+	new_cut_vfx.global_position = line_point * GLOBALS.DEFAULT_SCALING + GLOBALS.DEFAULT_OFFSET
+	new_cut_vfx.rotation = line_dir.angle()
+	new_cut_vfx.play()
 
 func _play_circle_animation(circle_center: Vector2, circle_radius: float, success: bool) -> void:
 	CIRCLE_VFX.global_position = circle_center * GLOBALS.DEFAULT_SCALING + GLOBALS.DEFAULT_OFFSET

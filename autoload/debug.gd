@@ -1,3 +1,5 @@
+@tool # added so other @tool scripts can access this script in the editor
+
 extends Node
 ## Debug logging and other utilities.
 
@@ -26,7 +28,8 @@ func log(message: Variant, seconds: float = 2) -> void:
 	label.text = str(message)
 	# black outline, white text
 	label.set("theme_override_constants/outline_size", 2)
-	label.set("theme_override_colors/font_outline_color", Color.BLACK)
+	label.set("theme_override_colors/font_color", Color(1, 1, 1, 0.5))
+	label.set("theme_override_colors/font_outline_color", Color(0, 0, 0, 1))
 	container.add_child(label)
 	container.move_child(label, 0)
 	# wait for the specified time, then erase the label

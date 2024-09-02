@@ -10,3 +10,8 @@ func _ready():
 # play the cut animation
 func play():
 	ANIM_PLAYER.play("cut")
+
+# delete itself when the animation is finished
+func _on_animation_player_animation_finished(anim_name: StringName):
+	if anim_name == "cut":
+		queue_free()

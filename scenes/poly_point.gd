@@ -1,3 +1,5 @@
+@tool
+
 extends Node2D
 ## A vertex of a polygon
 
@@ -17,13 +19,13 @@ var is_integer: bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	if DEBUG and DEBUG.is_enabled():
+		$debug_label.text = str(lattice_position)
 	if is_integral():
 		clickable = false
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
-	if DEBUG.is_enabled():
-		$debug_label.text = str(lattice_position)
 	queue_redraw()
 
 # draw the vertex as a little red circle
