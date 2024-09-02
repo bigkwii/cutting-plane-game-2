@@ -500,51 +500,124 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> void:
 			closest_distance = distance
 			selected_index = i
 	if selected_index == -1:
-		DEBUG.log("No vertex in range")
+		DEBUG.log("gomory_cut: No vertex in range")
 		return
 	DEBUG.log("gomory_cut: selected vertex: %s" % packed_vertices[selected_index])
-	# gomory mixed integer cut algorithm (very hacked)
-	# TODO: THIS DOESN'T WORK !!!
-	var n: int = packed_vertices.size()
-	var prev_index = (selected_index - 1 + n) % n
-	var next_index = (selected_index + 1) % n
-	var V_s = packed_vertices[selected_index]
-	var V_p = packed_vertices[prev_index]
-	var V_n = packed_vertices[next_index]
-	# chose constrain 1
-	var edge = V_s - V_p
-	var a = edge.y
-	var b = edge.x
-	var d = a * V_s.x + b * V_s.y
-	# compute value
-	var s_s = d - (a * V_s.x + b * V_s.y)
-	# check if s_s is fractional
-	var f_s = s_s - floor(s_s)
-	if abs(f_s) < GLOBALS.GEOMETRY_EPSILON:
-		# add a small perturnation just in case
-		f_s = 0.5
-	# compute fractional coefs
-	var f_a = a - floor(a)
-	var f_b = b - floor(b)
-	# gmi cut inequality
-	var a_prime = f_a if a >= 0 else (1 - f_a)
-	var b_prime = f_b if b >= 0 else (1 - f_b)
-	# avoid 0 coefs
-	if abs(a_prime) < GLOBALS.GEOMETRY_EPSILON and abs(b_prime) < GLOBALS.GEOMETRY_EPSILON:
-		DEBUG.log("gomory_cut: invalid GMI cut coefs")
-		return
-	# define cut line
-	var line_point = Vector2()
-	if abs(b_prime) > GLOBALS.GEOMETRY_EPSILON:
-		line_point.x = 0
-		line_point.y = f_s / b_prime
+	
+	# gomory mixed integer cut algorithm (ripped straight from the demo)
+	var selected_vertex = packed_vertices[selected_index]
+	var neigh_before = packed_vertices[(selected_index - 1 + packed_vertices.size()) % packed_vertices.size()]
+	var neigh_after = packed_vertices[(selected_index + 1) % packed_vertices.size()]
+	var a1 = Vector2(-(selected_vertex - neigh_before).y, (selected_vertex - neigh_before).x)
+	var b1 = a1.dot(neigh_before)
+	if a1.dot(neigh_after) > b1:
+		a1 = -a1
+		b1 = -b1
+	var a2 = Vector2(-(selected_vertex - neigh_after).y, (selected_vertex - neigh_after).x)
+	var b2 = a2.dot(neigh_after)
+	if a2.dot(neigh_before) > b2:
+		a2 = -a2
+		b2 = -b2
+	var inverse_basis_rows = compute_inverse_basis_rows(a1.x, a1.y, a2.x, a2.y)
+	# First GMI cut
+	var aLattice1 = Vector2(1, 0)
+	var aSlack1 = inverse_basis_rows[0]
+	var b = aSlack1.x * b1 + aSlack1.y * b2
+	var result1 = get_gmi(aLattice1, aSlack1, b, inverse_basis_rows)
+	var violation1 = INF
+	var GMIaLattice1: Vector2
+	var GMIaSlack1: Vector2
+	var GMIb1: float
+	if result1[0] == 0:
+		GMIaLattice1 = result1[1]
+		GMIaSlack1 = result1[2]
+		GMIb1 = result1[3]
+		GMIb1 -= (GMIaSlack1.x * b1 + GMIaSlack1.y * b2)
+		GMIaLattice1 -= Vector2(GMIaSlack1.x * a1.x + GMIaSlack1.y * a2.x, GMIaSlack1.x * a1.y + GMIaSlack1.y * a2.y)
+		violation1 = (GMIaLattice1.dot(selected_vertex) - GMIb1) / GMIaLattice1.length()
+	# Second GMI cut
+	var aLattice2 = Vector2(0, 1)
+	var aSlack2 = inverse_basis_rows[1]
+	b = aSlack2.x * b1 + aSlack2.y * b2
+	var result2 = get_gmi(aLattice2, aSlack2, b, inverse_basis_rows)
+	var violation2 = INF
+	var GMIaLattice2: Vector2
+	var GMIaSlack2: Vector2
+	var GMIb2: float
+	if result2[0] == 0:
+		GMIaLattice2 = result2[1]
+		GMIaSlack2 = result2[2]
+		GMIb2 = result2[3]
+		GMIb2 -= (GMIaSlack2.x * b1 + GMIaSlack2.y * b2)
+		GMIaLattice2 -= Vector2(GMIaSlack2.x * a1.x + GMIaSlack2.y * a2.x, GMIaSlack2.x * a1.y + GMIaSlack2.y * a2.y)
+		violation2 = (GMIaLattice2.dot(selected_vertex) - GMIb2) / GMIaLattice2.length()
+	# Determine which GMI cut to apply based on the violation
+	var GMIaLattice: Vector2
+	var GMIaSlack: Vector2
+	var GMIb: float
+	if violation1 < violation2:
+		GMIaLattice = GMIaLattice1
+		GMIaSlack = GMIaSlack1
+		GMIb = GMIb1
 	else:
-		line_point.x = f_s / a_prime
-		line_point.y = 0
-	# direction
-	var line_dir = Vector2(-b_prime, a_prime).normalized()
-
+		GMIaLattice = GMIaLattice2
+		GMIaSlack = GMIaSlack2
+		GMIb = GMIb2
+	# get the points for the cut
+	var point1: Vector2
+	var point2: Vector2
+	if (abs(GMIaLattice.x) > GLOBALS.GEOMETRY_EPSILON and abs(GMIaLattice.y) > GLOBALS.GEOMETRY_EPSILON):
+		point1.x = GMIb / GMIaLattice.x
+		point1.y = 0
+		point2.x = 0
+		point2.y = GMIb / GMIaLattice.y
+	elif (abs(GMIaLattice.x) <= GLOBALS.GEOMETRY_EPSILON):
+		point1.x = 0
+		point1.y = GMIb / GMIaLattice.y
+		point2.x = 1
+		point2.y = GMIb / GMIaLattice.y
+	else:
+		point1.x = GMIb / GMIaLattice.x
+		point1.y = 0
+		point2.x = GMIb / GMIaLattice.x
+		point2.y = 1
+	# turn the points into a line
+	var line_point = point1
+	var line_dir = point2 - point1
+	# Perform the cut on the polygon
+	DEBUG.log("gomory_cut: Performing cut with line: %s, %s" % [line_point, line_dir], 100)
 	cut_polygon(line_point, line_dir)
+
+# Function to compute inverse basis rows (ripped straight from the demo)
+func compute_inverse_basis_rows(a: float, b: float, c: float, d: float) -> Array:
+	var out_rows = []
+	var determinant = a * d - b * c
+	if determinant == 0:
+		DEBUG.log("compute_inverse_basis_rows: Error: Determinant is zero!")
+		return []
+	out_rows.append(Vector2(d / determinant, -b / determinant))
+	out_rows.append(Vector2(-c / determinant, a / determinant))
+	return out_rows
+
+# Function to compute GMI cut (ripped straight from the demo)
+func get_gmi(a_lattice: Vector2, a_slack: Vector2, b: float, inverse_basis_rows: Array) -> Array:
+	var GMIaLattice: Vector2 = Vector2()
+	var GMIaSlack: Vector2 = Vector2()
+	var GMIb: float = 0.0
+	var f0 = b - floor(b)
+	var f1 = a_lattice.x - floor(a_lattice.x)
+	var f2 = a_lattice.y - floor(a_lattice.y)
+	if f0 == 0.0:
+		return [1, GMIaLattice, GMIaSlack, GMIb]  # No GMI cut possible
+	var gmiLattice = Vector2()
+	gmiLattice.x = f1 / f0 if f1 <= f0 else (1.0 - f1) / (1.0 - f0)
+	gmiLattice.y = f2 / f0 if f2 <= f0 else (1.0 - f2) / (1.0 - f0)
+	GMIaSlack.x = a_slack.x / f0 if a_slack.x > 0.0 else -a_slack.x / (1.0 - f0)
+	GMIaSlack.y = a_slack.y / f0 if a_slack.y > 0.0 else -a_slack.y / (1.0 - f0)
+	GMIb = 1.0
+	GMIaLattice.x = gmiLattice.x * inverse_basis_rows[0].x + gmiLattice.y * inverse_basis_rows[1].x
+	GMIaLattice.y = gmiLattice.x * inverse_basis_rows[0].y + gmiLattice.y * inverse_basis_rows[1].y
+	return [0, GMIaLattice, GMIaSlack, GMIb]  # GMI cut successful
 
 # -- placeholder cut animations --
 # TODO: make real animations

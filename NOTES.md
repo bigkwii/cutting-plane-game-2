@@ -295,3 +295,19 @@ I don't think it's a good idea to Make every vert a button with a circle shape t
 ## FRI 2024-08-30
 
 Made vertices clickable and added effects. Gomory cuts are in development, finally. Note: Apparently splits are very broken under certain circumstances! It seems to be when one line intersects once, but the other twice. Hoo, boy...
+
+## SUN 2024-09-01
+
+Porting over the Gomory cut logic from the original demo. It's really, really messy. Bad code overall. It's *almost* working at the moment, however, there's a really annoying bug where some attempts at cutting the polygon when the selected vertex is colinear with one of the polygon's edges will result in a cut that's too deep, as in, it jumps to the next inner most lattice point and removes a big chunk of the polygon.
+
+This entire implementation is so convoluted and hard to debug... I really want to simplify it, but priority number one is to get it working. I'll keep at it.
+
+Also, a nice quiality of life improvement could be that, if a vertex ends up having an angle really close to 180 degrees, it should be deleted. For gameplay reasons, this would be a really good idea. But I'll leave that for later.
+
+The polygon should in general run a forgiveness check on the verts after a cut to correct this and also when a vert is really close to another vert, in which case they should be merged.
+
+Also, found a bug where circle cuts (or i guess any typo of cut) can cut through the convex hull if the polygon is thin enough. I'll have to fix that.
+
+Also, split cuts are still broken and don't work as intended. I'll have to fix that too. It's entirely possible for a split cut's lines to only intersect the polygon only once.
+
+Well, that's enough for today. I'll continue tomorrow.
