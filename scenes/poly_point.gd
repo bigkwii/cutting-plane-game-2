@@ -14,13 +14,15 @@ extends Node2D
 ## if hovering over with mouse
 @export var hover: bool = false
 
+@onready var DEBUG_LABEL = $debug_label
+
 ## flag that determines if it's an integer point
 var is_integer: bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	if DEBUG and DEBUG.is_enabled():
-		$debug_label.text = str(lattice_position)
+	if DEBUG.is_enabled():
+		DEBUG_LABEL.text = str(lattice_position)
 	if is_integral():
 		clickable = false
 

@@ -80,7 +80,7 @@ func _input(event):
 			DEBUG.log( "Clicked @ lattice pos: " + str( clicked_lattice_pos ) )
 			if cut_mode == CUT_MODES.DEBUG_CUT:
 				# split the polygon at the given position and at a hard-coded direction
-				POLYGON.cut_polygon(clicked_lattice_pos, debug_cut_direction)
+				POLYGON.cut_polygon(clicked_lattice_pos, debug_cut_direction, true)
 			# !!! TODO !!! in the demo, cut animations can be cancelled early, with the cut being made at that point
 			# should this be implemented as well? or should clicking be disabled during the animation?
 			# !!! THINK ABOUT IT !!!

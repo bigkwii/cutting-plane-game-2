@@ -116,6 +116,9 @@ func calculate_centroid() -> Vector2:
 	CENTROID.lattice_position = centroid_lattice_pos
 	CENTROID.position = centroid_lattice_pos * SCALING + OFFSET
 	CENTROID.color = Color(0, 1, 0)
+	# debug label
+	if DEBUG.is_enabled():
+		CENTROID.DEBUG_LABEL.text = str(centroid_lattice_pos)
 	return centroid_lattice_pos
 
 ## Determines if a given points is inside the polygon, given its lattice position.
@@ -277,6 +280,14 @@ func split_polygon(polygon: PackedVector2Array, line_point: Vector2, line_dir: V
 		return []
 	return [new_poly_1, new_poly_2]
 
+## returns if a given line would've cut the convex hull of the polygon
+func would_cut_hull(line_point: Vector2, line_dir: Vector2) -> bool:
+	var hull = CONVEX_INTEGER_HULL.convex_integer_hull
+	var new_polygons = split_polygon(hull, line_point, line_dir)
+	if new_polygons.size() == 0:
+		DEBUG.log("would_cut_hull: No new polygons found.")
+		return false
+	return true
 	
 ## Cuts the polygon, given a line, and keeps the half that contains the centroid of the original.
 ## [br][br]
@@ -287,30 +298,58 @@ func split_polygon(polygon: PackedVector2Array, line_point: Vector2, line_dir: V
 ## line_point, line_dir: point and direction of the line
 ## [br][br]
 ## returns true if the cut was successful, false otherwise
-func cut_polygon(line_point: Vector2, line_dir: Vector2) -> bool:
+func cut_polygon(line_point: Vector2, line_dir: Vector2, allow_hull_cutting: bool = false) -> bool:
 	var centroid: Vector2 = CENTROID.lattice_position
 	var polygon_verts = packed_vertices
 	var new_polygons = split_polygon(polygon_verts, line_point, line_dir)
 	if new_polygons.size() == 0:
 		DEBUG.log("cut_polygon: No new polygons found.")
 		return false
+	if not allow_hull_cutting and would_cut_hull(line_point, line_dir):
+		DEBUG.log("cut_polygon: Hull cutting detected. Aborting.")
+		return false
 	# play the cut animation
 	_play_cut_animation(line_point, line_dir)
-	if Geometry2D.is_point_in_polygon(centroid, new_polygons[0]):
-		rebuild_polygon(new_polygons[0])
-	else:
-		rebuild_polygon(new_polygons[1])
+	var polygon_to_be_kept_index: int = 0 if Geometry2D.is_point_in_polygon(centroid, new_polygons[0]) else 1
+	_run_forgiveness_checks(new_polygons[polygon_to_be_kept_index])
+	rebuild_polygon(new_polygons[polygon_to_be_kept_index])
 	return true
 
 ## returns true if a cut made with this line WOULD cut the polygon TODO: deprecated?
 ## [br][br]
 ## line_point, line_dir: point and direction of the line
-func would_cut_polygon(line_point: Vector2, line_dir: Vector2) -> bool:
+func would_cut_polygon(line_point: Vector2, line_dir: Vector2, allow_hull_cutting: bool = false) -> bool:
 	var polygon_verts = packed_vertices
 	var new_polygons = split_polygon(polygon_verts, line_point, line_dir)
 	if new_polygons.size() == 0:
 		return false
+	if not allow_hull_cutting and would_cut_hull(line_point, line_dir):
+		DEBUG.log("cut_polygon: Hull cutting detected. Aborting.")
+		return false
 	return true
+
+## runs "forgiveness" checks on a given polygon, for cleaning up floating point imprecision and quality of life
+func _run_forgiveness_checks(polygon: PackedVector2Array):
+	# 1) snap to lattice points if close enough
+	for i in range(polygon.size()):
+		if abs(polygon[i].x - round(polygon[i].x)) < GLOBALS.FORGIVENESS_SNAP_EPSILON and abs(polygon[i].y - round(polygon[i].y)) < GLOBALS.FORGIVENESS_SNAP_EPSILON:
+			polygon[i] = snapped( polygon[i], Vector2(GLOBALS.FORGIVENESS_SNAP_EPSILON, GLOBALS.FORGIVENESS_SNAP_EPSILON) )
+	# 2) remove vertices that are very close to being colinear with their neighbors
+	for i in range(polygon.size()):
+		var current_point = polygon[i]
+		var prev_point = polygon[(i - 1) % polygon.size()]
+		var next_point = polygon[(i + 1) % polygon.size()]
+		var dot = (current_point - prev_point).normalized().dot((next_point - current_point).normalized())
+		if abs(dot + 1) < GLOBALS.FORGIVENESS_COLINEAR_EPSILON:
+			polygon.remove_at(i)
+			i -= 1
+	# 3) merge vertices that are very close to each other
+	for i in range(polygon.size()):
+		var current_point = polygon[i]
+		var next_point = polygon[(i + 1) % polygon.size()]
+		if current_point.distance_to(next_point) < GLOBALS.FORGIVENESS_MERGE_EPSILON:
+			polygon.remove_at(i)
+			i -= 1
 
 ## returns all the intersection points of a circle with a polygon
 ## [br][br]
@@ -504,7 +543,7 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> void:
 		return
 	DEBUG.log("gomory_cut: selected vertex: %s" % packed_vertices[selected_index])
 	
-	# gomory mixed integer cut algorithm (ripped straight from the demo)
+	# gomory mixed integer cut algorithm (logic ripped straight from the demo)
 	var selected_vertex = packed_vertices[selected_index]
 	var neigh_before = packed_vertices[(selected_index - 1 + packed_vertices.size()) % packed_vertices.size()]
 	var neigh_after = packed_vertices[(selected_index + 1) % packed_vertices.size()]
@@ -555,7 +594,7 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> void:
 	var GMIaLattice: Vector2
 	var GMIaSlack: Vector2
 	var GMIb: float
-	if violation1 < violation2:
+	if violation1 <= violation2:
 		GMIaLattice = GMIaLattice1
 		GMIaSlack = GMIaSlack1
 		GMIb = GMIb1
@@ -566,12 +605,12 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> void:
 	# get the points for the cut
 	var point1: Vector2
 	var point2: Vector2
-	if (abs(GMIaLattice.x) > GLOBALS.GEOMETRY_EPSILON and abs(GMIaLattice.y) > GLOBALS.GEOMETRY_EPSILON):
+	if (GMIaLattice.x > 0 and GMIaLattice.y > 0):
 		point1.x = GMIb / GMIaLattice.x
 		point1.y = 0
 		point2.x = 0
 		point2.y = GMIb / GMIaLattice.y
-	elif (abs(GMIaLattice.x) <= GLOBALS.GEOMETRY_EPSILON):
+	elif (GMIaLattice.x == 0):
 		point1.x = 0
 		point1.y = GMIb / GMIaLattice.y
 		point2.x = 1
@@ -585,10 +624,12 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> void:
 	var line_point = point1
 	var line_dir = point2 - point1
 	# Perform the cut on the polygon
-	DEBUG.log("gomory_cut: Performing cut with line: %s, %s" % [line_point, line_dir], 100)
+	DEBUG.log("gomory_cut: Performing cut with line: point: %s, dir: %s" % [line_point, line_dir], 100)
 	cut_polygon(line_point, line_dir)
+	# this is to update the hover vfx on the verts. i know, it's a bit hacky.
+	gomory_mode_selected(true)
 
-# Function to compute inverse basis rows (ripped straight from the demo)
+## Function to compute inverse basis rows (ripped straight from the demo)
 func compute_inverse_basis_rows(a: float, b: float, c: float, d: float) -> Array:
 	var out_rows = []
 	var determinant = a * d - b * c
@@ -599,7 +640,7 @@ func compute_inverse_basis_rows(a: float, b: float, c: float, d: float) -> Array
 	out_rows.append(Vector2(-c / determinant, a / determinant))
 	return out_rows
 
-# Function to compute GMI cut (ripped straight from the demo)
+## Function to compute GMI cut (ripped straight from the demo)
 func get_gmi(a_lattice: Vector2, a_slack: Vector2, b: float, inverse_basis_rows: Array) -> Array:
 	var GMIaLattice: Vector2 = Vector2()
 	var GMIaSlack: Vector2 = Vector2()
@@ -640,6 +681,8 @@ func gomory_mode_selected(make_clickable: bool):
 	for vert in VERTS.get_children():
 		if vert.is_integral():
 			continue
+		if not make_clickable:
+			vert.hover = false # just in case
 		vert.clickable = make_clickable
 
 func update_verts_hover_vfx(mouse_lattice_pos):

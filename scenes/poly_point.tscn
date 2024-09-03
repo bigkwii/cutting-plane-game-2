@@ -9,3 +9,4 @@ script = ExtResource("1_ebfn4")
 offset_right = 40.0
 offset_bottom = 23.0
 theme_override_colors/font_color = Color(1, 1, 1, 0.392157)
+text = "(0, 0)"
