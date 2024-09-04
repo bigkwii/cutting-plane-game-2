@@ -311,3 +311,11 @@ Also, found a bug where circle cuts (or i guess any typo of cut) can cut through
 Also, split cuts are still broken and don't work as intended. I'll have to fix that too. It's entirely possible for a split cut's lines to only intersect the polygon only once.
 
 Well, that's enough for today. I'll continue tomorrow.
+
+## TUE 2024-09-03
+
+I found a funny bug where if somehow queue_free gets called on a @tool script, the editor crashes. I'll have to be careful with that.
+
+I fixed split cuts, and on the same stride fixed a whole bunch of things, including adding forgiveness checks, adding the split animations, fixing success animations playing when they shouldn't, and adding a check to cut_polygon to prevent cuts that change the hull. I also added a little click animation because why not.
+
+Gomory cuts are still broken. I'm not sure exactly what went wrong, since the implementation looks more or less identical to the demo's. Debugging this is hard since the demo's code is all over the place. I'll keep at it.

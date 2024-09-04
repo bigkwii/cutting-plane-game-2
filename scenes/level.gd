@@ -24,6 +24,7 @@ var debug_cut_direction = Vector2(1, 0)
 @onready var LATTICE_GRID = $lattice_grid
 @onready var POLYGON = $polygon
 @onready var CAMERA = $camera
+@onready var CLICK_VFXS = $vfx/click_vfxs
 # - hud elements -
 @onready var HUD = $CanvasLayer/HUD
 @onready var BUTTONS_CONTAINER = $CanvasLayer/HUD/buttons
@@ -32,6 +33,8 @@ var debug_cut_direction = Vector2(1, 0)
 @onready var GOMORY_CUT_BUTTON = $CanvasLayer/HUD/buttons/gomory
 @onready var H_SPLIT_CUT_BUTTON = $CanvasLayer/HUD/buttons/h_split
 @onready var V_SPLIT_CUT_BUTTON = $CanvasLayer/HUD/buttons/v_split
+# - proloaded scenes -
+@onready var CLICK_VFX = preload("res://scenes/click_vfx.tscn")
 # - debug cut button and input -
 @onready var DEBUG_CUT_BUTTON = $CanvasLayer/HUD/buttons/debug_cut
 @onready var DEBUG_CUT_INPUT = $CanvasLayer/HUD/buttons/debug_cut_input
@@ -76,6 +79,9 @@ func _input(event):
 			# if on the show hull button, do nothing
 			if BUTTONS_CONTAINER.get_global_rect().has_point(event.position): # !!! TODO !!!: this is hacky, i don't like it, figure out a cleaner way
 				return
+			# play click vfx
+			_play_click_vfx(get_global_mouse_position())
+			# get the clicked lattice position
 			var clicked_lattice_pos = snapped( (get_global_mouse_position() - GLOBALS.DEFAULT_OFFSET) / GLOBALS.DEFAULT_SCALING , Vector2(GLOBALS.CLICK_EPSILON, GLOBALS.CLICK_EPSILON) )
 			DEBUG.log( "Clicked @ lattice pos: " + str( clicked_lattice_pos ) )
 			if cut_mode == CUT_MODES.DEBUG_CUT:
@@ -165,3 +171,10 @@ func _handle_gomory_cut_click():
 		return
 	var mouse_lattice_pos = (get_global_mouse_position() - GLOBALS.DEFAULT_OFFSET) / GLOBALS.DEFAULT_SCALING
 	POLYGON.gomory_cut(mouse_lattice_pos)
+
+# click vfx
+func _play_click_vfx(pos: Vector2):
+	var click_vfx = CLICK_VFX.instantiate()
+	CLICK_VFXS.add_child(click_vfx)
+	click_vfx.position = pos
+	click_vfx.play_click()

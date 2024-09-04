@@ -1,5 +1,3 @@
-@tool # added so other @tool scripts can access this script in the editor
-
 extends Node
 ## Debug logging and other utilities.
 
