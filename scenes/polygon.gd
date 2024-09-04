@@ -621,14 +621,14 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> void:
 	var line_point = point1
 	var line_dir = point2 - point1
 	# Perform the cut on the polygon
-	DEBUG.log("gomory_cut: Performing cut with line: point: %s, dir: %s" % [line_point, line_dir], 100)
+	DEBUG.log("gomory_cut: Performing cut with line: point: %s, dir: %s; GMIaLattice: %s, GMib: %s" % [line_point, line_dir, GMIaLattice, GMIb], 100)
 	cut_polygon(line_point, line_dir)
 	# this is to update the hover vfx on the verts. i know, it's a bit hacky.
 	gomory_mode_selected(true)
 
 ## Function to compute inverse basis rows (ripped straight from the demo)
-func compute_inverse_basis_rows(a: float, b: float, c: float, d: float) -> Array:
-	var out_rows = []
+func compute_inverse_basis_rows(a: float, b: float, c: float, d: float) -> Array[Vector2]:
+	var out_rows: Array[Vector2] = []
 	var determinant = a * d - b * c
 	if determinant == 0:
 		DEBUG.log("compute_inverse_basis_rows: Error: Determinant is zero!")
@@ -642,9 +642,10 @@ func get_gmi(a_lattice: Vector2, a_slack: Vector2, b: float, inverse_basis_rows:
 	var GMIaLattice: Vector2 = Vector2()
 	var GMIaSlack: Vector2 = Vector2()
 	var GMIb: float = 0.0
+	var aprime = Vector2(a_lattice.dot(Vector2(1, 0)), a_lattice.dot(Vector2(0,1)))
 	var f0 = b - floor(b)
-	var f1 = a_lattice.x - floor(a_lattice.x)
-	var f2 = a_lattice.y - floor(a_lattice.y)
+	var f1 = aprime.x - floor(aprime.x)
+	var f2 = aprime.y - floor(aprime.y)
 	if f0 == 0.0:
 		return [1, GMIaLattice, GMIaSlack, GMIb]  # No GMI cut possible
 	var gmiLattice = Vector2()
@@ -701,13 +702,15 @@ func gomory_mode_selected(make_clickable: bool):
 
 func update_verts_hover_vfx(mouse_lattice_pos):
 	var closest_distance = INF
+	var selected_vert = null
 	for vert in VERTS.get_children():
 		if vert.is_integral():
 			continue
+		vert.hover = false
 		var distance = vert.lattice_position.distance_to(mouse_lattice_pos)
 		if distance < 0.1 and distance < closest_distance: # TODO: same!
 			closest_distance = distance
 			if closest_distance < INF:
-				vert.hover = true
-		else:
-			vert.hover = false
+				selected_vert = vert
+	if selected_vert:
+		selected_vert.hover = true

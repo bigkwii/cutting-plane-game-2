@@ -11,8 +11,6 @@ script = ExtResource("1_7muqx")
 [node name="lattice_grid" parent="." instance=ExtResource("2_4qubn")]
 
 [node name="polygon" parent="." instance=ExtResource("3_b5vrg")]
-color = null
-initial_vertices = null
 
 [node name="camera" parent="." instance=ExtResource("4_oqnx0")]
 
@@ -20,16 +18,27 @@ initial_vertices = null
 
 [node name="HUD" type="Control" parent="CanvasLayer"]
 layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
 
 [node name="buttons" type="VBoxContainer" parent="CanvasLayer/HUD"]
-layout_mode = 0
-offset_left = 888.0
-offset_top = 504.0
-offset_right = 992.0
-offset_bottom = 745.0
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -128.0
+offset_top = -264.0
+offset_right = -24.0
+offset_bottom = -23.0
+grow_horizontal = 0
+grow_vertical = 0
 metadata/_edit_group_ = true
 
 [node name="debug_cut" type="Button" parent="CanvasLayer/HUD/buttons"]
