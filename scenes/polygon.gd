@@ -25,6 +25,7 @@ var packed_vertices: PackedVector2Array = []
 # - vfx -
 @onready var CUT_VFXS = $vfx/cut_vfxs
 @onready var CIRCLE_VFX = $vfx/circle_vfx
+@onready var SPLIT_VFX = $vfx/split_vfx
 
 # -- preloaded scenes --
 var POLY_POINT_SCENE = preload("res://scenes/poly_point.tscn")
@@ -409,9 +410,22 @@ func circle_cut(clicked_lattice_pos: Vector2) -> void:
 	if !is_cut_successful:
 		return
 
-	var line_point = intersection_points[0]
-	var line_dir = intersection_points[1] - intersection_points[0]
-	cut_polygon(line_point, line_dir)
+	# make every valid cut possible
+	var already_made_cuts = []
+	var valid_cuts = 0
+	for cut_start in intersection_points:
+		for cut_end in intersection_points:
+			if cut_start == cut_end:
+				continue
+			if would_cut_hull(cut_start, cut_end - cut_start):
+				continue
+			if [cut_start, cut_end] in already_made_cuts or [cut_end, cut_start] in already_made_cuts:
+				continue
+			valid_cuts += 1
+			cut_polygon(cut_start, cut_end - cut_start)
+			already_made_cuts.append([cut_start, cut_end])
+	DEBUG.log("circle_cut: Made %s valid cuts." % valid_cuts, 100)
+
 
 ## extends 2 parallel lines from the clicked lattice position until one of the hits the lattice grid.
 ## [br][br]
@@ -431,6 +445,7 @@ func _base_split_cut(clicked_lattice_pos: Vector2, is_horizontal: bool) -> void:
 	var line_dir_1: Vector2
 	var line_point_2: Vector2
 	var line_dir_2: Vector2
+	var width: float
 	if is_horizontal:
 		var closest_y = round(clicked_lattice_pos.y)
 		var ceil_y = ceil(clicked_lattice_pos.y)
@@ -440,11 +455,13 @@ func _base_split_cut(clicked_lattice_pos: Vector2, is_horizontal: bool) -> void:
 			line_dir_1 = Vector2(1, 0)
 			line_point_2 = Vector2( clicked_lattice_pos.x, closest_y )
 			line_dir_2 = Vector2(1, 0)
+			width = abs(clicked_lattice_pos.y - closest_y)
 		else:
 			line_point_1 = Vector2( clicked_lattice_pos.x, closest_y )
 			line_dir_1 = Vector2(1, 0)
 			line_point_2 = Vector2( clicked_lattice_pos.x, closest_y + 2 * (clicked_lattice_pos.y - closest_y ) )
 			line_dir_2 = Vector2(1, 0)
+			width = abs(clicked_lattice_pos.y - closest_y)
 	else:
 		var closest_x = round(clicked_lattice_pos.x)
 		var ceil_x = ceil(clicked_lattice_pos.x)
@@ -454,11 +471,16 @@ func _base_split_cut(clicked_lattice_pos: Vector2, is_horizontal: bool) -> void:
 			line_dir_1 = Vector2(0, 1)
 			line_point_2 = Vector2( closest_x, clicked_lattice_pos.y )
 			line_dir_2 = Vector2(0, 1)
+			width = abs(clicked_lattice_pos.x - closest_x)
 		else:
 			line_point_1 = Vector2( closest_x, clicked_lattice_pos.y )
 			line_dir_1 = Vector2(0, 1)
 			line_point_2 = Vector2( closest_x + 2 * (clicked_lattice_pos.x - closest_x ), clicked_lattice_pos.y )
 			line_dir_2 = Vector2(0, 1)
+			width = abs(clicked_lattice_pos.x - closest_x)
+	# !!! PLACEHOLDER SPLIT ANIMATION !!!
+	_play_split_animation(clicked_lattice_pos, width, is_horizontal, true)
+	await SPLIT_VFX.animation_finished
 	# check if the lines intersect the polygon
 	var intersection_points_1 = line_intersects_polygon(packed_vertices, line_point_1, line_dir_1)
 	var intersection_points_2 = line_intersects_polygon(packed_vertices, line_point_2, line_dir_2)
@@ -594,7 +616,7 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> void:
 	var GMIaLattice: Vector2
 	var GMIaSlack: Vector2
 	var GMIb: float
-	if violation1 <= violation2:
+	if violation1 < violation2:
 		GMIaLattice = GMIaLattice1
 		GMIaSlack = GMIaSlack1
 		GMIb = GMIb1
@@ -675,6 +697,13 @@ func _play_circle_animation(circle_center: Vector2, circle_radius: float, succes
 	CIRCLE_VFX.radius = circle_radius * GLOBALS.DEFAULT_SCALING
 	CIRCLE_VFX.successful_cut = success
 	CIRCLE_VFX.play_grow()
+
+func _play_split_animation(origin: Vector2, width: float, is_horizontal: bool, success: bool) -> void:
+	SPLIT_VFX.global_position = origin * GLOBALS.DEFAULT_SCALING + GLOBALS.DEFAULT_OFFSET
+	SPLIT_VFX.width = width * GLOBALS.DEFAULT_SCALING
+	SPLIT_VFX.is_horizontal = is_horizontal
+	SPLIT_VFX.successful_cut = success
+	SPLIT_VFX.play_grow()
 
 # -- gomory cut mode vfx handling --
 func gomory_mode_selected(make_clickable: bool):
