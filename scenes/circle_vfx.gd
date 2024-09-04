@@ -2,11 +2,10 @@
 extends Node2D
 
 @export var radius: float = 100
-@export var successful_cut: bool = false
 @export var growing_factor: float = 0 # from 0 to 1
 @export var color: Color = Color(1, 1, 1, 1)
 
-signal animation_finished # TODO: this name is already used by anim player
+signal grow_animation_finished # TODO: this name is already used by anim player
 
 @onready var ANIM_PLAYER = $AnimationPlayer
 
@@ -20,13 +19,6 @@ func _process(_delta):
 func _draw():
 	draw_circle(Vector2(0, 0), growing_factor * radius, color, false, 1)
 
-func check_if_successful_cut():
-	animation_finished.emit() # !!! TODO !!! i'm not too happy with this solution
-	if successful_cut:
-		play_success()
-	else:
-		play_failure()
-
 # play the grow animation
 func play_grow():
 	ANIM_PLAYER.play("grow")
@@ -38,3 +30,7 @@ func play_success():
 # play the failed animation
 func play_failure():
 	ANIM_PLAYER.play("failure")
+
+func _on_animation_player_animation_finished(anim_name:StringName):
+	if anim_name == "grow":
+		grow_animation_finished.emit()

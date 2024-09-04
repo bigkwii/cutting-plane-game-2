@@ -244,7 +244,7 @@ func split_polygon(polygon: PackedVector2Array, line_point: Vector2, line_dir: V
 	if intersection_points.size() < 2:
 		DEBUG.log("split_polygon: Invalid number of intersection points: %s" % intersection_points.size())
 		return []
-	DEBUG.log("split_polygon: Found %s intersection points: %s" % [intersection_points.size(), intersection_points])
+	#DEBUG.log("split_polygon: Found %s intersection points: %s" % [intersection_points.size(), intersection_points])
 	var added_intersection_1 = false
 	var added_intersection_2 = false
 	for i in range(polygon.size()):
@@ -401,14 +401,11 @@ func circle_cut(clicked_lattice_pos: Vector2) -> void:
 	var is_cut_successful = intersection_points.size() >= 2 # TODO: check with would_cut_polygon ?
 
 	# placeholder circle animation. TODO: when the real animations are done, this function should AWAIT the grow animation to finish
-	_play_circle_animation(circle_center, circle_radius, is_cut_successful) # TODO: The success of the cut should be determined AFTER cut_polygon
+	_play_circle_animation(circle_center, circle_radius) # TODO: The success of the cut should be determined AFTER cut_polygon
 	# wait for the animation to finish
 	# !!! TODO !!! await is probably not the best here.
 	# the function should really end here and there should be another function that gets triggered by the signal that performs the cut
-	await CIRCLE_VFX.animation_finished
-
-	if !is_cut_successful:
-		return
+	await CIRCLE_VFX.grow_animation_finished
 
 	# make every valid cut possible
 	var already_made_cuts = []
@@ -421,10 +418,15 @@ func circle_cut(clicked_lattice_pos: Vector2) -> void:
 				continue
 			if [cut_start, cut_end] in already_made_cuts or [cut_end, cut_start] in already_made_cuts:
 				continue
-			valid_cuts += 1
-			cut_polygon(cut_start, cut_end - cut_start)
+			var is_valid_cut = cut_polygon(cut_start, cut_end - cut_start)
+			valid_cuts += 1 if is_valid_cut else 0
 			already_made_cuts.append([cut_start, cut_end])
-	DEBUG.log("circle_cut: Made %s valid cuts." % valid_cuts, 100)
+	if valid_cuts == 0:
+		DEBUG.log("circle_cut: No valid cuts found.")
+		_play_circle_failure_animation()
+	else:
+		DEBUG.log("circle_cut: Made %s valid cuts." % valid_cuts)
+		_play_circle_success_animation()
 
 
 ## extends 2 parallel lines from the clicked lattice position until one of the hits the lattice grid.
@@ -479,69 +481,35 @@ func _base_split_cut(clicked_lattice_pos: Vector2, is_horizontal: bool) -> void:
 			line_dir_2 = Vector2(0, 1)
 			width = abs(clicked_lattice_pos.x - closest_x)
 	# !!! PLACEHOLDER SPLIT ANIMATION !!!
-	_play_split_animation(clicked_lattice_pos, width, is_horizontal, true)
-	await SPLIT_VFX.animation_finished
+	_play_split_animation(clicked_lattice_pos, width, is_horizontal)
+	await SPLIT_VFX.grow_animation_finished
 	# check if the lines intersect the polygon
 	var intersection_points_1 = line_intersects_polygon(packed_vertices, line_point_1, line_dir_1)
 	var intersection_points_2 = line_intersects_polygon(packed_vertices, line_point_2, line_dir_2)
-	# if only line 1 intersects the polygon, cut in the direction of line 1
+	var valid_cuts = 0
+	# if only one of the lines intersects the polygon, cut in that direction
 	if intersection_points_1.size() > 0 and intersection_points_2.size() == 0:
-		cut_polygon(line_point_1, line_dir_1)
-		return
-	# if only line 2 intersects the polygon, cut in the direction of line 2
-	if intersection_points_1.size() == 0 and intersection_points_2.size() > 0:
-		cut_polygon(line_point_2, line_dir_2)
-		return
-	# if both lines intersect the polygon, cut in the direction described by the intersection points
-	if intersection_points_1.size() > 0 and intersection_points_2.size() > 0:
-		DEBUG.log("_base_split_cut: Cutting in the direction described by both lines' intersections.")
-		DEBUG.log("_base_split_cut: Intersection points 1: %s" % [intersection_points_1])
-		DEBUG.log("_base_split_cut: Intersection points 2: %s" % [intersection_points_2])
-		# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		# !!! TODO: BROKEN! SEEMS TO BE THE CASE WHEN 1 LINE INTERSECTS ONCE AND THE OTHER TWICE !!!
-		# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		# at most, there should be 2 intersection points per line (if there are more, something went terribly wrong).
-		# moreover, cuts cannot be done across the convex hull.
-		# we can check for this by checking if the points are "behind" or "in front" of the centroid.
-		# this, at most we'll have 2 cuts:
-		# 1. from the intersection from line 1 to the intersection from line 2, if both are behind the centroid
-		# 2. from the intersection from line 1 to the intersection from line 2, if both are in front of the centroid
-		var intersection_point_from_line_1_behind_centroid: Vector2
-		var intersection_point_from_line_2_behind_centroid: Vector2
-		var intersection_point_from_line_1_ahead_centroid: Vector2
-		var intersection_point_from_line_2_ahead_centroid: Vector2
-		if is_horizontal:
-			var centroid_x = CENTROID.lattice_position.x
-			for intersection_point in intersection_points_1:
-				if intersection_point.x < centroid_x:
-					intersection_point_from_line_1_behind_centroid = intersection_point
-				else:
-					intersection_point_from_line_1_ahead_centroid = intersection_point
-			for intersection_point in intersection_points_2:
-				if intersection_point.x < centroid_x:
-					intersection_point_from_line_2_behind_centroid = intersection_point
-				else:
-					intersection_point_from_line_2_ahead_centroid = intersection_point
-		else:
-			var centroid_y = CENTROID.lattice_position.y
-			for intersection_point in intersection_points_1:
-				if intersection_point.y < centroid_y:
-					intersection_point_from_line_1_behind_centroid = intersection_point
-				else:
-					intersection_point_from_line_1_ahead_centroid = intersection_point
-			for intersection_point in intersection_points_2:
-				if intersection_point.y < centroid_y:
-					intersection_point_from_line_2_behind_centroid = intersection_point
-				else:
-					intersection_point_from_line_2_ahead_centroid = intersection_point
-		# check if the points are valid
-		if intersection_point_from_line_1_behind_centroid and intersection_point_from_line_2_behind_centroid:
-			cut_polygon(intersection_point_from_line_1_behind_centroid, intersection_point_from_line_2_behind_centroid - intersection_point_from_line_1_behind_centroid)
-		if intersection_point_from_line_1_ahead_centroid and intersection_point_from_line_2_ahead_centroid:
-			cut_polygon(intersection_point_from_line_1_ahead_centroid, intersection_point_from_line_2_ahead_centroid - intersection_point_from_line_1_ahead_centroid)
-		return
-	# if neither line intersects the polygon, do nothing
-	DEBUG.log("_base_split_cut: No intersection points found.")
+		var is_valid_cut = cut_polygon(line_point_1, line_dir_1)
+		valid_cuts += 1 if is_valid_cut else 0
+	elif intersection_points_1.size() == 0 and intersection_points_2.size() > 0:
+		var is_valid_cut = cut_polygon(line_point_2, line_dir_2)
+		valid_cuts += 1 if is_valid_cut else 0
+	# if both lines intersect the polygon, cut in the direction as position described by the intersection of the polygon with the first line and the intersection with the other line
+	elif intersection_points_1.size() > 0 and intersection_points_2.size() > 0:
+		for cut_start in intersection_points_1:
+			for cut_end in intersection_points_2:
+				if cut_start == cut_end:
+					continue
+				if would_cut_hull(cut_start, cut_end - cut_start):
+					continue
+				var is_valid_cut = cut_polygon(cut_start, cut_end - cut_start)
+				valid_cuts += 1 if is_valid_cut else 0
+	if valid_cuts == 0:
+		DEBUG.log("_split_cut: No valid cuts found.")
+		_play_split_failure_animation()
+	else:
+		DEBUG.log("_split_cut: Made %s valid cuts." % valid_cuts)
+		_play_split_success_animation()
 
 func h_split_cut(clicked_lattice_pos: Vector2) -> void:
 	_base_split_cut(clicked_lattice_pos, true)
@@ -692,18 +660,28 @@ func _play_cut_animation(line_point: Vector2, line_dir: Vector2) -> void:
 	new_cut_vfx.rotation = line_dir.angle()
 	new_cut_vfx.play()
 
-func _play_circle_animation(circle_center: Vector2, circle_radius: float, success: bool) -> void:
+func _play_circle_animation(circle_center: Vector2, circle_radius: float) -> void:
 	CIRCLE_VFX.global_position = circle_center * GLOBALS.DEFAULT_SCALING + GLOBALS.DEFAULT_OFFSET
 	CIRCLE_VFX.radius = circle_radius * GLOBALS.DEFAULT_SCALING
-	CIRCLE_VFX.successful_cut = success
 	CIRCLE_VFX.play_grow()
 
-func _play_split_animation(origin: Vector2, width: float, is_horizontal: bool, success: bool) -> void:
+func _play_circle_success_animation() -> void:
+	CIRCLE_VFX.play_success()
+
+func _play_circle_failure_animation() -> void:
+	CIRCLE_VFX.play_failure()
+
+func _play_split_animation(origin: Vector2, width: float, is_horizontal: bool) -> void:
 	SPLIT_VFX.global_position = origin * GLOBALS.DEFAULT_SCALING + GLOBALS.DEFAULT_OFFSET
 	SPLIT_VFX.width = width * GLOBALS.DEFAULT_SCALING
 	SPLIT_VFX.is_horizontal = is_horizontal
-	SPLIT_VFX.successful_cut = success
 	SPLIT_VFX.play_grow()
+
+func _play_split_success_animation() -> void:
+	SPLIT_VFX.play_success()
+
+func _play_split_failure_animation() -> void:
+	SPLIT_VFX.play_failure()
 
 # -- gomory cut mode vfx handling --
 func gomory_mode_selected(make_clickable: bool):
