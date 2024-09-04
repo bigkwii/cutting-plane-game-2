@@ -395,16 +395,8 @@ func circle_cut(clicked_lattice_pos: Vector2) -> void:
 	# the radius of the circle will be the distance to the closest lattice point
 	var circle_radius = (closest_lattice_point - circle_center).length()
 	var intersection_points = circle_intersects_polygon(packed_vertices, circle_center, circle_radius)
-	#if intersection_points.size() < 2:
-	#	DEBUG.log("circle_cut: Invalid number of intersection points: %s" % intersection_points.size())
-	#	return
-	var is_cut_successful = intersection_points.size() >= 2 # TODO: check with would_cut_polygon ?
-
-	# placeholder circle animation. TODO: when the real animations are done, this function should AWAIT the grow animation to finish
-	_play_circle_animation(circle_center, circle_radius) # TODO: The success of the cut should be determined AFTER cut_polygon
-	# wait for the animation to finish
-	# !!! TODO !!! await is probably not the best here.
-	# the function should really end here and there should be another function that gets triggered by the signal that performs the cut
+	# placeholder circle animation. TODO: animation should be interruptible
+	_play_circle_animation(circle_center, circle_radius)
 	await CIRCLE_VFX.grow_animation_finished
 
 	# make every valid cut possible
@@ -494,16 +486,31 @@ func _base_split_cut(clicked_lattice_pos: Vector2, is_horizontal: bool) -> void:
 	elif intersection_points_1.size() == 0 and intersection_points_2.size() > 0:
 		var is_valid_cut = cut_polygon(line_point_2, line_dir_2)
 		valid_cuts += 1 if is_valid_cut else 0
-	# if both lines intersect the polygon, cut in the direction as position described by the intersection of the polygon with the first line and the intersection with the other line
+	# if both lines intersect the polygon, the potential cuts to be made are from the "top" intersection points of lines 1 and 2, and the "bottom" lines
+	# TODO: Ugh... ugly ass code. simplify this
 	elif intersection_points_1.size() > 0 and intersection_points_2.size() > 0:
-		for cut_start in intersection_points_1:
-			for cut_end in intersection_points_2:
-				if cut_start == cut_end:
-					continue
-				if would_cut_hull(cut_start, cut_end - cut_start):
-					continue
-				var is_valid_cut = cut_polygon(cut_start, cut_end - cut_start)
-				valid_cuts += 1 if is_valid_cut else 0
+		var coord_int = 0 if is_horizontal else 1 # 0: x, 1: y
+		var top_intersection_1 = intersection_points_1[0]
+		for intersection in intersection_points_1:
+			if intersection[coord_int] > top_intersection_1[coord_int]:
+				top_intersection_1 = intersection
+		var top_intersection_2 = intersection_points_2[0]
+		for intersection in intersection_points_2:
+			if intersection[coord_int] > top_intersection_2[coord_int]:
+				top_intersection_2 = intersection
+		var bottom_intersection_1 = intersection_points_1[0]
+		for intersection in intersection_points_1:
+			if intersection[coord_int] < bottom_intersection_1[coord_int]:
+				bottom_intersection_1 = intersection
+		var bottom_intersection_2 = intersection_points_2[0]
+		for intersection in intersection_points_2:
+			if intersection[coord_int] < bottom_intersection_2[coord_int]:
+				bottom_intersection_2 = intersection
+		# make the cuts
+		var is_valid_cut_1 = cut_polygon(top_intersection_1, top_intersection_2 - top_intersection_1)
+		var is_valid_cut_2 = cut_polygon(bottom_intersection_1, bottom_intersection_2 - bottom_intersection_1)
+		valid_cuts += 1 if is_valid_cut_1 else 0
+		valid_cuts += 1 if is_valid_cut_2 else 0
 	if valid_cuts == 0:
 		DEBUG.log("_split_cut: No valid cuts found.")
 		_play_split_failure_animation()
