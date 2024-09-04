@@ -319,3 +319,5 @@ I found a funny bug where if somehow queue_free gets called on a @tool script, t
 I fixed split cuts, and on the same stride fixed a whole bunch of things, including adding forgiveness checks, adding the split animations, fixing success animations playing when they shouldn't, and adding a check to cut_polygon to prevent cuts that change the hull. I also added a little click animation because why not.
 
 Gomory cuts are still broken. I'm not sure exactly what went wrong, since the implementation looks more or less identical to the demo's. Debugging this is hard since the demo's code is all over the place. I'll keep at it.
+
+I'll go to bed now. Night!
