@@ -8,8 +8,6 @@
 
 [node name="polygon" type="Node2D"]
 script = ExtResource("1_f3ty0")
-color = null
-initial_vertices = null
 
 [node name="verts" type="Node2D" parent="."]
 
@@ -25,3 +23,5 @@ visible = false
 [node name="circle_vfx" parent="vfx" instance=ExtResource("5_yiyq2")]
 
 [node name="split_vfx" parent="vfx" instance=ExtResource("5_27eb1")]
+
+[node name="cut_pieces" type="Node2D" parent="."]

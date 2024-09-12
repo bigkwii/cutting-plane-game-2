@@ -66,6 +66,7 @@ _data = {
 
 [node name="click_vfx" type="Node2D"]
 script = ExtResource("1_1iwhf")
+color = Color(1, 1, 1, 0.5)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {

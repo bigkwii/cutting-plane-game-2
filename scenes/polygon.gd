@@ -26,10 +26,13 @@ var packed_vertices: PackedVector2Array = []
 @onready var CUT_VFXS = $vfx/cut_vfxs
 @onready var CIRCLE_VFX = $vfx/circle_vfx
 @onready var SPLIT_VFX = $vfx/split_vfx
+# - cut pieces vfx -
+@onready var CUT_PIECES = $cut_pieces
 
 # -- preloaded scenes --
 var POLY_POINT_SCENE = preload("res://scenes/poly_point.tscn")
 var CUT_VFX_SCENE = preload("res://scenes/cut_vfx.tscn")
+var CUT_PIECE_SCENE = preload("res://scenes/cut_piece.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -228,7 +231,7 @@ func polygon_area(polygon: PackedVector2Array) -> float:
 	area /= 2
 	return abs(area)
 
-## Splits a polygon in two halves given a line, and returns BOTH halves' vertices in a Array[PackedVector2Array]
+## Splits a polygon in two halves given a line, and returns BOTH halves' vertices in a Array[PackedVector2Array] (and the intersection points)
 ## [br][br]
 ## If something goes wrong, returns an empty array.
 ## [br][br]
@@ -279,7 +282,7 @@ func split_polygon(polygon: PackedVector2Array, line_point: Vector2, line_dir: V
 	if polygon_area(new_poly_1) < GLOBALS.GEOMETRY_EPSILON_SQ or polygon_area(new_poly_2) < GLOBALS.GEOMETRY_EPSILON_SQ:
 		DEBUG.log("split_polygon: 0-area polygon detected (%s and %s), invalidated." % [polygon_area(new_poly_1), polygon_area(new_poly_2)])
 		return []
-	return [new_poly_1, new_poly_2]
+	return [new_poly_1, new_poly_2, intersection_points]
 
 ## returns if a given line would've cut the convex hull of the polygon
 func would_cut_hull(line_point: Vector2, line_dir: Vector2) -> bool:
@@ -312,8 +315,19 @@ func cut_polygon(line_point: Vector2, line_dir: Vector2, allow_hull_cutting: boo
 	# play the cut animation
 	_play_cut_animation(line_point, line_dir)
 	var polygon_to_be_kept_index: int = 0 if Geometry2D.is_point_in_polygon(centroid, new_polygons[0]) else 1
+	# run forgiveness checks on the polygon to be kept
 	_run_forgiveness_checks(new_polygons[polygon_to_be_kept_index])
+	# rebuild the polygon with the polygon to be kept
 	rebuild_polygon(new_polygons[polygon_to_be_kept_index])
+	# make a cut piece with the polygon to be removed, with an inital speed and direction given by their centroids
+	var polygon_to_be_removed_index: int = 1 - polygon_to_be_kept_index
+	# get the perpendicular direction to the cut line
+	var intersection_points = new_polygons[2]
+	var cut_piece_direction = (intersection_points[0] - intersection_points[1]).rotated(-PI/2).normalized()
+	# make sure the direction is away from the polygon to be kept
+	if cut_piece_direction.dot(centroid - intersection_points[0]) > 0:
+		cut_piece_direction = -cut_piece_direction
+	_make_cut_piece(new_polygons[polygon_to_be_removed_index], cut_piece_direction)
 	return true
 
 ## returns true if a cut made with this line WOULD cut the polygon TODO: deprecated?
@@ -589,15 +603,15 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> void:
 		violation2 = (GMIaLattice2.dot(selected_vertex) - GMIb2) / GMIaLattice2.length()
 	# Determine which GMI cut to apply based on the violation
 	var GMIaLattice: Vector2
-	var GMIaSlack: Vector2
+	var _GMIaSlack: Vector2
 	var GMIb: float
 	if violation1 < violation2:
 		GMIaLattice = GMIaLattice1
-		GMIaSlack = GMIaSlack1
+		_GMIaSlack = GMIaSlack1
 		GMIb = GMIb1
 	else:
 		GMIaLattice = GMIaLattice2
-		GMIaSlack = GMIaSlack2
+		_GMIaSlack = GMIaSlack2
 		GMIb = GMIb2
 	# get the points for the cut
 	var point1: Vector2
@@ -607,7 +621,7 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> void:
 		point1.y = 0
 		point2.x = 0
 		point2.y = GMIb / GMIaLattice.y
-	elif (GMIaLattice.x == 0):
+	elif (abs(GMIaLattice.x) < GLOBALS.GEOMETRY_EPSILON):
 		point1.x = 0
 		point1.y = GMIb / GMIaLattice.y
 		point2.x = 1
@@ -621,7 +635,7 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> void:
 	var line_point = point1
 	var line_dir = point2 - point1
 	# Perform the cut on the polygon
-	DEBUG.log("gomory_cut: Performing cut with line: point: %s, dir: %s; GMIaLattice: %s, GMib: %s" % [line_point, line_dir, GMIaLattice, GMIb], 100)
+	DEBUG.log("gomory_cut: Performing cut with line: point1: %s, point2: %s" % [point1, point2], 100)
 	cut_polygon(line_point, line_dir)
 	# this is to update the hover vfx on the verts. i know, it's a bit hacky.
 	gomory_mode_selected(true)
@@ -659,7 +673,7 @@ func get_gmi(a_lattice: Vector2, a_slack: Vector2, b: float, inverse_basis_rows:
 	return [0, GMIaLattice, GMIaSlack, GMIb]  # GMI cut successful
 
 # -- placeholder cut animations --
-# TODO: make real animations
+# TODO: make circle and split animations interruplible (?)
 
 func _play_cut_animation(line_point: Vector2, line_dir: Vector2) -> void:
 	var new_cut_vfx = CUT_VFX_SCENE.instantiate()
@@ -714,3 +728,13 @@ func update_verts_hover_vfx(mouse_lattice_pos):
 				selected_vert = vert
 	if selected_vert:
 		selected_vert.hover = true
+
+# -- cut piece creation --
+func _make_cut_piece(lattice_verts: PackedVector2Array, initial_velocity_dir: Vector2 = Vector2(0, 0)) -> void:
+	var new_cut_piece = CUT_PIECE_SCENE.instantiate()
+	new_cut_piece.packed_vertices = lattice_verts
+	new_cut_piece.SCALING = SCALING
+	new_cut_piece.OFFSET = OFFSET
+	new_cut_piece.color = color
+	new_cut_piece.initial_velocity_dir = initial_velocity_dir
+	CUT_PIECES.add_child(new_cut_piece)
