@@ -42,6 +42,7 @@ _data = {
 }
 
 [node name="cut_piece" type="RigidBody2D"]
+gravity_scale = 0.0
 script = ExtResource("1_ku2v0")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

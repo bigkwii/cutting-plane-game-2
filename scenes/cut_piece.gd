@@ -12,9 +12,9 @@ extends RigidBody2D
 @onready var ANIM_PLAYER: AnimationPlayer = $AnimationPlayer
 
 @export var initial_velocity_dir: Vector2 = Vector2(0, 0)
-var velocity: Vector2 = Vector2(0, 0)
-var gravity: Vector2 = Vector2(0, 1)
-var speed = 5
+var speed: float = 1000
+var air_res: float = 10
+var radian_randomness: float = 0.0
 
 func _ready():
 	collision_shape.shape = ConvexPolygonShape2D.new()
@@ -23,17 +23,16 @@ func _ready():
 		packed_vertices[i] = packed_vertices[i] * SCALING + OFFSET
 	collision_shape.shape.set_points(packed_vertices)
 	# add some randomness to the initial velocity
-	initial_velocity_dir = initial_velocity_dir.rotated(RANDOM.RNG.randf_range(-0.15, 0.15))
-	velocity = initial_velocity_dir * speed
+	initial_velocity_dir = initial_velocity_dir.rotated(RANDOM.RNG.randf_range(-radian_randomness, radian_randomness))
+	linear_velocity = initial_velocity_dir * speed
 	# schedule for self destruction
 	ANIM_PLAYER.play("fade")
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta):
 	queue_redraw()
-	# apply gravity
-	velocity += gravity * delta
-	move_and_collide(velocity)
+	# apply air resistance
+	linear_velocity = linear_velocity.lerp(Vector2.ZERO, air_res * delta)
 
 func _draw():
 	if packed_vertices.size() < 3:

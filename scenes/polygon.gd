@@ -77,7 +77,7 @@ func build_polygon() -> void:
 	for vert in packed_vertices:
 		_add_new_vertex(vert)
 	calculate_centroid()
-	calculate_convex_integer_hull(true) # for testing purposes, remove this `true` later, recalculating the hull is expensive and unnecessary
+	calculate_convex_integer_hull(true) # TODO: for testing purposes, remove this `true` later, recalculating the hull is expensive and unnecessary
 
 ## Removes all vertex children from the polygon
 func _delete_verts() -> void:
