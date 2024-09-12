@@ -4,7 +4,7 @@ extends RigidBody2D
 ## note: lattice coords. convert to game coords with SCALING and OFFSET
 @export var packed_vertices: PackedVector2Array = PackedVector2Array()
 @export var color: Color = Color(1, 1, 1)
-@export var alpha: int = 1
+@export var alpha: float = 1
 @export var SCALING: int = GLOBALS.DEFAULT_SCALING
 @export var OFFSET: Vector2 = GLOBALS.DEFAULT_OFFSET
 
