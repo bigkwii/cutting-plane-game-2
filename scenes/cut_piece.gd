@@ -49,5 +49,4 @@ func _draw():
 
 func _on_animation_player_animation_finished(anim_name):
 	if anim_name == "fade":
-		DEBUG.log("cut_piece: Animation 'fade' finished, deleting...")
 		queue_free()
