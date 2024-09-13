@@ -1,4 +1,4 @@
-@tool
+#@tool
 
 extends Node2D
 ## A vertex of a polygon
