@@ -360,7 +360,7 @@ func _run_forgiveness_checks(polygon: PackedVector2Array):
 			i -= 1
 	# 3) merge vertices that are very close to each other
 	for i in range(polygon.size()):
-		var current_point = polygon[i]
+		var current_point = polygon[i] # !!! TODO: CRASHES HERE SOMETIMES (OUT OF RANGE) !!!
 		var next_point = polygon[(i + 1) % polygon.size()]
 		if current_point.distance_to(next_point) < GLOBALS.FORGIVENESS_MERGE_EPSILON:
 			polygon.remove_at(i)
@@ -546,7 +546,7 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> void:
 		if packed_vertices[i].x == int(packed_vertices[i].x) and packed_vertices[i].y == int(packed_vertices[i].y):
 			continue
 		var distance = packed_vertices[i].distance_to(clicked_lattice_pos)
-		if distance < 0.1 and distance < closest_distance: # TODO: this!
+		if distance < GLOBALS.GOMORY_CUT_CLICK_RANGE and distance < closest_distance:
 			closest_distance = distance
 			selected_index = i
 	if selected_index == -1:
@@ -572,32 +572,32 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> void:
 	# First GMI cut
 	var aLattice1 = Vector2(1, 0)
 	var aSlack1 = inverse_basis_rows[0]
-	var b = aSlack1.x * b1 + aSlack1.y * b2
+	var b = inverse_basis_rows[0].x * b1 + inverse_basis_rows[0].y * b2
 	var result1 = get_gmi(aLattice1, aSlack1, b, inverse_basis_rows)
-	var violation1 = INF
-	var GMIaLattice1: Vector2
-	var GMIaSlack1: Vector2
-	var GMIb1: float
-	if result1[0] == 0:
-		GMIaLattice1 = result1[1]
-		GMIaSlack1 = result1[2]
-		GMIb1 = result1[3]
+	var violation1: float = 0.0
+	var GMIaLattice1: Vector2 = result1[0]
+	var GMIaSlack1: Vector2 = result1[1]
+	var GMIb1: float = result1[2]
+	var status = 0
+	if (abs(selected_vertex.x - round(selected_vertex.x)) < GLOBALS.GEOMETRY_EPSILON):
+		status = 1
+	if status == 0:
 		GMIb1 -= (GMIaSlack1.x * b1 + GMIaSlack1.y * b2)
 		GMIaLattice1 -= Vector2(GMIaSlack1.x * a1.x + GMIaSlack1.y * a2.x, GMIaSlack1.x * a1.y + GMIaSlack1.y * a2.y)
 		violation1 = (GMIaLattice1.dot(selected_vertex) - GMIb1) / GMIaLattice1.length()
 	# Second GMI cut
 	var aLattice2 = Vector2(0, 1)
 	var aSlack2 = inverse_basis_rows[1]
-	b = aSlack2.x * b1 + aSlack2.y * b2
+	b = inverse_basis_rows[1].x * b1 + inverse_basis_rows[1].y * b2
 	var result2 = get_gmi(aLattice2, aSlack2, b, inverse_basis_rows)
-	var violation2 = INF
-	var GMIaLattice2: Vector2
-	var GMIaSlack2: Vector2
-	var GMIb2: float
-	if result2[0] == 0:
-		GMIaLattice2 = result2[1]
-		GMIaSlack2 = result2[2]
-		GMIb2 = result2[3]
+	var violation2: float = 0.0
+	var GMIaLattice2: Vector2 = result2[0]
+	var GMIaSlack2: Vector2 = result2[1]
+	var GMIb2: float = result2[2]
+	status = 0
+	if (abs(selected_vertex.y - round(selected_vertex.y)) < GLOBALS.GEOMETRY_EPSILON):
+		status = 1
+	if status == 0:
 		GMIb2 -= (GMIaSlack2.x * b1 + GMIaSlack2.y * b2)
 		GMIaLattice2 -= Vector2(GMIaSlack2.x * a1.x + GMIaSlack2.y * a2.x, GMIaSlack2.x * a1.y + GMIaSlack2.y * a2.y)
 		violation2 = (GMIaLattice2.dot(selected_vertex) - GMIb2) / GMIaLattice2.length()
@@ -616,12 +616,12 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> void:
 	# get the points for the cut
 	var point1: Vector2
 	var point2: Vector2
-	if (GMIaLattice.x > 0 and GMIaLattice.y > 0):
+	if ( GMIaLattice.x != 0 and GMIaLattice.y != 0 ):
 		point1.x = GMIb / GMIaLattice.x
 		point1.y = 0
 		point2.x = 0
 		point2.y = GMIb / GMIaLattice.y
-	elif (abs(GMIaLattice.x) < GLOBALS.GEOMETRY_EPSILON):
+	elif ( GMIaLattice.x == 0 ):
 		point1.x = 0
 		point1.y = GMIb / GMIaLattice.y
 		point2.x = 1
@@ -635,7 +635,6 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> void:
 	var line_point = point1
 	var line_dir = point2 - point1
 	# Perform the cut on the polygon
-	DEBUG.log("gomory_cut: Performing cut with line: point1: %s, point2: %s" % [point1, point2], 100)
 	cut_polygon(line_point, line_dir)
 	# this is to update the hover vfx on the verts. i know, it's a bit hacky.
 	gomory_mode_selected(true)
@@ -670,7 +669,7 @@ func get_gmi(a_lattice: Vector2, a_slack: Vector2, b: float, inverse_basis_rows:
 	GMIb = 1.0
 	GMIaLattice.x = gmiLattice.x * inverse_basis_rows[0].x + gmiLattice.y * inverse_basis_rows[1].x
 	GMIaLattice.y = gmiLattice.x * inverse_basis_rows[0].y + gmiLattice.y * inverse_basis_rows[1].y
-	return [0, GMIaLattice, GMIaSlack, GMIb]  # GMI cut successful
+	return [GMIaLattice, GMIaSlack, GMIb]  # GMI cut successful
 
 # -- placeholder cut animations --
 # TODO: make circle and split animations interruplible (?)

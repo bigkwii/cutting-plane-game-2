@@ -34,7 +34,7 @@ func _process(_delta):
 func _draw():
 	draw_circle(Vector2.ZERO, radius, color)
 	if clickable:
-		draw_circle(Vector2.ZERO, 0.1 * GLOBALS.DEFAULT_SCALING, Color(1, 0, 0, 0.5), false, 1) # TODO: replace 0.1 with global var
+		draw_circle(Vector2.ZERO, GLOBALS.GOMORY_CUT_CLICK_RANGE * GLOBALS.DEFAULT_SCALING, Color(1, 0, 0, 0.5), false, 1)
 	if hover:
 		draw_circle(Vector2.ZERO, radius, Color.RED, false, 2)
 	if is_integral():

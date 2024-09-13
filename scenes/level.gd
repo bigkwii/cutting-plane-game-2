@@ -163,13 +163,13 @@ func _handle_gomory_cut_selected(make_clickable: bool): # TODO: AFTER A CUT, THE
 func _handle_gomory_cut_hover():
 	if cut_mode != CUT_MODES.GOMORY_CUT:
 		return
-	var mouse_lattice_pos = (get_global_mouse_position() - GLOBALS.DEFAULT_OFFSET) / GLOBALS.DEFAULT_SCALING
+	var mouse_lattice_pos = (get_global_mouse_position() - GLOBALS.DEFAULT_OFFSET) / GLOBALS.DEFAULT_SCALING # TODO: these should be read from the level file
 	POLYGON.update_verts_hover_vfx(mouse_lattice_pos)
 
 func _handle_gomory_cut_click():
 	if cut_mode != CUT_MODES.GOMORY_CUT: # prob unneccesary
 		return
-	var mouse_lattice_pos = (get_global_mouse_position() - GLOBALS.DEFAULT_OFFSET) / GLOBALS.DEFAULT_SCALING
+	var mouse_lattice_pos = (get_global_mouse_position() - GLOBALS.DEFAULT_OFFSET) / GLOBALS.DEFAULT_SCALING # TODO: these should be read from the level file
 	POLYGON.gomory_cut(mouse_lattice_pos)
 
 # click vfx
