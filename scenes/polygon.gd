@@ -351,6 +351,8 @@ func _run_forgiveness_checks(polygon: PackedVector2Array):
 			polygon[i] = snapped( polygon[i], Vector2(GLOBALS.FORGIVENESS_SNAP_EPSILON, GLOBALS.FORGIVENESS_SNAP_EPSILON) )
 	# 2) remove vertices that are very close to being colinear with their neighbors
 	for i in range(polygon.size()):
+		if i >= polygon.size(): # failsafe
+			break
 		var current_point = polygon[i]
 		var prev_point = polygon[(i - 1) % polygon.size()]
 		var next_point = polygon[(i + 1) % polygon.size()]
@@ -360,6 +362,8 @@ func _run_forgiveness_checks(polygon: PackedVector2Array):
 			i -= 1
 	# 3) merge vertices that are very close to each other
 	for i in range(polygon.size()):
+		if i >= polygon.size(): # failsafe
+			break
 		var current_point = polygon[i] # !!! TODO: CRASHES HERE SOMETIMES (OUT OF RANGE) !!!
 		var next_point = polygon[(i + 1) % polygon.size()]
 		if current_point.distance_to(next_point) < GLOBALS.FORGIVENESS_MERGE_EPSILON:
@@ -569,7 +573,7 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> void:
 		a2 = -a2
 		b2 = -b2
 	var inverse_basis_rows = compute_inverse_basis_rows(a1.x, a1.y, a2.x, a2.y)
-	# First GMI cut
+	# 1st tableau row
 	var aLattice1 = Vector2(1, 0)
 	var aSlack1 = inverse_basis_rows[0]
 	var b = inverse_basis_rows[0].x * b1 + inverse_basis_rows[0].y * b2
@@ -580,12 +584,14 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> void:
 	var GMIb1: float = result1[2]
 	var status = 0
 	if (abs(selected_vertex.x - round(selected_vertex.x)) < GLOBALS.GEOMETRY_EPSILON):
+		# component is too close to an integer, skip
 		status = 1
 	if status == 0:
+		# slack projection
 		GMIb1 -= (GMIaSlack1.x * b1 + GMIaSlack1.y * b2)
 		GMIaLattice1 -= Vector2(GMIaSlack1.x * a1.x + GMIaSlack1.y * a2.x, GMIaSlack1.x * a1.y + GMIaSlack1.y * a2.y)
 		violation1 = (GMIaLattice1.dot(selected_vertex) - GMIb1) / GMIaLattice1.length()
-	# Second GMI cut
+	# 2nd tableau row
 	var aLattice2 = Vector2(0, 1)
 	var aSlack2 = inverse_basis_rows[1]
 	b = inverse_basis_rows[1].x * b1 + inverse_basis_rows[1].y * b2
@@ -596,8 +602,10 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> void:
 	var GMIb2: float = result2[2]
 	status = 0
 	if (abs(selected_vertex.y - round(selected_vertex.y)) < GLOBALS.GEOMETRY_EPSILON):
+		# component is too close to an integer, skip
 		status = 1
 	if status == 0:
+		# slack projection
 		GMIb2 -= (GMIaSlack2.x * b1 + GMIaSlack2.y * b2)
 		GMIaLattice2 -= Vector2(GMIaSlack2.x * a1.x + GMIaSlack2.y * a2.x, GMIaSlack2.x * a1.y + GMIaSlack2.y * a2.y)
 		violation2 = (GMIaLattice2.dot(selected_vertex) - GMIb2) / GMIaLattice2.length()
