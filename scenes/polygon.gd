@@ -178,7 +178,7 @@ func is_point_on_line(point: Vector2, line_point: Vector2, line_dir: Vector2) ->
 ## segment_start, segment_end: start and end points of the segment
 func is_point_on_segment(point: Vector2, segment_start: Vector2, segment_end: Vector2) -> bool:
 	var cross_product = (point.y - segment_start.y) * (segment_end.x - segment_start.x) - (point.x - segment_start.x) * (segment_end.y - segment_start.y)
-	if abs(cross_product) > GLOBALS.GEOMETRY_EPSILON:
+	if abs(cross_product) > GLOBALS.CROSS_PRODUCT_EPSILON:
 		return false
 	var dot_product = (point.x - segment_start.x) * (segment_end.x - segment_start.x) + (point.y - segment_start.y) * (segment_end.y - segment_start.y)
 	if dot_product < 0:
@@ -570,7 +570,8 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> void:
 	var GMIaLattice1: Vector2 = gmi_result_1[0]
 	var GMIaSlack1: Vector2 = gmi_result_1[1]
 	var GMIb1: float = gmi_result_1[2]
-	if (abs(selected_vertex.x - round(selected_vertex.x)) > GLOBALS.GEOMETRY_EPSILON): # if the component isn't too close to an integer
+	# if gmi cut possible (unnecessary?) and the component isn't too close to an integer
+	if (abs(b - floor(b)) > GLOBALS.GEOMETRY_EPSILON) and (abs(selected_vertex.x - round(selected_vertex.x)) > GLOBALS.GEOMETRY_EPSILON):
 		# slack projection
 		GMIb1 -= (GMIaSlack1.x * b1 + GMIaSlack1.y * b2)
 		GMIaLattice1 -= Vector2(GMIaSlack1.x * a1.x + GMIaSlack1.y * a2.x, GMIaSlack1.x * a1.y + GMIaSlack1.y * a2.y)
@@ -584,7 +585,8 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> void:
 	var GMIaLattice2: Vector2 = gmi_result_2[0]
 	var GMIaSlack2: Vector2 = gmi_result_2[1]
 	var GMIb2: float = gmi_result_2[2]
-	if (abs(selected_vertex.y - round(selected_vertex.y)) > GLOBALS.GEOMETRY_EPSILON): # if the component isn't too close to an integer
+	# if gmi cut possible (unnecessary?) and the component isn't too close to an integer
+	if (abs(b - floor(b)) > GLOBALS.GEOMETRY_EPSILON) and (abs(selected_vertex.y - round(selected_vertex.y)) > GLOBALS.GEOMETRY_EPSILON):
 		# slack projection
 		GMIb2 -= (GMIaSlack2.x * b1 + GMIaSlack2.y * b2)
 		GMIaLattice2 -= Vector2(GMIaSlack2.x * a1.x + GMIaSlack2.y * a2.x, GMIaSlack2.x * a1.y + GMIaSlack2.y * a2.y)
@@ -620,10 +622,8 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> void:
 		point2.x = GMIb / GMIaLattice.x
 		point2.y = 1.0
 	# turn the points into a line
-	var line_point = snapped( point1 , Vector2(GLOBALS.GEOMETRY_EPSILON, GLOBALS.GEOMETRY_EPSILON) )
-	var line_dir = snapped( point2 - point1 , Vector2(GLOBALS.GEOMETRY_EPSILON, GLOBALS.GEOMETRY_EPSILON) )
-	DEBUG.log("gomory_cut: GMI points: %s, %s" % [point1, point2])
-	DEBUG.log("gomory_cut: GMI cut line: %s, %s" % [line_point, line_dir])
+	var line_point = point1
+	var line_dir = point2 - point1
 	# draw that line, for debugging purposes
 	_play_cut_animation(line_point, line_dir)
 	# Perform the cut on the polygon
@@ -635,8 +635,8 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> void:
 func compute_inverse_basis_rows(a: float, b: float, c: float, d: float) -> Array[Vector2]:
 	var out_rows: Array[Vector2] = []
 	var determinant = a * d - b * c
-	if determinant == 0:
-		DEBUG.log("compute_inverse_basis_rows: Error: Determinant is zero!")
+	if abs(determinant) < GLOBALS.GEOMETRY_EPSILON:
+		DEBUG.log("compute_inverse_basis_rows: Error: Determinant is (too close to) zero!")
 		return []
 	out_rows.append(Vector2(d / determinant, -b / determinant))
 	out_rows.append(Vector2(-c / determinant, a / determinant))

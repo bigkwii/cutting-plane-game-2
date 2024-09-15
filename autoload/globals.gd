@@ -20,6 +20,8 @@ var CLICK_EPSILON = 0.01
 ## epsilons for geometric calculations
 var GEOMETRY_EPSILON = 0.00001
 var GEOMETRY_EPSILON_SQ = GEOMETRY_EPSILON * GEOMETRY_EPSILON
+## epsilon for cross product checking
+var CROSS_PRODUCT_EPSILON = GEOMETRY_EPSILON * 10
 ## epsilon for snapping newly discovered intersection points
 var INTERSECTION_SNAP_EPSILON = GEOMETRY_EPSILON * 10
 ## gomory cut vertex click range
