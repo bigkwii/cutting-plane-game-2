@@ -185,8 +185,6 @@ func line_intersects_segment(line_point: Vector2, line_direction: Vector2, segme
 		return null
 	if not is_point_on_segment(intersection, segment_start, segment_end):
 		return null
-	# snap the intersection to avoid floating point badness
-	intersection = snapped( intersection, Vector2(GLOBALS.GEOMETRY_EPSILON, GLOBALS.GEOMETRY_EPSILON) )
 	return intersection
 
 ## returns all the intersection points of a line with a polygon
@@ -201,9 +199,6 @@ func line_intersects_polygon(polygon: PackedVector2Array, line_point: Vector2, l
 		var intersection = line_intersects_segment(line_point, line_dir, start_point, end_point)
 		if intersection and not intersection in intersection_points:
 			intersection_points.append(intersection)
-	# snap the intersection points with epsilons to avoid floating point badness !!! TODO: DOESNT SEEM TO WORK !!!
-	for intersection in intersection_points:
-		intersection = snapped( intersection, Vector2(GLOBALS.GEOMETRY_EPSILON, GLOBALS.GEOMETRY_EPSILON) )
 	return intersection_points
 
 ## Determines if a given point is "above" a given line. Above being the line's normal.
