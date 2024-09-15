@@ -1,1 +1,30 @@
-{}
+{
+    "name": "Demo 9 - Shine Bright Like A Diamond",
+	"max_y": 7, 
+	"poly_color": "#ffffff",
+	"circle_budget": 5,
+	"gomory_budget": 4,
+	"split_budget": 5,
+	"poly_vertices": [
+        [
+            4.0,
+            5.8
+        ],
+        [
+            6.5,
+            1.8
+        ],
+        [
+            5.0,
+            0.5
+        ],
+        [
+            3.0,
+            0.5
+        ],
+        [
+            1.5,
+            1.8
+        ]
+    ]
+}

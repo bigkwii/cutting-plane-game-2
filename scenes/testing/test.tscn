@@ -7,4 +7,4 @@
 script = ExtResource("1_ue41n")
 
 [node name="level" parent="." instance=ExtResource("2_or463")]
-level_json_path = "res://levels/demo/8.json"
+level_json_path = "res://levels/demo/9.json"

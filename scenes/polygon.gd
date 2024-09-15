@@ -353,6 +353,10 @@ func _run_forgiveness_checks(polygon: PackedVector2Array):
 			continue
 		var prev_point = polygon[(i - 1) % polygon.size()]
 		var next_point = polygon[(i + 1) % polygon.size()]
+		# in the very rare case where snapping causes the hull to be cut... skip for now TODO: how do we handle this?
+		# (this means gomory cuts can fail, that is, be selectable when clicking them results in an invalid (usually 0 area) cut)
+		if line_intersects_polygon(CONVEX_INTEGER_HULL.convex_integer_hull, prev_point, (next_point - prev_point)):
+			continue
 		var dot = (current_point - prev_point).normalized().dot((next_point - current_point).normalized())
 		if abs(dot - 1) < GLOBALS.FORGIVENESS_COLINEAR_EPSILON:
 			polygon.remove_at(i)
