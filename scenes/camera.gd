@@ -12,9 +12,11 @@ var zoom_max = 3.0
 var zoom_step = 0.1
 var is_panning = false
 var last_mouse_pos = Vector2()
-var scene_rect = Rect2(Vector2(), DisplayServer.screen_get_size())
+var scene_rect = Rect2(Vector2(), Vector2(1920, 1080)) # just a default value
 
 func _ready():
+	# set scene_rect
+	scene_rect.size = get_viewport_rect().size
 	# center the camera
 	position = scene_rect.position + scene_rect.size / 2
 	# Initialize zoom level
