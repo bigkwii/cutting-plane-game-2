@@ -157,6 +157,21 @@ func calculate_convex_integer_hull(redraw: bool = false) -> void:
 	if redraw:
 		CONVEX_INTEGER_HULL.queue_redraw()
 
+## Determines if a given point is "above" a given line. Above being the line's normal.
+## [br][br]
+## point: Vector2 the point to check
+## line_point, line_dir: point and direction of the line
+func is_point_above_line(point: Vector2, line_point: Vector2, line_dir: Vector2) -> bool:
+	return (line_dir.x) * (point.y - line_point.y) > (line_dir.y) * (point.x - line_point.x)
+
+## Determines if a given point is ON a given line.
+## [br][br]
+## point: Vector2 the point to check
+## line_point, line_dir: point and direction of the line
+func is_point_on_line(point: Vector2, line_point: Vector2, line_dir: Vector2) -> bool:
+	var cross_product = (point.y - line_point.y) * line_dir.x - (point.x - line_point.x) * line_dir.y
+	return abs(cross_product) < GLOBALS.GEOMETRY_EPSILON
+
 ## determines if a given point is on a segment
 ## [br][br]
 ## point: Vector2 the point to check
@@ -201,22 +216,6 @@ func line_intersects_polygon(polygon: PackedVector2Array, line_point: Vector2, l
 			intersection_points.append(intersection)
 	return intersection_points
 
-## Determines if a given point is "above" a given line. Above being the line's normal.
-## [br][br]
-## point: Vector2 the point to check
-## line_point, line_dir: point and direction of the line
-func is_point_above_line(point: Vector2, line_point: Vector2, line_dir: Vector2) -> bool:
-	return (line_dir.x) * (point.y - line_point.y) > (line_dir.y) * (point.x - line_point.x)
-
-## Determines if a given point is ON a given line.
-## [br][br]
-## point: Vector2 the point to check
-## line_point, line_dir: point and direction of the line
-func is_point_on_line(point: Vector2, line_point: Vector2, line_dir: Vector2) -> bool:
-	var relative_pos = point - line_point
-	var cross_prod = relative_pos.cross(line_dir)
-	return abs(cross_prod) < GLOBALS.GEOMETRY_EPSILON
-
 ## Calculates the UNSIGNED area of a polygon represented by a PackedVector2Array. Works for both CW and CCW winding orders.
 ## [br][br]
 ## polygon: PackedVector2Array the polygon to calculate the area of
@@ -241,40 +240,29 @@ func polygon_area(polygon: PackedVector2Array) -> float:
 func split_polygon(polygon: PackedVector2Array, line_point: Vector2, line_dir: Vector2) -> Array[PackedVector2Array]:
 	var new_poly_1 = PackedVector2Array()
 	var new_poly_2 = PackedVector2Array()
-	var intersection_points = line_intersects_polygon(polygon, line_point, line_dir)
-	if intersection_points.size() < 2:
-		DEBUG.log("split_polygon: Invalid number of intersection points: %s (%s)" % [intersection_points.size(), intersection_points])
-		return []
-	var added_intersection_1 = false
-	var added_intersection_2 = false
+	var intersection_points = []
 	for i in range(polygon.size()):
 		var current_point = polygon[i]
 		var next_point = polygon[(i + 1) % polygon.size()]
-
-		var current_on_line = is_point_on_line(current_point, line_point, line_dir)
-		var next_on_line = is_point_on_line(next_point, line_point, line_dir)
-
-		if current_on_line:
-			# If the current point lies on the line, add it to both polygons only once
-			if not added_intersection_1:
-				new_poly_1.append(current_point)
-				new_poly_2.append(current_point)
-				added_intersection_1 = true
-			elif not added_intersection_2:
-				new_poly_1.append(current_point)
-				new_poly_2.append(current_point)
-				added_intersection_2 = true
-			continue
 		if is_point_above_line(current_point, line_point, line_dir):
 			new_poly_1.append(current_point)
 		else:
 			new_poly_2.append(current_point)
-		if not current_on_line and not next_on_line:
-			var intersection_candidate = line_intersects_segment(line_point, line_dir, current_point, next_point)
-			if intersection_candidate:
-				# Always add the intersection candidate to both polygons
-				new_poly_1.append(intersection_candidate)
-				new_poly_2.append(intersection_candidate)
+		#if not current_on_line and not next_on_line:
+		var intersection_candidate = line_intersects_segment(line_point, line_dir, current_point, next_point)
+		if intersection_candidate:
+			# snap the intersection candidate to avoid floating point imprecision
+			intersection_candidate = snapped(intersection_candidate, Vector2(GLOBALS.INTERSECTION_SNAP_EPSILON, GLOBALS.INTERSECTION_SNAP_EPSILON))
+			# check for duplicates
+			if intersection_candidate in intersection_points:
+				continue
+			# Always add the intersection candidate to both polygons
+			new_poly_1.append(intersection_candidate)
+			new_poly_2.append(intersection_candidate)
+			intersection_points.append(intersection_candidate)
+	if intersection_points.size() < 2:
+		DEBUG.log("split_polygon: Invalid number of intersection points: %s (%s)" % [intersection_points.size(), intersection_points])
+		return []
 	# area check. if any of the new polygons has an area of 0, it's invalid
 	if polygon_area(new_poly_1) < GLOBALS.GEOMETRY_EPSILON_SQ or polygon_area(new_poly_2) < GLOBALS.GEOMETRY_EPSILON_SQ:
 		DEBUG.log("split_polygon: 0-area polygon detected (%s and %s), invalidated." % [polygon_area(new_poly_1), polygon_area(new_poly_2)])
@@ -286,8 +274,8 @@ func would_cut_hull(line_point: Vector2, line_dir: Vector2) -> bool:
 	var hull = CONVEX_INTEGER_HULL.convex_integer_hull
 	var new_polygons = split_polygon(hull, line_point, line_dir)
 	if new_polygons.size() == 0:
-		DEBUG.log("would_cut_hull: No new polygons found.")
 		return false
+	DEBUG.log("would_cut_hull: new_polygons: %s" % [new_polygons])
 	return true
 	
 ## Cuts the polygon, given a line, and keeps the half that contains the centroid of the original.
@@ -353,6 +341,9 @@ func _run_forgiveness_checks(polygon: PackedVector2Array):
 		if i >= polygon.size(): # failsafe
 			break
 		var current_point = polygon[i]
+		# don't remove points from the convex hull
+		if current_point in CONVEX_INTEGER_HULL.convex_integer_hull:
+			continue
 		var prev_point = polygon[(i - 1) % polygon.size()]
 		var next_point = polygon[(i + 1) % polygon.size()]
 		var dot = (current_point - prev_point).normalized().dot((next_point - current_point).normalized())
@@ -363,7 +354,7 @@ func _run_forgiveness_checks(polygon: PackedVector2Array):
 	for i in range(polygon.size()):
 		if i >= polygon.size(): # failsafe
 			break
-		var current_point = polygon[i] # !!! TODO: CRASHES HERE SOMETIMES (OUT OF RANGE) !!!
+		var current_point = polygon[i]
 		var next_point = polygon[(i + 1) % polygon.size()]
 		if current_point.distance_to(next_point) < GLOBALS.FORGIVENESS_MERGE_EPSILON:
 			polygon.remove_at(i)
@@ -383,8 +374,6 @@ func circle_intersects_polygon(polygon: PackedVector2Array, circle_center: Vecto
 		# intersection_parameter is a value between 0 and 1. convert to the actual position of the intersection
 		if intersection_parameter != -1:
 			var intersection = start_point + intersection_parameter * (end_point - start_point)
-			# snapped to avoid floating point badness
-			intersection = snapped( intersection, Vector2(GLOBALS.GEOMETRY_EPSILON, GLOBALS.GEOMETRY_EPSILON) )
 			intersection_points.append(intersection)
 	return intersection_points
 
@@ -662,8 +651,6 @@ func get_gmi(a_lattice: Vector2, a_slack: Vector2, b: float, inverse_basis_rows:
 	var f0 = b - floor(b)
 	var f1 = aprime.x - floor(aprime.x)
 	var f2 = aprime.y - floor(aprime.y)
-	if f0 == 0.0:
-		return [1, GMIaLattice, GMIaSlack, GMIb]  # No GMI cut possible
 	var gmiLattice = Vector2()
 	gmiLattice.x = f1 / f0 if f1 <= f0 else (1.0 - f1) / (1.0 - f0)
 	gmiLattice.y = f2 / f0 if f2 <= f0 else (1.0 - f2) / (1.0 - f0)

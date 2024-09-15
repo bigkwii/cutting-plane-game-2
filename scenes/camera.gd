@@ -8,7 +8,7 @@ extends Camera2D
 
 # Variables to control the zoom and panning
 var zoom_min = 1.0
-var zoom_max = 3.0
+var zoom_max = 5.0
 var zoom_step = 0.1
 var is_panning = false
 var last_mouse_pos = Vector2()
