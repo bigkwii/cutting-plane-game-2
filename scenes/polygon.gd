@@ -186,7 +186,6 @@ func is_point_on_segment(point: Vector2, segment_start: Vector2, segment_end: Ve
 	var squared_length = (segment_end - segment_start).length_squared()
 	if dot_product - squared_length > GLOBALS.GEOMETRY_EPSILON:
 		# TODO: Keep an eye on this epsilon. this one could be tricky.
-		#DEBUG.log("is_point_on_segment: dot_product: %s, squared_length: %s" % [dot_product, squared_length], 100)
 		return false
 	return true
 
@@ -626,7 +625,7 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> void:
 	# turn the points into a line
 	var line_point = point1
 	var line_dir = point2 - point1
-	# draw that line, for debugging purposes
+	# draw that line, for debugging purposes TODO: delete this
 	_play_cut_animation(line_point, line_dir)
 	# Perform the cut on the polygon
 	cut_polygon(line_point, line_dir)
