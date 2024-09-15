@@ -351,7 +351,9 @@ func _run_forgiveness_checks(polygon: PackedVector2Array):
 	# 1) snap to lattice points if close enough
 	for i in range(polygon.size()):
 		if abs(polygon[i].x - round(polygon[i].x)) < GLOBALS.FORGIVENESS_SNAP_EPSILON and abs(polygon[i].y - round(polygon[i].y)) < GLOBALS.FORGIVENESS_SNAP_EPSILON:
-			polygon[i] = snapped( polygon[i], Vector2(GLOBALS.FORGIVENESS_SNAP_EPSILON, GLOBALS.FORGIVENESS_SNAP_EPSILON) )
+			# avoid snapping to points that are not in the convex hull
+			if snapped( polygon[i], Vector2(GLOBALS.FORGIVENESS_SNAP_EPSILON, GLOBALS.FORGIVENESS_SNAP_EPSILON)) in CONVEX_INTEGER_HULL.convex_integer_hull:
+				polygon[i] = snapped( polygon[i], Vector2(GLOBALS.FORGIVENESS_SNAP_EPSILON, GLOBALS.FORGIVENESS_SNAP_EPSILON) )
 	# 2) remove vertices that are very close to being colinear with their neighbors
 	for i in range(polygon.size()):
 		if i >= polygon.size(): # failsafe
@@ -360,7 +362,7 @@ func _run_forgiveness_checks(polygon: PackedVector2Array):
 		var prev_point = polygon[(i - 1) % polygon.size()]
 		var next_point = polygon[(i + 1) % polygon.size()]
 		var dot = (current_point - prev_point).normalized().dot((next_point - current_point).normalized())
-		if abs(dot + 1) < GLOBALS.FORGIVENESS_COLINEAR_EPSILON:
+		if abs(dot - 1) < GLOBALS.FORGIVENESS_COLINEAR_EPSILON:
 			polygon.remove_at(i)
 			i -= 1
 	# 3) merge vertices that are very close to each other
@@ -627,12 +629,12 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> void:
 	# get the points for the cut
 	var point1: Vector2
 	var point2: Vector2
-	if ( GMIaLattice.x != 0 and GMIaLattice.y != 0 ):
+	if ( abs(GMIaLattice.x) >= GLOBALS.GEOMETRY_EPSILON and abs(GMIaLattice.y) >= GLOBALS.GEOMETRY_EPSILON ):
 		point1.x = GMIb / GMIaLattice.x
 		point1.y = 0
 		point2.x = 0
 		point2.y = GMIb / GMIaLattice.y
-	elif ( GMIaLattice.x == 0 ):
+	elif ( abs(GMIaLattice.x) < GLOBALS.GEOMETRY_EPSILON ):
 		point1.x = 0
 		point1.y = GMIb / GMIaLattice.y
 		point2.x = 1

@@ -123,21 +123,16 @@ func _set_lattice_grid_parameters(max_y: int):
 		DEBUG.log("level.gd: max_y not given, defaulting.")
 		return
 	var window_size = get_viewport_rect().size
-	DEBUG.log("level.gd: window_size: %s" % window_size, 100)
 	var aspect_ratio = 4.0 / 3.0 # i like 4:3 for the grid, it leaves space for the hud
-	DEBUG.log("level.gd: aspect_ratio: %s" % aspect_ratio, 100)
 	# calculate max_x based on max_y and aspect ratio
 	var max_x = int( max_y * aspect_ratio )
 	DIMENSIONS.y = max_y
 	DIMENSIONS.x = max_x
-	DEBUG.log("level.gd: Calculated lattice grid size: %s" % DIMENSIONS, 100)
 	SCALING = int( window_size.y / max_y )
-	DEBUG.log("level.gd: Calculated scaling: %s" % SCALING, 100)
 	# set offset such that the grid is centered
 	OFFSET.y = int(SCALING * 0.5)
 	# center the grid
 	OFFSET.x = int( (window_size.x - SCALING * (max_x-1)) * 0.5 )
-	DEBUG.log("level.gd: Calculated offset: %s" % OFFSET, 100)
 	# set the lattice grid size
 	LATTICE_GRID.DIMENSIONS = DIMENSIONS
 	LATTICE_GRID.SCALING = SCALING
