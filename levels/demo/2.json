@@ -2,6 +2,9 @@
 	"name": "Demo 2 - 8-bit shoe",
     "max_y": 6,
 	"poly_color": "#002389",
+    "circle_budget": 5,
+	"gomory_budget": 3,
+	"split_budget": 3,
 	"poly_vertices": [
 		[
             0.7,

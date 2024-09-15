@@ -2,6 +2,9 @@
 	"name": "Demo 1 - after eight",
 	"max_y": 6, 
 	"poly_color": "#4c4c4c",
+	"circle_budget": 5,
+	"gomory_budget": 2,
+	"split_budget": 2,
 	"poly_vertices": [
 		[
 			1.7,

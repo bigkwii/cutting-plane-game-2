@@ -2,6 +2,9 @@
 	"name": "ERROR!",
 	"max_y": 6, 
 	"poly_color": "ff0000",
+	"circle_budget": -1,
+	"gomory_budget": -1,
+	"split_budget": -1,
 	"poly_vertices": [
 		[
 			1.7,
