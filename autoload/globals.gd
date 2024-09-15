@@ -21,7 +21,8 @@ var CLICK_EPSILON = 0.01
 var GEOMETRY_EPSILON = 0.00001
 var GEOMETRY_EPSILON_SQ = GEOMETRY_EPSILON * GEOMETRY_EPSILON
 ## epsilon for cross product checking
-var CROSS_PRODUCT_EPSILON = GEOMETRY_EPSILON * 10
+var CROSS_PRODUCT_EPSILON = GEOMETRY_EPSILON * 5000 # the very existence of this variable is a testament to the fragility of floating point arithmetic and the human spirit
+# in other words, this epsilon is used EXCLUSIVELY in polygon.is_point_on_segment. terrible. TODO: find a better GEOMETRY_EPSILON
 ## epsilon for snapping newly discovered intersection points
 var INTERSECTION_SNAP_EPSILON = GEOMETRY_EPSILON * 10
 ## gomory cut vertex click range
