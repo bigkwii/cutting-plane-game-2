@@ -1,10 +1,26 @@
 {
     "name": "Demo 3 - Falling Pint",
-	"max_y": 6, 
-	"poly_color": "#4c4c4c",
+	"max_y": 8, 
+	"poly_color": "#d40000",
 	"circle_budget": 5,
-	"gomory_budget": 2,
-	"split_budget": 2,
+	"gomory_budget": 5,
+	"split_budget": 6,
 	"poly_vertices": [
+        [
+            5.2,
+            0.8
+        ],
+        [
+            2.0,
+            4.5
+        ],
+        [
+            4.5,
+            6.0
+        ],
+        [
+            8.2,
+            3.8
+        ]
     ]
 }
