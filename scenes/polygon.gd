@@ -184,7 +184,9 @@ func is_point_on_segment(point: Vector2, segment_start: Vector2, segment_end: Ve
 	if dot_product < 0:
 		return false
 	var squared_length = (segment_end - segment_start).length_squared()
-	if dot_product > squared_length:
+	if dot_product - squared_length > GLOBALS.GEOMETRY_EPSILON:
+		# TODO: Keep an eye on this epsilon. this one could be tricky.
+		#DEBUG.log("is_point_on_segment: dot_product: %s, squared_length: %s" % [dot_product, squared_length], 100)
 		return false
 	return true
 

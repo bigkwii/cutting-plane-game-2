@@ -1,1 +1,34 @@
-{}
+{
+    "name": "Demo 4 - Aubergine",
+	"max_y": 8, 
+	"poly_color": "#590059",
+	"circle_budget": 5,
+	"gomory_budget": 5,
+	"split_budget": 6,
+	"poly_vertices": [
+        [
+            3.5,
+            5.5
+        ],
+        [
+            5.5,
+            5.8
+        ],
+        [
+            6.5,
+            4.7
+        ],
+        [
+            6.5,
+            0.7
+        ],
+        [
+            5.2,
+            1.7
+        ],
+        [
+            3.1,
+            4.7
+        ]
+    ]
+}
