@@ -21,7 +21,7 @@ var CLICK_EPSILON = 0.01
 var GEOMETRY_EPSILON = 0.00001
 var GEOMETRY_EPSILON_SQ = GEOMETRY_EPSILON * GEOMETRY_EPSILON
 ## gomory cut vertex click range
-var GOMORY_CUT_CLICK_RANGE = 0.1
+var GOMORY_CUT_CLICK_RANGE = 0.15
 ## epsilon for correcting a new point that got "close enough" to being integral
 var FORGIVENESS_SNAP_EPSILON = GEOMETRY_EPSILON * 10000
 var FORGIVENESS_COLINEAR_EPSILON = GEOMETRY_EPSILON * 500

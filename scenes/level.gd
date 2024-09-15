@@ -190,20 +190,20 @@ func _on_v_split_pressed():
 # TODO: These function names SUCK
 
 ## call with true when selecting gomory cut, call with false when any other cut is selected
-func _handle_gomory_cut_selected(make_clickable: bool): # TODO: AFTER A CUT, THE EFFECT DISSAPEARS!
+func _handle_gomory_cut_selected(make_clickable: bool): # TODO: AFTER A CUT, THE EFFECT DISSAPEARS! (solved in a hacky way)
 	POLYGON.gomory_mode_selected(make_clickable)
 
 ## call in process. updates the mouse position for hover vfx
 func _handle_gomory_cut_hover():
 	if cut_mode != CUT_MODES.GOMORY_CUT:
 		return
-	var mouse_lattice_pos = (get_global_mouse_position() - OFFSET) / SCALING # TODO: these should be read from the level file
+	var mouse_lattice_pos = (get_global_mouse_position() - OFFSET) / SCALING
 	POLYGON.update_verts_hover_vfx(mouse_lattice_pos)
 
 func _handle_gomory_cut_click():
 	if cut_mode != CUT_MODES.GOMORY_CUT: # prob unneccesary
 		return
-	var mouse_lattice_pos = (get_global_mouse_position() - OFFSET) / SCALING # TODO: these should be read from the level file
+	var mouse_lattice_pos = (get_global_mouse_position() - OFFSET) / SCALING
 	POLYGON.gomory_cut(mouse_lattice_pos)
 
 # click vfx

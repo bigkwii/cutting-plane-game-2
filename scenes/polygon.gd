@@ -243,9 +243,8 @@ func split_polygon(polygon: PackedVector2Array, line_point: Vector2, line_dir: V
 	var new_poly_2 = PackedVector2Array()
 	var intersection_points = line_intersects_polygon(polygon, line_point, line_dir)
 	if intersection_points.size() < 2:
-		DEBUG.log("split_polygon: Invalid number of intersection points: %s" % intersection_points.size())
+		DEBUG.log("split_polygon: Invalid number of intersection points: %s (%s)" % [intersection_points.size(), intersection_points])
 		return []
-	#DEBUG.log("split_polygon: Found %s intersection points: %s" % [intersection_points.size(), intersection_points])
 	var added_intersection_1 = false
 	var added_intersection_2 = false
 	for i in range(polygon.size()):
@@ -577,16 +576,12 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> void:
 	var aLattice1 = Vector2(1, 0)
 	var aSlack1 = inverse_basis_rows[0]
 	var b = inverse_basis_rows[0].x * b1 + inverse_basis_rows[0].y * b2
-	var result1 = get_gmi(aLattice1, aSlack1, b, inverse_basis_rows)
+	var gmi_result_1 = get_gmi(aLattice1, aSlack1, b, inverse_basis_rows)
 	var violation1: float = 0.0
-	var GMIaLattice1: Vector2 = result1[0]
-	var GMIaSlack1: Vector2 = result1[1]
-	var GMIb1: float = result1[2]
-	var status = 0
-	if (abs(selected_vertex.x - round(selected_vertex.x)) < GLOBALS.GEOMETRY_EPSILON):
-		# component is too close to an integer, skip
-		status = 1
-	if status == 0:
+	var GMIaLattice1: Vector2 = gmi_result_1[0]
+	var GMIaSlack1: Vector2 = gmi_result_1[1]
+	var GMIb1: float = gmi_result_1[2]
+	if (abs(selected_vertex.x - round(selected_vertex.x)) > GLOBALS.GEOMETRY_EPSILON): # if the component isn't too close to an integer
 		# slack projection
 		GMIb1 -= (GMIaSlack1.x * b1 + GMIaSlack1.y * b2)
 		GMIaLattice1 -= Vector2(GMIaSlack1.x * a1.x + GMIaSlack1.y * a2.x, GMIaSlack1.x * a1.y + GMIaSlack1.y * a2.y)
@@ -595,16 +590,12 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> void:
 	var aLattice2 = Vector2(0, 1)
 	var aSlack2 = inverse_basis_rows[1]
 	b = inverse_basis_rows[1].x * b1 + inverse_basis_rows[1].y * b2
-	var result2 = get_gmi(aLattice2, aSlack2, b, inverse_basis_rows)
+	var gmi_result_2 = get_gmi(aLattice2, aSlack2, b, inverse_basis_rows)
 	var violation2: float = 0.0
-	var GMIaLattice2: Vector2 = result2[0]
-	var GMIaSlack2: Vector2 = result2[1]
-	var GMIb2: float = result2[2]
-	status = 0
-	if (abs(selected_vertex.y - round(selected_vertex.y)) < GLOBALS.GEOMETRY_EPSILON):
-		# component is too close to an integer, skip
-		status = 1
-	if status == 0:
+	var GMIaLattice2: Vector2 = gmi_result_2[0]
+	var GMIaSlack2: Vector2 = gmi_result_2[1]
+	var GMIb2: float = gmi_result_2[2]
+	if (abs(selected_vertex.y - round(selected_vertex.y)) > GLOBALS.GEOMETRY_EPSILON): # if the component isn't too close to an integer
 		# slack projection
 		GMIb2 -= (GMIaSlack2.x * b1 + GMIaSlack2.y * b2)
 		GMIaLattice2 -= Vector2(GMIaSlack2.x * a1.x + GMIaSlack2.y * a2.x, GMIaSlack2.x * a1.y + GMIaSlack2.y * a2.y)
@@ -626,22 +617,26 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> void:
 	var point2: Vector2
 	if ( abs(GMIaLattice.x) >= GLOBALS.GEOMETRY_EPSILON and abs(GMIaLattice.y) >= GLOBALS.GEOMETRY_EPSILON ):
 		point1.x = GMIb / GMIaLattice.x
-		point1.y = 0
-		point2.x = 0
+		point1.y = 0.0
+		point2.x = 0.0
 		point2.y = GMIb / GMIaLattice.y
 	elif ( abs(GMIaLattice.x) < GLOBALS.GEOMETRY_EPSILON ):
-		point1.x = 0
+		point1.x = 0.0
 		point1.y = GMIb / GMIaLattice.y
-		point2.x = 1
+		point2.x = 1.0
 		point2.y = GMIb / GMIaLattice.y
 	else:
 		point1.x = GMIb / GMIaLattice.x
-		point1.y = 0
+		point1.y = 0.0
 		point2.x = GMIb / GMIaLattice.x
-		point2.y = 1
+		point2.y = 1.0
 	# turn the points into a line
-	var line_point = point1
-	var line_dir = point2 - point1
+	var line_point = snapped( point1 , Vector2(GLOBALS.GEOMETRY_EPSILON, GLOBALS.GEOMETRY_EPSILON) )
+	var line_dir = snapped( point2 - point1 , Vector2(GLOBALS.GEOMETRY_EPSILON, GLOBALS.GEOMETRY_EPSILON) )
+	DEBUG.log("gomory_cut: GMI points: %s, %s" % [point1, point2])
+	DEBUG.log("gomory_cut: GMI cut line: %s, %s" % [line_point, line_dir])
+	# draw that line, for debugging purposes
+	_play_cut_animation(line_point, line_dir)
 	# Perform the cut on the polygon
 	cut_polygon(line_point, line_dir)
 	# this is to update the hover vfx on the verts. i know, it's a bit hacky.
@@ -729,7 +724,7 @@ func update_verts_hover_vfx(mouse_lattice_pos):
 			continue
 		vert.hover = false
 		var distance = vert.lattice_position.distance_to(mouse_lattice_pos)
-		if distance < 0.1 and distance < closest_distance: # TODO: same!
+		if distance < GLOBALS.GOMORY_CUT_CLICK_RANGE and distance < closest_distance: # TODO: same!
 			closest_distance = distance
 			if closest_distance < INF:
 				selected_vert = vert

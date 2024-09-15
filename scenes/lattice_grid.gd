@@ -47,4 +47,3 @@ func make_lattice_grid() -> void:
 			_add_new_lattice_point(Vector2(x, y))
 	DEBUG.log("Lattice grid created:\nDIMENSIONS: %s\nSCALING: %s\nOFFSET: %s"
 			  % [DIMENSIONS, SCALING, OFFSET])
-

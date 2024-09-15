@@ -92,12 +92,12 @@ _data = {
 script = ExtResource("1_m7fnf")
 
 [node name="solid" type="Line2D" parent="."]
-points = PackedVector2Array(-2000, 0, 2000, 0)
+points = PackedVector2Array(-10000, 0, 10000, 0)
 width = 1.0
 default_color = Color(1, 1, 1, 0)
 
 [node name="after_image" type="Line2D" parent="."]
-points = PackedVector2Array(-2000, 0, 2000, 0)
+points = PackedVector2Array(-10000, 0, 10000, 0)
 width = 1.0
 default_color = Color(1, 1, 1, 0)
 
