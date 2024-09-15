@@ -1,1 +1,22 @@
-{}
+{
+    "name": "Demo 7 - Pyramid",
+	"max_y": 8, 
+	"poly_color": "#009900",
+	"circle_budget": 5,
+	"gomory_budget": 6,
+	"split_budget": 5,
+	"poly_vertices": [
+        [
+            2.8,
+            6.3
+        ],
+        [
+            6.5,
+            2.9
+        ],
+        [
+            4.1,
+            1.1
+        ]
+    ]
+}
