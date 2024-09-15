@@ -13,6 +13,8 @@ extends Node2D
 @export var clickable = false
 ## if hovering over with mouse
 @export var hover: bool = false
+## scaling
+@export var SCALING: int = GLOBALS.DEFAULT_SCALING
 
 @onready var DEBUG_LABEL = $debug_label
 
@@ -34,7 +36,7 @@ func _process(_delta):
 func _draw():
 	draw_circle(Vector2.ZERO, radius, color)
 	if clickable:
-		draw_circle(Vector2.ZERO, GLOBALS.GOMORY_CUT_CLICK_RANGE * GLOBALS.DEFAULT_SCALING, Color(1, 0, 0, 0.5), false, 1)
+		draw_circle(Vector2.ZERO, GLOBALS.GOMORY_CUT_CLICK_RANGE * SCALING, Color(1, 0, 0, 0.5), false, 1)
 	if hover:
 		draw_circle(Vector2.ZERO, radius, Color.RED, false, 2)
 	if is_integral():

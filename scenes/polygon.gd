@@ -63,6 +63,7 @@ func _add_new_vertex(lattice_pos: Vector2):
 	new_vert.lattice_position = lattice_pos
 	new_vert.position = lattice_pos * SCALING + OFFSET
 	new_vert.color = color
+	new_vert.SCALING = SCALING
 	VERTS.add_child(new_vert)
 
 ## Builds the Polygon given vertices on initial_vertices. Does not clear the previous vertices.
@@ -150,6 +151,8 @@ func calculate_convex_integer_hull(redraw: bool = false) -> void:
 	# get the convex hull of the points
 	hull = Geometry2D.convex_hull(hull)
 	CONVEX_INTEGER_HULL.convex_integer_hull = PackedVector2Array(hull)
+	CONVEX_INTEGER_HULL.SCALING = SCALING
+	CONVEX_INTEGER_HULL.OFFSET = OFFSET
 	# if a redraw was requested, queue it
 	if redraw:
 		CONVEX_INTEGER_HULL.queue_redraw()
@@ -685,13 +688,13 @@ func get_gmi(a_lattice: Vector2, a_slack: Vector2, b: float, inverse_basis_rows:
 func _play_cut_animation(line_point: Vector2, line_dir: Vector2) -> void:
 	var new_cut_vfx = CUT_VFX_SCENE.instantiate()
 	CUT_VFXS.add_child(new_cut_vfx)
-	new_cut_vfx.global_position = line_point * GLOBALS.DEFAULT_SCALING + GLOBALS.DEFAULT_OFFSET
+	new_cut_vfx.global_position = line_point * SCALING + OFFSET
 	new_cut_vfx.rotation = line_dir.angle()
 	new_cut_vfx.play()
 
 func _play_circle_animation(circle_center: Vector2, circle_radius: float) -> void:
-	CIRCLE_VFX.global_position = circle_center * GLOBALS.DEFAULT_SCALING + GLOBALS.DEFAULT_OFFSET
-	CIRCLE_VFX.radius = circle_radius * GLOBALS.DEFAULT_SCALING
+	CIRCLE_VFX.global_position = circle_center * SCALING + OFFSET
+	CIRCLE_VFX.radius = circle_radius * SCALING
 	CIRCLE_VFX.play_grow()
 
 func _play_circle_success_animation() -> void:
@@ -701,8 +704,8 @@ func _play_circle_failure_animation() -> void:
 	CIRCLE_VFX.play_failure()
 
 func _play_split_animation(origin: Vector2, width: float, is_horizontal: bool) -> void:
-	SPLIT_VFX.global_position = origin * GLOBALS.DEFAULT_SCALING + GLOBALS.DEFAULT_OFFSET
-	SPLIT_VFX.width = width * GLOBALS.DEFAULT_SCALING
+	SPLIT_VFX.global_position = origin * SCALING + OFFSET
+	SPLIT_VFX.width = width * SCALING
 	SPLIT_VFX.is_horizontal = is_horizontal
 	SPLIT_VFX.play_grow()
 

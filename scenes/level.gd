@@ -8,6 +8,12 @@ var LEVELS_DIR = "res://levels/"
 var DEFAULT_LEVEL_PATH = "res://levels/default.json"
 
 # -- vars --
+## dimensions of the lattice grid
+@export var DIMENSIONS: Vector2 = GLOBALS.DEFAULT_DIMENSIONS
+## scaling factor for the lattice points
+@export var SCALING: int = GLOBALS.DEFAULT_SCALING
+## offset from the game origin to the grid origin
+@export var OFFSET: Vector2 = GLOBALS.DEFAULT_OFFSET
 ## selected level
 @export_file("*.json") var level_json_path: String = "res://levels/default.json" # so it shows up on editor
 ## level name
@@ -40,7 +46,7 @@ var debug_cut_direction = Vector2(1, 0)
 @onready var DEBUG_CUT_INPUT = $CanvasLayer/HUD/buttons/debug_cut_input
 
 # Called when the node enters the scene tree for the first time.
-func _ready():
+func _ready(): # TODO: messy. separate these into functions
 	# load level
 	# if something goes wrong with the given path, load default
 	if not FileAccess.file_exists(level_json_path):
@@ -53,9 +59,12 @@ func _ready():
 		return
 	DEBUG.log("level.gd: Opened %s" % level_json_path)
 	var parsed_data = JSON.parse_string(file_data.get_as_text())
-	# assign data
-	level_name = parsed_data["name"]
-	var level_color: Color = Color(parsed_data["poly_color"])
+	# - assign data -
+	level_name = parsed_data["name"] if parsed_data.has("name") else "!!! NO NAME !!!"
+	# set lattice grid size
+	var max_y = parsed_data["max_y"] if parsed_data.has("max_y") else -1
+	_set_lattice_grid_parameters(max_y)
+	var level_color: Color = Color(parsed_data["poly_color"]) if parsed_data.has("poly_color") else GLOBALS.DEFAULT_COLOR
 	var level_vertices : Array[Vector2] = []
 	for vert in parsed_data["poly_vertices"]:
 		level_vertices.append(Vector2(vert[0], vert[1]))
@@ -82,7 +91,7 @@ func _input(event):
 			# play click vfx
 			_play_click_vfx(get_global_mouse_position())
 			# get the clicked lattice position
-			var clicked_lattice_pos = snapped( (get_global_mouse_position() - GLOBALS.DEFAULT_OFFSET) / GLOBALS.DEFAULT_SCALING , Vector2(GLOBALS.CLICK_EPSILON, GLOBALS.CLICK_EPSILON) )
+			var clicked_lattice_pos = snapped( (get_global_mouse_position() - OFFSET) / SCALING , Vector2(GLOBALS.CLICK_EPSILON, GLOBALS.CLICK_EPSILON) )
 			DEBUG.log( "Clicked @ lattice pos: " + str( clicked_lattice_pos ) )
 			if cut_mode == CUT_MODES.DEBUG_CUT:
 				# split the polygon at the given position and at a hard-coded direction
@@ -107,6 +116,36 @@ func _input(event):
 			elif cut_mode == CUT_MODES.GOMORY_CUT:
 				_handle_gomory_cut_click()
 
+# -- layout functions --
+## called when calculating the lattice grid size. determines the layout constants based on window size and level data
+func _set_lattice_grid_parameters(max_y: int):
+	if max_y == -1:
+		DEBUG.log("level.gd: max_y not given, defaulting.")
+		return
+	var window_size = get_viewport_rect().size
+	DEBUG.log("level.gd: window_size: %s" % window_size, 100)
+	var aspect_ratio = window_size.x / window_size.y
+	DEBUG.log("level.gd: aspect_ratio: %s" % aspect_ratio, 100)
+	# calculate max_x based on max_y and aspect ratio
+	var max_x = int( max_y * aspect_ratio )
+	DIMENSIONS.y = max_y
+	DIMENSIONS.x = max_x
+	DEBUG.log("level.gd: Calculated lattice grid size: %s" % DIMENSIONS, 100)
+	SCALING = int( window_size.y / (max_y) )
+	DEBUG.log("level.gd: Calculated scaling: %s" % SCALING, 100)
+	# set offset such that the grid is centered
+	OFFSET.y = int(SCALING * 0.5)
+	# center the grid
+	OFFSET.x = int( (window_size.x - (SCALING * max_x)) )
+	DEBUG.log("level.gd: Calculated offset: %s" % OFFSET, 100)
+	# set the lattice grid size
+	LATTICE_GRID.DIMENSIONS = DIMENSIONS
+	LATTICE_GRID.SCALING = SCALING
+	LATTICE_GRID.OFFSET = OFFSET
+	LATTICE_GRID.make_lattice_grid()
+	# set the polygon grid size
+	POLYGON.SCALING = SCALING
+	POLYGON.OFFSET = OFFSET
 
 # -- button callbacks --
 # when the show hull button is HELD, show the convex hull
@@ -163,13 +202,13 @@ func _handle_gomory_cut_selected(make_clickable: bool): # TODO: AFTER A CUT, THE
 func _handle_gomory_cut_hover():
 	if cut_mode != CUT_MODES.GOMORY_CUT:
 		return
-	var mouse_lattice_pos = (get_global_mouse_position() - GLOBALS.DEFAULT_OFFSET) / GLOBALS.DEFAULT_SCALING # TODO: these should be read from the level file
+	var mouse_lattice_pos = (get_global_mouse_position() - OFFSET) / SCALING # TODO: these should be read from the level file
 	POLYGON.update_verts_hover_vfx(mouse_lattice_pos)
 
 func _handle_gomory_cut_click():
 	if cut_mode != CUT_MODES.GOMORY_CUT: # prob unneccesary
 		return
-	var mouse_lattice_pos = (get_global_mouse_position() - GLOBALS.DEFAULT_OFFSET) / GLOBALS.DEFAULT_SCALING # TODO: these should be read from the level file
+	var mouse_lattice_pos = (get_global_mouse_position() - OFFSET) / SCALING # TODO: these should be read from the level file
 	POLYGON.gomory_cut(mouse_lattice_pos)
 
 # click vfx

@@ -19,7 +19,8 @@ extends Node2D
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	_make_lattice_grid()
+	# make_lattice_grid() # gets handled by level scene now
+	pass
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -32,8 +33,15 @@ func _add_new_lattice_point(lattice_pos: Vector2) -> void:
 	new_lattice_point.position = lattice_pos * SCALING + OFFSET # scaling and offset from the game origin
 	LATTICE_POINTS.add_child(new_lattice_point)
 
+## removes all lattice points
+func _remove_all_lattice_points() -> void:
+	for lattice_point in LATTICE_POINTS.get_children():
+		lattice_point.queue_free()
+
 ## Makes the grid
-func _make_lattice_grid() -> void:
+func make_lattice_grid() -> void:
+	if LATTICE_POINTS.get_child_count() > 0:
+		_remove_all_lattice_points()
 	for x in range(DIMENSIONS.x):
 		for y in range(DIMENSIONS.y):
 			_add_new_lattice_point(Vector2(x, y))
