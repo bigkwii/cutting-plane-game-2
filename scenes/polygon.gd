@@ -238,7 +238,7 @@ func polygon_area(polygon: PackedVector2Array) -> float:
 ## polygon: PackedVector2Array the polygon to be split
 ## line_point, line_dir: point and direction of the line
 ## [br][br]
-func split_polygon(polygon: PackedVector2Array, line_point: Vector2, line_dir: Vector2) -> Array[PackedVector2Array]:
+func split_polygon(polygon: PackedVector2Array, line_point: Vector2, line_dir: Vector2, logs=true) -> Array[PackedVector2Array]:
 	var new_poly_1 = PackedVector2Array()
 	var new_poly_2 = PackedVector2Array()
 	var intersection_points = []
@@ -262,21 +262,23 @@ func split_polygon(polygon: PackedVector2Array, line_point: Vector2, line_dir: V
 			new_poly_2.append(intersection_candidate)
 			intersection_points.append(intersection_candidate)
 	if intersection_points.size() < 2:
-		DEBUG.log("split_polygon: Invalid number of intersection points: %s (%s)" % [intersection_points.size(), intersection_points])
+		if logs:
+			DEBUG.log("split_polygon: Invalid number of intersection points: %s (%s)" % [intersection_points.size(), intersection_points])
 		return []
 	# apply forgiveness checks TODO: remove from cut_polygon?
 	_run_forgiveness_checks(new_poly_1)
 	_run_forgiveness_checks(new_poly_2)
 	# area check. if any of the new polygons has an area of 0, it's invalid
 	if polygon_area(new_poly_1) < GLOBALS.GEOMETRY_EPSILON_SQ or polygon_area(new_poly_2) < GLOBALS.GEOMETRY_EPSILON_SQ:
-		DEBUG.log("split_polygon: 0-area polygon detected (%s and %s), invalidated." % [polygon_area(new_poly_1), polygon_area(new_poly_2)])
+		if logs:
+			DEBUG.log("split_polygon: 0-area polygon detected (%s and %s), invalidated." % [polygon_area(new_poly_1), polygon_area(new_poly_2)])
 		return []
 	return [new_poly_1, new_poly_2, intersection_points]
 
 ## returns if a given line would've cut the convex hull of the polygon
 func would_cut_hull(line_point: Vector2, line_dir: Vector2) -> bool:
 	var hull = CONVEX_INTEGER_HULL.convex_integer_hull
-	var new_polygons = split_polygon(hull, line_point, line_dir)
+	var new_polygons = split_polygon(hull, line_point, line_dir, false)
 	if new_polygons.size() == 0:
 		return false
 	else:
