@@ -94,14 +94,26 @@ func _input(event):
 		get_tree().reload_current_scene()
 	# handle clicking with mouse 1
 	if event is InputEventMouseButton:
+
+		# !! likely temporary !!
+		# if esc is pressed, open the menu
+		# NOT WORKING LMAO
+		if event.is_action_pressed("esc"):
+			DEBUG.log("pressed ESC")
+			MENU_PANEL.visible = not MENU_PANEL.visible
+
 		if event.button_index == MOUSE_BUTTON_LEFT and not event.pressed and not is_cutting: # not event.pressed = released
+			
+			# !! likely temporary !!
+			if MENU_PANEL.visible:
+				return
+
 			# if on the show hull button, do nothing
 			if BUTTONS_CONTAINER.get_global_rect().has_point(event.position): # !!! TODO !!!: this is hacky, i don't like it, figure out a cleaner way
 				return
 
+			# !! likely temporary !!
 			if OPEN_MENU.get_global_rect().has_point(event.position):
-				return
-			if MENU_PANEL.visible:
 				return
 
 			# play click vfx
@@ -242,6 +254,7 @@ func _on_reload_pressed():
 
 
 func _on_exit_pressed():
+	GLOBALS.level_json_path = ""
 	var test_menu_scene = load("res://scenes/testing/test_menu.tscn")
 	var test_menu = test_menu_scene.instantiate()
 	get_tree().get_root().add_child(test_menu)

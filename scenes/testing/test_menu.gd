@@ -11,6 +11,7 @@ var level_scene = preload("res://scenes/level.tscn")
 func _ready():
 	POLYGON.build_polygon()
 	FREE_PLAY_LEVEL_SELECT.visible = false
+	DEBUG.log("This is exported with debug enabled. Please let me know if anything weird happens. You can clear the debug log with CTRL+L.", 20)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -29,7 +30,7 @@ func _process(delta):
 
 func _input(event):
 	# close free play menu on esc
-	if event.is_action_pressed("ui_cancel"):
+	if event.is_action_pressed("esc"):
 		if FREE_PLAY_LEVEL_SELECT.visible:
 			FREE_PLAY_LEVEL_SELECT.visible = false
 
