@@ -1,10 +1,9 @@
 [gd_scene load_steps=3 format=3 uid="uid://clrnwpok4we7c"]
 
 [ext_resource type="Script" path="res://scenes/testing/test.gd" id="1_ue41n"]
-[ext_resource type="PackedScene" uid="uid://xkjk8b3j283s" path="res://scenes/level.tscn" id="2_or463"]
+[ext_resource type="PackedScene" uid="uid://bjgl665nkg4ka" path="res://scenes/testing/test_menu.tscn" id="2_4ner3"]
 
 [node name="test" type="Node2D"]
 script = ExtResource("1_ue41n")
 
-[node name="level" parent="." instance=ExtResource("2_or463")]
-level_json_path = "res://levels/demo/9.json"
+[node name="test_menu" parent="." instance=ExtResource("2_4ner3")]

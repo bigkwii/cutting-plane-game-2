@@ -81,7 +81,9 @@ func _input(event):
 	# reload scene if reset input is pressed
 	if event.is_action_pressed("reset"):
 		DEBUG.log("Reloading scene...")
+		# this scene will be called by a main scene, make sure level_json_path is set
 		get_tree().reload_current_scene()
+		return
 	# handle clicking with mouse 1
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and not event.pressed and not is_cutting: # not event.pressed = released

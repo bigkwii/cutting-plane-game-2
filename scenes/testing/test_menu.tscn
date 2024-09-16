@@ -1,0 +1,172 @@
+[gd_scene load_steps=3 format=3 uid="uid://bjgl665nkg4ka"]
+
+[ext_resource type="Script" path="res://scenes/testing/test_menu.gd" id="1_b6t46"]
+[ext_resource type="PackedScene" uid="uid://dnibem6i2pwss" path="res://scenes/polygon.tscn" id="2_3o1bf"]
+
+[node name="test_menu" type="Node2D"]
+script = ExtResource("1_b6t46")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Control" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1920.0
+offset_bottom = 1088.0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/Control"]
+offset_left = 264.0
+offset_top = 128.0
+offset_right = 1664.0
+offset_bottom = 402.0
+theme_override_font_sizes/normal_font_size = 105
+text = "The Cutting Plane Game v2"
+fit_content = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control"]
+offset_left = 768.0
+offset_top = 672.0
+offset_right = 1152.0
+offset_bottom = 1040.0
+
+[node name="free_play_btn" type="Button" parent="CanvasLayer/Control/VBoxContainer"]
+layout_mode = 2
+text = "Free Play"
+
+[node name="arcade_btn" type="Button" parent="CanvasLayer/Control/VBoxContainer"]
+layout_mode = 2
+tooltip_text = "W.I.P!!!"
+disabled = true
+text = "Arcade"
+
+[node name="exit_btn" type="Button" parent="CanvasLayer/Control/VBoxContainer"]
+layout_mode = 2
+tooltip_text = "W.I.P!!!"
+text = "Exit"
+
+[node name="Panel" type="Panel" parent="CanvasLayer/Control"]
+layout_mode = 0
+offset_left = 512.0
+offset_top = 208.0
+offset_right = 1408.0
+offset_bottom = 960.0
+
+[node name="Label" type="Label" parent="CanvasLayer/Control/Panel"]
+layout_mode = 0
+offset_left = 312.0
+offset_top = 32.0
+offset_right = 592.0
+offset_bottom = 88.0
+theme_override_font_sizes/font_size = 40
+text = "Free Play"
+horizontal_alignment = 1
+
+[node name="lvl1_btn" type="Button" parent="CanvasLayer/Control/Panel"]
+layout_mode = 0
+offset_left = 128.0
+offset_top = 112.0
+offset_right = 256.0
+offset_bottom = 238.0
+text = "Level 1
+After Eight"
+
+[node name="lvl2_btn" type="Button" parent="CanvasLayer/Control/Panel"]
+layout_mode = 0
+offset_left = 384.0
+offset_top = 112.0
+offset_right = 512.0
+offset_bottom = 238.0
+text = "Level 2
+8-bit Shoe"
+
+[node name="lvl3_btn" type="Button" parent="CanvasLayer/Control/Panel"]
+layout_mode = 0
+offset_left = 640.0
+offset_top = 112.0
+offset_right = 768.0
+offset_bottom = 238.0
+text = "Level 3
+Falling Pint"
+
+[node name="lvl4_btn" type="Button" parent="CanvasLayer/Control/Panel"]
+layout_mode = 0
+offset_left = 128.0
+offset_top = 304.0
+offset_right = 256.0
+offset_bottom = 432.0
+text = "Level 4
+Aubergine"
+
+[node name="lvl5_btn" type="Button" parent="CanvasLayer/Control/Panel"]
+layout_mode = 0
+offset_left = 384.0
+offset_top = 304.0
+offset_right = 512.0
+offset_bottom = 432.0
+text = "Level 5
+Lapiz Cola"
+
+[node name="lvl6_btn" type="Button" parent="CanvasLayer/Control/Panel"]
+layout_mode = 0
+offset_left = 640.0
+offset_top = 304.0
+offset_right = 768.0
+offset_bottom = 432.0
+text = "Level 6
+Ice Cream"
+
+[node name="lvl7_btn" type="Button" parent="CanvasLayer/Control/Panel"]
+layout_mode = 0
+offset_left = 128.0
+offset_top = 499.0
+offset_right = 256.0
+offset_bottom = 624.0
+text = "Level 7
+Pyramid"
+
+[node name="lvl8_btn" type="Button" parent="CanvasLayer/Control/Panel"]
+layout_mode = 0
+offset_left = 384.0
+offset_top = 499.0
+offset_right = 512.0
+offset_bottom = 624.0
+text = "Level 8
+Igloo"
+
+[node name="lvl9_btn" type="Button" parent="CanvasLayer/Control/Panel"]
+layout_mode = 0
+offset_left = 640.0
+offset_top = 499.0
+offset_right = 768.0
+offset_bottom = 624.0
+text = "Level 9
+Shine Bright
+Like a Diamond"
+
+[node name="x_btn" type="Button" parent="CanvasLayer/Control/Panel"]
+layout_mode = 0
+offset_left = 816.0
+offset_top = 32.0
+offset_right = 850.0
+offset_bottom = 72.0
+text = "X"
+
+[node name="polygon" parent="." instance=ExtResource("2_3o1bf")]
+position = Vector2(960, 576)
+initial_vertices = Array[Vector2]([Vector2(-1.8, -1.5), Vector2(-1.5, -1.8), Vector2(1.5, -1.8), Vector2(1.8, -1.5), Vector2(1.8, 1.5), Vector2(1.5, 1.8), Vector2(-1.5, 1.8), Vector2(-1.8, 1.5)])
+
+[node name="vfxs" type="Node2D" parent="."]
+position = Vector2(960, 576)
+
+[connection signal="pressed" from="CanvasLayer/Control/VBoxContainer/free_play_btn" to="." method="_on_free_play_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/Control/VBoxContainer/exit_btn" to="." method="_on_exit_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/Control/Panel/lvl1_btn" to="." method="_on_lvl_1_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/Control/Panel/lvl2_btn" to="." method="_on_lvl_2_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/Control/Panel/lvl3_btn" to="." method="_on_lvl_3_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/Control/Panel/lvl4_btn" to="." method="_on_lvl_4_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/Control/Panel/lvl5_btn" to="." method="_on_lvl_5_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/Control/Panel/lvl6_btn" to="." method="_on_lvl_6_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/Control/Panel/lvl7_btn" to="." method="_on_lvl_7_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/Control/Panel/lvl8_btn" to="." method="_on_lvl_8_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/Control/Panel/lvl9_btn" to="." method="_on_lvl_9_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/Control/Panel/x_btn" to="." method="_on_x_btn_pressed"]
