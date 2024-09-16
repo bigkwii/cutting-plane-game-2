@@ -15,6 +15,7 @@ offset_right = 1920.0
 offset_bottom = 1088.0
 
 [node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/Control"]
+layout_mode = 0
 offset_left = 264.0
 offset_top = 128.0
 offset_right = 1664.0
@@ -24,6 +25,7 @@ text = "The Cutting Plane Game v2"
 fit_content = true
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control"]
+layout_mode = 0
 offset_left = 768.0
 offset_top = 672.0
 offset_right = 1152.0

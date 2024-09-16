@@ -7,7 +7,6 @@ extends Node2D
 var cut_vfx = preload("res://scenes/cut_vfx.tscn")
 var level_scene = preload("res://scenes/level.tscn")
 
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	POLYGON.build_polygon()

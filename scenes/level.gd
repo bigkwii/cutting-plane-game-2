@@ -34,6 +34,8 @@ var debug_cut_direction = Vector2(1, 0)
 # - hud elements -
 @onready var HUD = $CanvasLayer/HUD
 @onready var BUTTONS_CONTAINER = $CanvasLayer/HUD/buttons
+@onready var OPEN_MENU = $CanvasLayer/HUD/open_menu
+@onready var MENU_PANEL = $CanvasLayer/HUD/panel
 @onready var SHOW_HULL_BUTTON = $CanvasLayer/HUD/buttons/show_hull
 @onready var CIRCLE_CUT_BUTTON = $CanvasLayer/HUD/buttons/circle
 @onready var GOMORY_CUT_BUTTON = $CanvasLayer/HUD/buttons/gomory
@@ -47,6 +49,11 @@ var debug_cut_direction = Vector2(1, 0)
 
 # Called when the node enters the scene tree for the first time.
 func _ready(): # TODO: messy. separate these into functions
+	
+	# !! likely temporary !!
+	if GLOBALS.level_json_path != "":
+		level_json_path = GLOBALS.level_json_path
+
 	# load level
 	# if something goes wrong with the given path, load default
 	if not FileAccess.file_exists(level_json_path):
@@ -81,15 +88,22 @@ func _input(event):
 	# reload scene if reset input is pressed
 	if event.is_action_pressed("reset"):
 		DEBUG.log("Reloading scene...")
-		# this scene will be called by a main scene, make sure level_json_path is set
+
+		GLOBALS.level_json_path = level_json_path
+
 		get_tree().reload_current_scene()
-		return
 	# handle clicking with mouse 1
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and not event.pressed and not is_cutting: # not event.pressed = released
 			# if on the show hull button, do nothing
 			if BUTTONS_CONTAINER.get_global_rect().has_point(event.position): # !!! TODO !!!: this is hacky, i don't like it, figure out a cleaner way
 				return
+
+			if OPEN_MENU.get_global_rect().has_point(event.position):
+				return
+			if MENU_PANEL.visible:
+				return
+
 			# play click vfx
 			_play_click_vfx(get_global_mouse_position())
 			# get the clicked lattice position
@@ -214,3 +228,26 @@ func _play_click_vfx(pos: Vector2):
 	CLICK_VFXS.add_child(click_vfx)
 	click_vfx.position = pos
 	click_vfx.play_click()
+
+# !! likely temporary !!
+
+func _on_open_menu_pressed():
+	MENU_PANEL.visible = not MENU_PANEL.visible
+
+
+func _on_reload_pressed():
+	DEBUG.log("Reloading scene...")
+	GLOBALS.level_json_path = level_json_path
+	get_tree().reload_current_scene()
+
+
+func _on_exit_pressed():
+	var test_menu_scene = load("res://scenes/testing/test_menu.tscn")
+	var test_menu = test_menu_scene.instantiate()
+	get_tree().get_root().add_child(test_menu)
+	get_tree().current_scene = test_menu
+	queue_free()
+
+
+func _on_x_pressed():
+	MENU_PANEL.visible = false
