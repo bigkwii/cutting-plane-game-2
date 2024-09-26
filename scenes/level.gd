@@ -85,6 +85,10 @@ func _process(_delta):
 
 # handle inputs here! not in _process!
 func _input(event):
+	# !! likely temporary !!
+	# if esc is pressed, open the menu
+	if event.is_action_pressed("esc"):
+		MENU_PANEL.visible = not MENU_PANEL.visible
 	# reload scene if reset input is pressed
 	if event.is_action_pressed("reset"):
 		DEBUG.log("Reloading scene...")
@@ -94,14 +98,6 @@ func _input(event):
 		get_tree().reload_current_scene()
 	# handle clicking with mouse 1
 	if event is InputEventMouseButton:
-
-		# !! likely temporary !!
-		# if esc is pressed, open the menu
-		# NOT WORKING LMAO
-		if event.is_action_pressed("esc"):
-			DEBUG.log("pressed ESC")
-			MENU_PANEL.visible = not MENU_PANEL.visible
-
 		if event.button_index == MOUSE_BUTTON_LEFT and not event.pressed and not is_cutting: # not event.pressed = released
 			
 			# !! likely temporary !!

@@ -265,9 +265,6 @@ func split_polygon(polygon: PackedVector2Array, line_point: Vector2, line_dir: V
 		if logs:
 			DEBUG.log("split_polygon: Invalid number of intersection points: %s (%s)" % [intersection_points.size(), intersection_points])
 		return []
-	# apply forgiveness checks TODO: remove from cut_polygon?
-	_run_forgiveness_checks(new_poly_1)
-	_run_forgiveness_checks(new_poly_2)
 	# area check. if any of the new polygons has an area of 0, it's invalid
 	if polygon_area(new_poly_1) < GLOBALS.GEOMETRY_EPSILON_SQ or polygon_area(new_poly_2) < GLOBALS.GEOMETRY_EPSILON_SQ:
 		if logs:
@@ -308,8 +305,9 @@ func cut_polygon(line_point: Vector2, line_dir: Vector2, allow_hull_cutting: boo
 	# play the cut animation
 	_play_cut_animation(line_point, line_dir)
 	var polygon_to_be_kept_index: int = 0 if Geometry2D.is_point_in_polygon(centroid, new_polygons[0]) else 1
-	# run forgiveness checks on the polygon to be kept
-	_run_forgiveness_checks(new_polygons[polygon_to_be_kept_index]) # TODO: remove this, since it's already done in split_polygon ?
+	# run forgiveness checks on both new polygons
+	_run_forgiveness_checks(new_polygons[polygon_to_be_kept_index])
+	_run_forgiveness_checks(new_polygons[1 - polygon_to_be_kept_index])
 	# rebuild the polygon with the polygon to be kept
 	rebuild_polygon(new_polygons[polygon_to_be_kept_index])
 	# make a cut piece with the polygon to be removed, with an inital speed and direction given by their centroids
@@ -348,6 +346,8 @@ func _run_forgiveness_checks(polygon: PackedVector2Array):
 	for i in range(polygon.size()):
 		if i >= polygon.size(): # failsafe
 			break
+		if polygon.size() <= 3: # if removing a point would turn the poly into a line, break
+			break
 		var current_point = polygon[i]
 		# don't remove points from the convex hull
 		if current_point in CONVEX_INTEGER_HULL.convex_integer_hull:
@@ -365,6 +365,8 @@ func _run_forgiveness_checks(polygon: PackedVector2Array):
 	# 3) merge vertices that are very close to each other
 	for i in range(polygon.size()):
 		if i >= polygon.size(): # failsafe
+			break
+		if polygon.size() <= 3: # if removing a point would turn the poly into a line, break
 			break
 		var current_point = polygon[i]
 		var next_point = polygon[(i + 1) % polygon.size()]
