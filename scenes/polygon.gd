@@ -324,18 +324,18 @@ func cut_polygon(line_point: Vector2, line_dir: Vector2, allow_hull_cutting: boo
 	var hull_area: float = polygon_area(CONVEX_INTEGER_HULL.convex_integer_hull)
 	var poly_area: float = polygon_area(packed_vertices)
 	var ratio = hull_area / poly_area
-	if ratio == 1.0:
-		DEBUG.log("Perfect. RANK S (%s)" % ratio, 3)
-	elif ratio >= 0.99:
-		DEBUG.log("Excellent. RANK A (%s)" % ratio, 3)
+	if is_integral():
+		DEBUG.log("Perfect. RANK S (%s)" % ratio, 10)
+	elif ratio >= 0.975:
+		DEBUG.log("Excellent. RANK A (%s)" % ratio, 10)
 	elif ratio >= 0.95:
-		DEBUG.log("Very good. RANK B (%s)" % ratio, 3)
+		DEBUG.log("Very good. RANK B (%s)" % ratio, 10)
 	elif ratio >= 0.90:
-		DEBUG.log("Good. RANK C (%s)" % ratio, 3)
+		DEBUG.log("Good. RANK C (%s)" % ratio, 10)
 	elif ratio >= 0.80:
-		DEBUG.log("Ok. RANK D (%s)" % ratio, 3)
+		DEBUG.log("Ok. RANK D (%s)" % ratio, 10)
 	else:
-		DEBUG.log("You can do better. NO RANK (%s)" % ratio, 3)
+		DEBUG.log("You can do better. NO RANK (%s)" % ratio, 10)
 
 	return true
 
