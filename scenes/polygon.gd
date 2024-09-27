@@ -266,7 +266,7 @@ func split_polygon(polygon: PackedVector2Array, line_point: Vector2, line_dir: V
 			DEBUG.log("split_polygon: Invalid number of intersection points: %s (%s)" % [intersection_points.size(), intersection_points])
 		return []
 	# area check. if any of the new polygons has an area of 0, it's invalid
-	if polygon_area(new_poly_1) < GLOBALS.GEOMETRY_EPSILON_SQ or polygon_area(new_poly_2) < GLOBALS.GEOMETRY_EPSILON_SQ:
+	if polygon_area(new_poly_1) < GLOBALS.GEOMETRY_EPSILON_AREA or polygon_area(new_poly_2) < GLOBALS.GEOMETRY_EPSILON_AREA:
 		if logs:
 			DEBUG.log("split_polygon: 0-area polygon detected (%s and %s), invalidated." % [polygon_area(new_poly_1), polygon_area(new_poly_2)])
 		return []
@@ -319,6 +319,24 @@ func cut_polygon(line_point: Vector2, line_dir: Vector2, allow_hull_cutting: boo
 	if cut_piece_direction.dot(centroid - intersection_points[0]) > 0:
 		cut_piece_direction = -cut_piece_direction
 	_make_cut_piece(new_polygons[polygon_to_be_removed_index], cut_piece_direction)
+
+	# area checks for score TODO: put this in a separate function and have it be called by level.tscn
+	var hull_area: float = polygon_area(CONVEX_INTEGER_HULL.convex_integer_hull)
+	var poly_area: float = polygon_area(packed_vertices)
+	var ratio = hull_area / poly_area
+	if ratio == 1.0:
+		DEBUG.log("Perfect. RANK S (%s)" % ratio, 3)
+	elif ratio >= 0.99:
+		DEBUG.log("Excellent. RANK A (%s)" % ratio, 3)
+	elif ratio >= 0.95:
+		DEBUG.log("Very good. RANK B (%s)" % ratio, 3)
+	elif ratio >= 0.90:
+		DEBUG.log("Good. RANK C (%s)" % ratio, 3)
+	elif ratio >= 0.80:
+		DEBUG.log("Ok. RANK D (%s)" % ratio, 3)
+	else:
+		DEBUG.log("You can do better. NO RANK (%s)" % ratio, 3)
+
 	return true
 
 ## returns true if a cut made with this line WOULD cut the polygon TODO: deprecated?
@@ -638,8 +656,6 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> void:
 	# turn the points into a line
 	var line_point = point1
 	var line_dir = point2 - point1
-	# draw that line, for debugging purposes TODO: delete this
-	_play_cut_animation(line_point, line_dir)
 	# Perform the cut on the polygon
 	cut_polygon(line_point, line_dir)
 	# this is to update the hover vfx on the verts. i know, it's a bit hacky.
