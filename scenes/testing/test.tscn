@@ -1,9 +1,35 @@
-[gd_scene load_steps=3 format=3 uid="uid://clrnwpok4we7c"]
+[gd_scene load_steps=5 format=3 uid="uid://clrnwpok4we7c"]
 
 [ext_resource type="Script" path="res://scenes/testing/test.gd" id="1_ue41n"]
 [ext_resource type="PackedScene" uid="uid://bjgl665nkg4ka" path="res://scenes/testing/test_menu.tscn" id="2_4ner3"]
+[ext_resource type="Shader" path="res://assets/shaders/crt.gdshader" id="3_8sy56"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bb2ux"]
+shader = ExtResource("3_8sy56")
+shader_parameter/resolution = Vector2(960, 540)
+shader_parameter/scan_line_amount = 1.0
+shader_parameter/warp_amount = 0.0
+shader_parameter/noise_amount = 0.03
+shader_parameter/interference_amount = 0.2
+shader_parameter/grille_amount = 0.0
+shader_parameter/grille_size = 1.0
+shader_parameter/vignette_amount = 0.6
+shader_parameter/vignette_intensity = 1.0
+shader_parameter/aberation_amount = 0.5
+shader_parameter/roll_line_amount = 0.3
+shader_parameter/roll_speed = 1.0
+shader_parameter/scan_line_strength = -5.0
+shader_parameter/pixel_strength = -4.0
 
 [node name="test" type="Node2D"]
 script = ExtResource("1_ue41n")
 
 [node name="test_menu" parent="." instance=ExtResource("2_4ner3")]
+
+[node name="crt_canvas_layer" type="CanvasLayer" parent="."]
+
+[node name="crt_color_rect" type="ColorRect" parent="crt_canvas_layer"]
+material = SubResource("ShaderMaterial_bb2ux")
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
