@@ -29,6 +29,7 @@ script = ExtResource("1_ue41n")
 [node name="crt_canvas_layer" type="CanvasLayer" parent="."]
 
 [node name="crt_color_rect" type="ColorRect" parent="crt_canvas_layer"]
+z_index = 1000
 material = SubResource("ShaderMaterial_bb2ux")
 offset_right = 1920.0
 offset_bottom = 1080.0

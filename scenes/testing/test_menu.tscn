@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://bjgl665nkg4ka"]
+[gd_scene load_steps=5 format=3 uid="uid://bjgl665nkg4ka"]
 
 [ext_resource type="Script" path="res://scenes/testing/test_menu.gd" id="1_b6t46"]
 [ext_resource type="PackedScene" uid="uid://dnibem6i2pwss" path="res://scenes/polygon.tscn" id="2_3o1bf"]
+[ext_resource type="FontFile" uid="uid://htfjdomf6luk" path="res://assets/fonts/thin.ttf" id="2_b4vfd"]
+[ext_resource type="FontFile" uid="uid://3jdkpqo41bvf" path="res://assets/fonts/thick.ttf" id="3_7mkkd"]
 
 [node name="test_menu" type="Node2D"]
 script = ExtResource("1_b6t46")
@@ -16,11 +18,12 @@ offset_bottom = 1088.0
 
 [node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/Control"]
 layout_mode = 0
-offset_left = 264.0
+offset_left = 256.0
 offset_top = 128.0
 offset_right = 1664.0
 offset_bottom = 402.0
-theme_override_font_sizes/normal_font_size = 105
+theme_override_fonts/normal_font = ExtResource("2_b4vfd")
+theme_override_font_sizes/normal_font_size = 100
 text = "The Cutting Plane Game v2"
 fit_content = true
 
@@ -33,17 +36,23 @@ offset_bottom = 1040.0
 
 [node name="free_play_btn" type="Button" parent="CanvasLayer/Control/VBoxContainer"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("3_7mkkd")
+theme_override_font_sizes/font_size = 50
 text = "Free Play"
 
 [node name="arcade_btn" type="Button" parent="CanvasLayer/Control/VBoxContainer"]
 layout_mode = 2
 tooltip_text = "W.I.P!!!"
+theme_override_fonts/font = ExtResource("3_7mkkd")
+theme_override_font_sizes/font_size = 50
 disabled = true
 text = "Arcade"
 
 [node name="exit_btn" type="Button" parent="CanvasLayer/Control/VBoxContainer"]
 layout_mode = 2
 tooltip_text = "W.I.P!!!"
+theme_override_fonts/font = ExtResource("3_7mkkd")
+theme_override_font_sizes/font_size = 50
 text = "Exit"
 
 [node name="Panel" type="Panel" parent="CanvasLayer/Control"]
