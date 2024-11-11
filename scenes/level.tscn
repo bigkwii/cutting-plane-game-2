@@ -1,14 +1,19 @@
-[gd_scene load_steps=5 format=3 uid="uid://xkjk8b3j283s"]
+[gd_scene load_steps=8 format=3 uid="uid://xkjk8b3j283s"]
 
 [ext_resource type="Script" path="res://scenes/level.gd" id="1_7muqx"]
 [ext_resource type="PackedScene" uid="uid://dgb3ubanl7ucn" path="res://scenes/lattice_grid.tscn" id="2_4qubn"]
 [ext_resource type="PackedScene" uid="uid://dnibem6i2pwss" path="res://scenes/polygon.tscn" id="3_b5vrg"]
+[ext_resource type="PackedScene" uid="uid://c1bv5rh3yb6ac" path="res://scenes/guide_grid.tscn" id="3_mg6o6"]
 [ext_resource type="PackedScene" uid="uid://lotaw6d6q6u5" path="res://scenes/camera.tscn" id="4_oqnx0"]
+[ext_resource type="Theme" uid="uid://bqljbjsn8elrs" path="res://assets/themes/default.tres" id="6_2bsft"]
+[ext_resource type="PackedScene" uid="uid://dx4csne7vpmre" path="res://scenes/cut_button.tscn" id="7_1qqha"]
 
 [node name="level" type="Node2D"]
 script = ExtResource("1_7muqx")
 
 [node name="lattice_grid" parent="." instance=ExtResource("2_4qubn")]
+
+[node name="guide_grid" parent="." instance=ExtResource("3_mg6o6")]
 
 [node name="polygon" parent="." instance=ExtResource("3_b5vrg")]
 
@@ -25,61 +30,69 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 0
 grow_vertical = 0
+theme = ExtResource("6_2bsft")
 
-[node name="buttons" type="VBoxContainer" parent="CanvasLayer/HUD"]
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -128.0
-offset_top = -264.0
-offset_right = -24.0
-offset_bottom = -23.0
-grow_horizontal = 0
-grow_vertical = 0
-metadata/_edit_group_ = true
+[node name="debug_buttons" type="VBoxContainer" parent="CanvasLayer/HUD"]
+layout_mode = 0
+offset_left = -1848.0
+offset_top = -180.0
+offset_right = -1680.0
+offset_bottom = -56.0
 
-[node name="debug_cut" type="Button" parent="CanvasLayer/HUD/buttons"]
+[node name="debug_cut" parent="CanvasLayer/HUD/debug_buttons" instance=ExtResource("7_1qqha")]
 layout_mode = 2
-text = "debug cut
-"
 
-[node name="debug_cut_input" type="LineEdit" parent="CanvasLayer/HUD/buttons"]
+[node name="debug_cut_input" type="LineEdit" parent="CanvasLayer/HUD/debug_buttons"]
 layout_mode = 2
 text = "0"
 placeholder_text = "degrees"
 
-[node name="circle" type="Button" parent="CanvasLayer/HUD/buttons"]
-layout_mode = 2
-text = "circle"
+[node name="cut_buttons" type="VBoxContainer" parent="CanvasLayer/HUD"]
+layout_mode = 0
+offset_left = -128.0
+offset_top = -752.0
+offset_right = -64.0
+offset_bottom = -388.0
+theme_override_constants/separation = 20
+alignment = 1
 
-[node name="gomory" type="Button" parent="CanvasLayer/HUD/buttons"]
+[node name="circle" parent="CanvasLayer/HUD/cut_buttons" instance=ExtResource("7_1qqha")]
 layout_mode = 2
-text = "gomory"
+text = "C"
+cut_type = "circle"
 
-[node name="h_split" type="Button" parent="CanvasLayer/HUD/buttons"]
+[node name="gomory" parent="CanvasLayer/HUD/cut_buttons" instance=ExtResource("7_1qqha")]
 layout_mode = 2
-text = "h split"
+text = "G"
+cut_type = "gomory"
 
-[node name="v_split" type="Button" parent="CanvasLayer/HUD/buttons"]
+[node name="h_split" parent="CanvasLayer/HUD/cut_buttons" instance=ExtResource("7_1qqha")]
 layout_mode = 2
-text = "v split"
+text = "H"
+cut_type = "h_split"
+visible_budget = false
 
-[node name="show_hull" type="Button" parent="CanvasLayer/HUD/buttons"]
+[node name="v_split" parent="CanvasLayer/HUD/cut_buttons" instance=ExtResource("7_1qqha")]
 layout_mode = 2
-focus_mode = 0
-action_mode = 0
-keep_pressed_outside = true
-text = "CONV. HULL"
+text = "V"
+cut_type = "v_split"
+
+[node name="show_hull" parent="CanvasLayer/HUD" instance=ExtResource("7_1qqha")]
+layout_mode = 2
+offset_left = -248.0
+offset_top = -176.0
+offset_right = -64.0
+offset_bottom = -64.0
+text = "CONV.
+HULL"
+visible_budget = false
 
 [node name="open_menu" type="Button" parent="CanvasLayer/HUD"]
 layout_mode = 2
-offset_left = -128.0
-offset_top = -1048.0
-offset_right = -24.0
-offset_bottom = -944.0
+offset_left = -232.0
+offset_top = -1024.0
+offset_right = -63.0
+offset_bottom = -912.0
 text = "Open
 Menu"
 
@@ -97,47 +110,47 @@ offset_left = 248.0
 offset_top = 32.0
 offset_right = 392.0
 offset_bottom = 101.0
-theme_override_font_sizes/font_size = 50
 text = "Menu"
 
 [node name="reload" type="Button" parent="CanvasLayer/HUD/panel"]
 layout_mode = 0
-offset_left = 160.0
-offset_top = 184.0
-offset_right = 480.0
-offset_bottom = 234.0
-theme_override_font_sizes/font_size = 30
-text = "Reload Scene (Ctrl+R)"
+offset_left = 96.0
+offset_top = 144.0
+offset_right = 548.0
+offset_bottom = 256.0
+text = "Reload Scene
+(Ctrl+R)"
 
 [node name="exit" type="Button" parent="CanvasLayer/HUD/panel"]
 layout_mode = 0
 offset_left = 160.0
 offset_top = 280.0
-offset_right = 480.0
-offset_bottom = 330.0
-theme_override_font_sizes/font_size = 30
-text = "Back to Main Menu"
+offset_right = 485.0
+offset_bottom = 392.0
+text = "Back to
+Main Menu"
 
 [node name="x" type="Button" parent="CanvasLayer/HUD/panel"]
 layout_mode = 0
-offset_left = 568.0
+offset_left = 552.0
 offset_top = 32.0
-offset_right = 608.0
-offset_bottom = 72.0
+offset_right = 600.0
+offset_bottom = 92.0
 text = "X"
 
 [node name="vfx" type="Node2D" parent="."]
 
 [node name="click_vfxs" type="Node2D" parent="vfx"]
 
-[connection signal="pressed" from="CanvasLayer/HUD/buttons/debug_cut" to="." method="_on_debug_cut_pressed"]
-[connection signal="text_changed" from="CanvasLayer/HUD/buttons/debug_cut_input" to="." method="_on_debug_cut_input_text_changed"]
-[connection signal="pressed" from="CanvasLayer/HUD/buttons/circle" to="." method="_on_circle_pressed"]
-[connection signal="pressed" from="CanvasLayer/HUD/buttons/gomory" to="." method="_on_gomory_pressed"]
-[connection signal="pressed" from="CanvasLayer/HUD/buttons/h_split" to="." method="_on_h_split_pressed"]
-[connection signal="pressed" from="CanvasLayer/HUD/buttons/v_split" to="." method="_on_v_split_pressed"]
-[connection signal="button_down" from="CanvasLayer/HUD/buttons/show_hull" to="." method="_on_show_hull_button_down"]
-[connection signal="button_up" from="CanvasLayer/HUD/buttons/show_hull" to="." method="_on_show_hull_button_up"]
+[connection signal="zoom_level_changed" from="camera" to="." method="_on_camera_zoom_level_changed"]
+[connection signal="pressed" from="CanvasLayer/HUD/debug_buttons/debug_cut" to="." method="_on_debug_cut_pressed"]
+[connection signal="text_changed" from="CanvasLayer/HUD/debug_buttons/debug_cut_input" to="." method="_on_debug_cut_input_text_changed"]
+[connection signal="pressed" from="CanvasLayer/HUD/cut_buttons/circle" to="." method="_on_circle_pressed"]
+[connection signal="pressed" from="CanvasLayer/HUD/cut_buttons/gomory" to="." method="_on_gomory_pressed"]
+[connection signal="pressed" from="CanvasLayer/HUD/cut_buttons/h_split" to="." method="_on_h_split_pressed"]
+[connection signal="pressed" from="CanvasLayer/HUD/cut_buttons/v_split" to="." method="_on_v_split_pressed"]
+[connection signal="button_down" from="CanvasLayer/HUD/show_hull" to="." method="_on_show_hull_button_down"]
+[connection signal="button_up" from="CanvasLayer/HUD/show_hull" to="." method="_on_show_hull_button_up"]
 [connection signal="pressed" from="CanvasLayer/HUD/open_menu" to="." method="_on_open_menu_pressed"]
 [connection signal="pressed" from="CanvasLayer/HUD/panel/reload" to="." method="_on_reload_pressed"]
 [connection signal="pressed" from="CanvasLayer/HUD/panel/exit" to="." method="_on_exit_pressed"]

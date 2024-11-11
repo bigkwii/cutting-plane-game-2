@@ -28,24 +28,25 @@ var debug_cut_direction = Vector2(1, 0)
 
 # -- child nodes --
 @onready var LATTICE_GRID = $lattice_grid
+@onready var GUIDE_GRID = $guide_grid
 @onready var POLYGON = $polygon
 @onready var CAMERA = $camera
 @onready var CLICK_VFXS = $vfx/click_vfxs
 # - hud elements -
 @onready var HUD = $CanvasLayer/HUD
-@onready var BUTTONS_CONTAINER = $CanvasLayer/HUD/buttons
+@onready var BUTTONS_CONTAINER = $CanvasLayer/HUD/cut_buttons
 @onready var OPEN_MENU = $CanvasLayer/HUD/open_menu
 @onready var MENU_PANEL = $CanvasLayer/HUD/panel
-@onready var SHOW_HULL_BUTTON = $CanvasLayer/HUD/buttons/show_hull
-@onready var CIRCLE_CUT_BUTTON = $CanvasLayer/HUD/buttons/circle
-@onready var GOMORY_CUT_BUTTON = $CanvasLayer/HUD/buttons/gomory
-@onready var H_SPLIT_CUT_BUTTON = $CanvasLayer/HUD/buttons/h_split
-@onready var V_SPLIT_CUT_BUTTON = $CanvasLayer/HUD/buttons/v_split
+@onready var SHOW_HULL_BUTTON = $CanvasLayer/HUD/show_hull
+@onready var CIRCLE_CUT_BUTTON = $CanvasLayer/HUD/cut_buttons/circle
+@onready var GOMORY_CUT_BUTTON = $CanvasLayer/HUD/cut_buttons/gomory
+@onready var H_SPLIT_CUT_BUTTON = $CanvasLayer/HUD/cut_buttons/h_split
+@onready var V_SPLIT_CUT_BUTTON = $CanvasLayer/HUD/cut_buttons/v_split
 # - proloaded scenes -
 @onready var CLICK_VFX = preload("res://scenes/click_vfx.tscn")
 # - debug cut button and input -
-@onready var DEBUG_CUT_BUTTON = $CanvasLayer/HUD/buttons/debug_cut
-@onready var DEBUG_CUT_INPUT = $CanvasLayer/HUD/buttons/debug_cut_input
+@onready var DEBUG_CUT_BUTTON = $CanvasLayer/HUD/debug_buttons/debug_cut
+@onready var DEBUG_CUT_INPUT = $CanvasLayer/HUD/debug_buttons/debug_cut_input
 
 # Called when the node enters the scene tree for the first time.
 func _ready(): # TODO: messy. separate these into functions
@@ -162,6 +163,11 @@ func _set_lattice_grid_parameters(max_y: int):
 	LATTICE_GRID.SCALING = SCALING
 	LATTICE_GRID.OFFSET = OFFSET
 	LATTICE_GRID.make_lattice_grid()
+	# set the guide grid size
+	GUIDE_GRID.DIMENSIONS = DIMENSIONS
+	GUIDE_GRID.SCALING = SCALING
+	GUIDE_GRID.OFFSET = OFFSET
+	GUIDE_GRID.update_alpha(0.0)
 	# set the polygon grid size
 	POLYGON.SCALING = SCALING
 	POLYGON.OFFSET = OFFSET
@@ -260,3 +266,7 @@ func _on_exit_pressed():
 
 func _on_x_pressed():
 	MENU_PANEL.visible = false
+
+
+func _on_camera_zoom_level_changed(zoom_level:float):
+	GUIDE_GRID.update_alpha(zoom_level - 0.25) # -0.25 so the grid doesn't show up too early

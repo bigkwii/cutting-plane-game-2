@@ -17,7 +17,7 @@ func _process(_delta):
 	queue_redraw() # TODO: this seems pretty inefficient... maybe draw with shaders?
 
 func _draw():
-	draw_circle(Vector2(0, 0), growing_factor * radius, color, false, 1)
+	draw_circle(Vector2(0, 0), growing_factor * radius, color, false, 1.5)
 
 # play the grow animation
 func play_grow():

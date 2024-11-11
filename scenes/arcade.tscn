@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://dy0r3jrpws0sn"]
+
+[node name="arcade" type="Node2D"]
+
+[node name="loaded_level" type="Node2D" parent="."]

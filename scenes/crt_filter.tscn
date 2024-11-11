@@ -1,0 +1,33 @@
+[gd_scene load_steps=3 format=3 uid="uid://g6tm7g6rdrq6"]
+
+[ext_resource type="Shader" path="res://assets/shaders/crt.gdshader" id="1_uliut"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ces05"]
+shader = ExtResource("1_uliut")
+shader_parameter/resolution = Vector2(960, 540)
+shader_parameter/scan_line_amount = 1.0
+shader_parameter/warp_amount = 0.0
+shader_parameter/noise_amount = 0.03
+shader_parameter/interference_amount = 0.2
+shader_parameter/grille_amount = 0.0
+shader_parameter/grille_size = 1.0
+shader_parameter/vignette_amount = 0.6
+shader_parameter/vignette_intensity = 1.0
+shader_parameter/aberation_amount = 0.5
+shader_parameter/roll_line_amount = 0.3
+shader_parameter/roll_speed = 1.0
+shader_parameter/scan_line_strength = -5.0
+shader_parameter/pixel_strength = -4.0
+
+[node name="crt_filter" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+
+[node name="crt_canvas_layer" type="CanvasLayer" parent="."]
+
+[node name="crt_color_rect" type="ColorRect" parent="crt_canvas_layer"]
+z_index = 1000
+material = SubResource("ShaderMaterial_ces05")
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2

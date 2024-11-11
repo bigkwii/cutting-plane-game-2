@@ -14,6 +14,9 @@ var is_panning = false
 var last_mouse_pos = Vector2()
 var scene_rect = Rect2(Vector2(), Vector2(1920, 1080)) # just a default value
 
+## signal to notify the zoom level change, where zoom_level=0..1
+signal zoom_level_changed(zoom_level: float)
+
 func _ready():
 	# set scene_rect
 	scene_rect.size = get_viewport_rect().size
@@ -59,6 +62,7 @@ func adjust_zoom(new_zoom):
 	var camera_pos_delta = (mouse_world_pos - position) * (1 - old_zoom.x / new_zoom.x)
 	position += camera_pos_delta
 	clamp_camera_position()
+	zoom_level_changed.emit( (new_zoom.x - zoom_min) / (zoom_max - zoom_min) )
 
 func pan_camera(new_mouse_pos):
 	if zoom != Vector2(1, 1): # Only pan if zoomed in

@@ -1,9 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://bjgl665nkg4ka"]
+[gd_scene load_steps=7 format=3 uid="uid://bjgl665nkg4ka"]
 
 [ext_resource type="Script" path="res://scenes/testing/test_menu.gd" id="1_b6t46"]
 [ext_resource type="PackedScene" uid="uid://dnibem6i2pwss" path="res://scenes/polygon.tscn" id="2_3o1bf"]
 [ext_resource type="FontFile" uid="uid://htfjdomf6luk" path="res://assets/fonts/thin.ttf" id="2_b4vfd"]
 [ext_resource type="FontFile" uid="uid://3jdkpqo41bvf" path="res://assets/fonts/thick.ttf" id="3_7mkkd"]
+[ext_resource type="Theme" uid="uid://bqljbjsn8elrs" path="res://assets/themes/default.tres" id="4_xvnma"]
+[ext_resource type="FontFile" uid="uid://bvvtosdeupbva" path="res://assets/fonts/extrathick.ttf" id="5_ba3wp"]
 
 [node name="test_menu" type="Node2D"]
 script = ExtResource("1_b6t46")
@@ -15,15 +17,16 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 1920.0
 offset_bottom = 1088.0
+theme = ExtResource("4_xvnma")
 
 [node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/Control"]
 layout_mode = 0
-offset_left = 256.0
+offset_left = 128.0
 offset_top = 128.0
-offset_right = 1664.0
+offset_right = 1792.0
 offset_bottom = 402.0
 theme_override_fonts/normal_font = ExtResource("2_b4vfd")
-theme_override_font_sizes/normal_font_size = 100
+theme_override_font_sizes/normal_font_size = 120
 text = "The Cutting Plane Game v2"
 fit_content = true
 
@@ -37,14 +40,12 @@ offset_bottom = 1040.0
 [node name="free_play_btn" type="Button" parent="CanvasLayer/Control/VBoxContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_7mkkd")
-theme_override_font_sizes/font_size = 50
 text = "Free Play"
 
 [node name="arcade_btn" type="Button" parent="CanvasLayer/Control/VBoxContainer"]
 layout_mode = 2
 tooltip_text = "W.I.P!!!"
 theme_override_fonts/font = ExtResource("3_7mkkd")
-theme_override_font_sizes/font_size = 50
 disabled = true
 text = "Arcade"
 
@@ -52,115 +53,126 @@ text = "Arcade"
 layout_mode = 2
 tooltip_text = "W.I.P!!!"
 theme_override_fonts/font = ExtResource("3_7mkkd")
-theme_override_font_sizes/font_size = 50
 text = "Exit"
 
 [node name="Panel" type="Panel" parent="CanvasLayer/Control"]
 layout_mode = 0
-offset_left = 512.0
-offset_top = 208.0
-offset_right = 1408.0
-offset_bottom = 960.0
+offset_left = 128.0
+offset_top = 176.0
+offset_right = 1792.0
+offset_bottom = 1024.0
+theme = ExtResource("4_xvnma")
 
-[node name="Label" type="Label" parent="CanvasLayer/Control/Panel"]
+[node name="free_play_label" type="Label" parent="CanvasLayer/Control/Panel"]
 layout_mode = 0
-offset_left = 312.0
+offset_left = 672.0
 offset_top = 32.0
-offset_right = 592.0
+offset_right = 995.0
 offset_bottom = 88.0
-theme_override_font_sizes/font_size = 40
+theme_override_fonts/font = ExtResource("5_ba3wp")
 text = "Free Play"
+horizontal_alignment = 1
+
+[node name="free_play_desc" type="Label" parent="CanvasLayer/Control/Panel"]
+layout_mode = 0
+offset_left = 224.0
+offset_top = 96.0
+offset_right = 1445.0
+offset_bottom = 152.0
+text = "Play any level without restrictions."
 horizontal_alignment = 1
 
 [node name="lvl1_btn" type="Button" parent="CanvasLayer/Control/Panel"]
 layout_mode = 0
-offset_left = 128.0
-offset_top = 112.0
-offset_right = 256.0
-offset_bottom = 238.0
+offset_left = 64.0
+offset_top = 176.0
+offset_right = 512.0
+offset_bottom = 302.0
+theme = ExtResource("4_xvnma")
 text = "Level 1
 After Eight"
 
 [node name="lvl2_btn" type="Button" parent="CanvasLayer/Control/Panel"]
 layout_mode = 0
-offset_left = 384.0
-offset_top = 112.0
-offset_right = 512.0
-offset_bottom = 238.0
+offset_left = 608.0
+offset_top = 176.0
+offset_right = 1056.0
+offset_bottom = 304.0
 text = "Level 2
 8-bit Shoe"
 
 [node name="lvl3_btn" type="Button" parent="CanvasLayer/Control/Panel"]
 layout_mode = 0
-offset_left = 640.0
-offset_top = 112.0
-offset_right = 768.0
-offset_bottom = 238.0
+offset_left = 1152.0
+offset_top = 176.0
+offset_right = 1600.0
+offset_bottom = 302.0
 text = "Level 3
 Falling Pint"
 
 [node name="lvl4_btn" type="Button" parent="CanvasLayer/Control/Panel"]
 layout_mode = 0
-offset_left = 128.0
-offset_top = 304.0
-offset_right = 256.0
-offset_bottom = 432.0
+offset_left = 64.0
+offset_top = 376.0
+offset_right = 512.0
+offset_bottom = 504.0
 text = "Level 4
 Aubergine"
 
 [node name="lvl5_btn" type="Button" parent="CanvasLayer/Control/Panel"]
 layout_mode = 0
-offset_left = 384.0
-offset_top = 304.0
-offset_right = 512.0
-offset_bottom = 432.0
+offset_left = 608.0
+offset_top = 376.0
+offset_right = 1056.0
+offset_bottom = 504.0
 text = "Level 5
 Lapiz Cola"
 
 [node name="lvl6_btn" type="Button" parent="CanvasLayer/Control/Panel"]
 layout_mode = 0
-offset_left = 640.0
-offset_top = 304.0
-offset_right = 768.0
-offset_bottom = 432.0
+offset_left = 1152.0
+offset_top = 368.0
+offset_right = 1600.0
+offset_bottom = 504.0
 text = "Level 6
 Ice Cream"
 
 [node name="lvl7_btn" type="Button" parent="CanvasLayer/Control/Panel"]
 layout_mode = 0
-offset_left = 128.0
-offset_top = 499.0
-offset_right = 256.0
-offset_bottom = 624.0
+offset_left = 64.0
+offset_top = 560.0
+offset_right = 512.0
+offset_bottom = 784.0
 text = "Level 7
 Pyramid"
 
 [node name="lvl8_btn" type="Button" parent="CanvasLayer/Control/Panel"]
 layout_mode = 0
-offset_left = 384.0
-offset_top = 499.0
-offset_right = 512.0
-offset_bottom = 624.0
+offset_left = 608.0
+offset_top = 560.0
+offset_right = 1056.0
+offset_bottom = 784.0
 text = "Level 8
 Igloo"
 
 [node name="lvl9_btn" type="Button" parent="CanvasLayer/Control/Panel"]
 layout_mode = 0
-offset_left = 640.0
-offset_top = 499.0
-offset_right = 768.0
-offset_bottom = 624.0
+offset_left = 1152.0
+offset_top = 560.0
+offset_right = 1600.0
+offset_bottom = 784.0
 text = "Level 9
 Shine Bright
-Like a Diamond"
+Like a
+Diamond"
 
 [node name="x_btn" type="Button" parent="CanvasLayer/Control/Panel"]
 layout_mode = 0
-offset_left = 816.0
-offset_top = 32.0
-offset_right = 850.0
-offset_bottom = 72.0
-text = "X"
+offset_left = 1560.0
+offset_top = 24.0
+offset_right = 1638.0
+offset_bottom = 96.0
+text = " X "
 
 [node name="polygon" parent="." instance=ExtResource("2_3o1bf")]
 position = Vector2(960, 576)

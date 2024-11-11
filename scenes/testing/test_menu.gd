@@ -20,10 +20,11 @@ func _process(delta):
 	# make polygon rotate
 	# change axis of rotation
 	POLYGON.rotation += 0.15 * delta
+	
 	# fire random vfxs every 1-2 seconds
-	if randf() < 0.01:
+	if randf() < delta * 2:
 		var vfx = cut_vfx.instantiate()
-		vfx.position = Vector2(randf_range(0, 800), randf_range(0, 600))
+		vfx.position = Vector2(randf_range(-400, 400), randf_range(-300, 300))
 		vfx.rotation = randf() * 360
 		VFXS.add_child(vfx)
 		vfx.play()
