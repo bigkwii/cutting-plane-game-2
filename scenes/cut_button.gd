@@ -12,9 +12,9 @@ extends Button
 @export var selected: bool = false:
 	set(value):
 		if value and budget != 0:
-			_set_border_color(Color(1.0, 0.0, 0.0))
+			_set_font_color(Color(1.0, 0.0, 0.0))
 		else:
-			_set_border_color(Color(1.0, 1.0, 1.0))
+			_set_font_color(Color(1.0, 1.0, 1.0))
 		selected = value
 		queue_redraw()
 
@@ -88,10 +88,9 @@ func _update_budget_label(value: int):
 		BUDGET_LEFT_LABEL.text = str(value)
 	queue_redraw()
 
-# TODO: figure out an elegant way to change the border color (self modulate is ugly, it modulates _draw). changing the font color for now
-func _set_border_color(color: Color):
+## sets the font color
+func _set_font_color(color: Color):
 	add_theme_color_override("font_color", color)
 	add_theme_color_override("font_hover_color", color)
-	add_theme_color_override("font_pressed_color", color)
 	add_theme_color_override("font_focus_color", color)
 	queue_redraw()
