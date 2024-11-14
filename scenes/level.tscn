@@ -23,6 +23,7 @@ script = ExtResource("1_7muqx")
 
 [node name="HUD" type="Control" parent="CanvasLayer"]
 layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 64.0
@@ -34,6 +35,7 @@ grow_vertical = 2
 theme = ExtResource("6_2bsft")
 
 [node name="debug_buttons" type="VBoxContainer" parent="CanvasLayer/HUD"]
+process_mode = 1
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -51,6 +53,7 @@ text = "0"
 placeholder_text = "degrees"
 
 [node name="cut_buttons" type="VBoxContainer" parent="CanvasLayer/HUD"]
+process_mode = 1
 layout_mode = 1
 anchors_preset = 6
 anchor_left = 1.0
@@ -87,6 +90,7 @@ text = "V"
 cut_type = "v_split"
 
 [node name="show_hull" parent="CanvasLayer/HUD" instance=ExtResource("7_1qqha")]
+process_mode = 1
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -115,6 +119,7 @@ text = "Open
 Menu"
 
 [node name="panel" type="Panel" parent="CanvasLayer/HUD"]
+process_mode = 2
 visible = false
 layout_mode = 1
 anchors_preset = 8

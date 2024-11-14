@@ -91,4 +91,7 @@ func _update_budget_label(value: int):
 # TODO: figure out an elegant way to change the border color (self modulate is ugly, it modulates _draw). changing the font color for now
 func _set_border_color(color: Color):
 	add_theme_color_override("font_color", color)
+	add_theme_color_override("font_hover_color", color)
+	add_theme_color_override("font_pressed_color", color)
+	add_theme_color_override("font_focus_color", color)
 	queue_redraw()

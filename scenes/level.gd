@@ -22,7 +22,7 @@ var level_name: String
 var is_cutting = false
 # - cut mode stuff -
 enum CUT_MODES { DEBUG_CUT, CIRCLE_CUT, GOMORY_CUT, H_SPLIT_CUT, V_SPLIT_CUT }
-var cut_mode = CUT_MODES.DEBUG_CUT
+var cut_mode = CUT_MODES.CIRCLE_CUT
 # - debug -
 var debug_cut_direction = Vector2(1, 0)
 
@@ -45,6 +45,7 @@ var debug_cut_direction = Vector2(1, 0)
 # - proloaded scenes -
 @onready var CLICK_VFX = preload("res://scenes/click_vfx.tscn")
 # - debug cut button and input -
+@onready var DEBUG_CONTAINER = $CanvasLayer/HUD/debug_buttons
 @onready var DEBUG_CUT_BUTTON = $CanvasLayer/HUD/debug_buttons/debug_cut
 @onready var DEBUG_CUT_INPUT = $CanvasLayer/HUD/debug_buttons/debug_cut_input
 
@@ -79,6 +80,8 @@ func _ready(): # TODO: messy. separate these into functions
 	POLYGON.color = level_color
 	POLYGON.initial_vertices = level_vertices
 	POLYGON.build_polygon()
+	# DEFAULT SELECTED CUT
+	CIRCLE_CUT_BUTTON.selected = true
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -87,9 +90,9 @@ func _process(_delta):
 # handle inputs here! not in _process!
 func _input(event):
 	# !! likely temporary !!
-	# if esc is pressed, open the menu
+	# if esc is pressed, open the menu TODO: the menu should be handled by the parent scene
 	if event.is_action_pressed("esc"):
-		MENU_PANEL.visible = not MENU_PANEL.visible
+		_on_open_menu_pressed()
 	# reload scene if reset input is pressed
 	if event.is_action_pressed("reset"):
 		DEBUG.log("Reloading scene...")
@@ -111,6 +114,12 @@ func _input(event):
 
 			# !! likely temporary !!
 			if OPEN_MENU.get_global_rect().has_point(event.position):
+				return
+
+			if DEBUG_CONTAINER.get_global_rect().has_point(event.position):
+				return
+			
+			if SHOW_HULL_BUTTON.get_global_rect().has_point(event.position):
 				return
 
 			# play click vfx
@@ -172,6 +181,14 @@ func _set_lattice_grid_parameters(max_y: int):
 	POLYGON.SCALING = SCALING
 	POLYGON.OFFSET = OFFSET
 
+## unselects all cut buttons
+func _unselect_all_cut_buttons():
+	CIRCLE_CUT_BUTTON.selected = false
+	GOMORY_CUT_BUTTON.selected = false
+	H_SPLIT_CUT_BUTTON.selected = false
+	V_SPLIT_CUT_BUTTON.selected = false
+	DEBUG_CUT_BUTTON.selected = false
+
 # -- button callbacks --
 # when the show hull button is HELD, show the convex hull
 func _on_show_hull_button_down():
@@ -183,6 +200,8 @@ func _on_show_hull_button_up():
 # when the debug cut button is PRESSED, set the cut mode to DEBUG_CUT
 func _on_debug_cut_pressed():
 	cut_mode = CUT_MODES.DEBUG_CUT
+	_unselect_all_cut_buttons()
+	DEBUG_CUT_BUTTON.selected = true
 	DEBUG.log("DEBUG_CUT selected")
 	_handle_gomory_cut_selected(false)
 
@@ -194,6 +213,8 @@ func _on_debug_cut_input_text_changed(new_text:String):
 # when the circle cut button is PRESSED, set the cut mode to CIRCLE_CUT
 func _on_circle_pressed():
 	cut_mode = CUT_MODES.CIRCLE_CUT
+	_unselect_all_cut_buttons()
+	CIRCLE_CUT_BUTTON.selected = true
 	DEBUG.log("CIRCLE_CUT selected")
 	_handle_gomory_cut_selected(false)
 
@@ -201,18 +222,24 @@ func _on_circle_pressed():
 func _on_gomory_pressed():
 	# Note: this one has to change the polygon such that the vertices are clickable
 	cut_mode = CUT_MODES.GOMORY_CUT
+	_unselect_all_cut_buttons()
+	GOMORY_CUT_BUTTON.selected = true
 	DEBUG.log("GOMORY_CUT selected")
 	_handle_gomory_cut_selected(true)
 
 # when the h split cut button is PRESSED, set the cut mode to H_SPLIT_CUT
 func _on_h_split_pressed():
 	cut_mode = CUT_MODES.H_SPLIT_CUT
+	_unselect_all_cut_buttons()
+	H_SPLIT_CUT_BUTTON.selected = true
 	DEBUG.log("H_SPLIT_CUT selected")
 	_handle_gomory_cut_selected(false)
 
 # when the v split cut button is PRESSED, set the cut mode to V_SPLIT_CUT
 func _on_v_split_pressed():
 	cut_mode = CUT_MODES.V_SPLIT_CUT
+	_unselect_all_cut_buttons()
+	V_SPLIT_CUT_BUTTON.selected = true
 	DEBUG.log("V_SPLIT_CUT selected")
 	_handle_gomory_cut_selected(false)
 
@@ -246,6 +273,7 @@ func _play_click_vfx(pos: Vector2):
 # !! likely temporary !!
 
 func _on_open_menu_pressed():
+	get_tree().paused = not get_tree().paused
 	MENU_PANEL.visible = not MENU_PANEL.visible
 
 
@@ -256,6 +284,7 @@ func _on_reload_pressed():
 
 
 func _on_exit_pressed():
+	get_tree().paused = false
 	GLOBALS.level_json_path = ""
 	var test_menu_scene = load("res://scenes/testing/test_menu.tscn")
 	var test_menu = test_menu_scene.instantiate()
@@ -265,6 +294,7 @@ func _on_exit_pressed():
 
 
 func _on_x_pressed():
+	get_tree().paused = false
 	MENU_PANEL.visible = false
 
 

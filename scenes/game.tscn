@@ -1,3 +1,10 @@
-[gd_scene format=3 uid="uid://df2roj2vetpki"]
+[gd_scene load_steps=3 format=3 uid="uid://df2roj2vetpki"]
+
+[ext_resource type="PackedScene" uid="uid://dy0r3jrpws0sn" path="res://scenes/arcade.tscn" id="1_15cia"]
+[ext_resource type="PackedScene" uid="uid://g6tm7g6rdrq6" path="res://scenes/crt_filter.tscn" id="2_e2gbo"]
 
 [node name="game" type="Node2D"]
+
+[node name="arcade" parent="." instance=ExtResource("1_15cia")]
+
+[node name="crt_filter" parent="." instance=ExtResource("2_e2gbo")]

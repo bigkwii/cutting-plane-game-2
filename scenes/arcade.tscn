@@ -1,5 +1,8 @@
-[gd_scene format=3 uid="uid://dy0r3jrpws0sn"]
+[gd_scene load_steps=2 format=3 uid="uid://dy0r3jrpws0sn"]
+
+[ext_resource type="Script" path="res://scenes/arcade.gd" id="1_umj7k"]
 
 [node name="arcade" type="Node2D"]
+script = ExtResource("1_umj7k")
 
 [node name="loaded_level" type="Node2D" parent="."]
