@@ -34,6 +34,11 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("6_2bsft")
 
+[node name="name_label" type="Label" parent="CanvasLayer/HUD"]
+layout_mode = 1
+offset_right = 40.0
+offset_bottom = 52.0
+
 [node name="debug_buttons" type="VBoxContainer" parent="CanvasLayer/HUD"]
 process_mode = 1
 layout_mode = 1
@@ -117,6 +122,23 @@ offset_bottom = 128.0
 grow_horizontal = 0
 text = "Open
 Menu"
+
+[node name="score_container" type="VBoxContainer" parent="CanvasLayer/HUD"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -0.5
+offset_right = 0.5
+offset_bottom = -64.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="level_score_label" type="Label" parent="CanvasLayer/HUD/score_container"]
+layout_mode = 2
+text = "SCORE: "
 
 [node name="panel" type="Panel" parent="CanvasLayer/HUD"]
 process_mode = 2

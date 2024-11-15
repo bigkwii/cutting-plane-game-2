@@ -7,6 +7,10 @@ var LEVELS_DIR = "res://levels/"
 ## default level file
 var DEFAULT_LEVEL_PATH = "res://levels/default.json"
 
+# -- signals --
+signal level_completed
+signal cut_made(score: int)
+
 # -- vars --
 ## dimensions of the lattice grid
 @export var DIMENSIONS: Vector2 = GLOBALS.DEFAULT_DIMENSIONS
@@ -34,6 +38,7 @@ var debug_cut_direction = Vector2(1, 0)
 @onready var CLICK_VFXS = $vfx/click_vfxs
 # - hud elements -
 @onready var HUD = $CanvasLayer/HUD
+@onready var NAME_LABEL = $CanvasLayer/HUD/name_label
 @onready var BUTTONS_CONTAINER = $CanvasLayer/HUD/cut_buttons
 @onready var OPEN_MENU = $CanvasLayer/HUD/open_menu
 @onready var MENU_PANEL = $CanvasLayer/HUD/panel
@@ -70,6 +75,7 @@ func _ready(): # TODO: messy. separate these into functions
 	var parsed_data = JSON.parse_string(file_data.get_as_text())
 	# - assign data -
 	level_name = parsed_data["name"] if parsed_data.has("name") else "!!! NO NAME !!!"
+	NAME_LABEL.text = level_name
 	# set lattice grid size
 	var max_y = parsed_data["max_y"] if parsed_data.has("max_y") else -1
 	_set_lattice_grid_parameters(max_y)
@@ -82,6 +88,8 @@ func _ready(): # TODO: messy. separate these into functions
 	POLYGON.build_polygon()
 	# DEFAULT SELECTED CUT
 	CIRCLE_CUT_BUTTON.selected = true
+	# ONLY SHOW DEBUG CUT IF DEBUG IS ENABLED!
+	DEBUG_CONTAINER.visible = DEBUG.is_enabled()
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -108,17 +116,13 @@ func _input(event):
 			if MENU_PANEL.visible:
 				return
 
-			# if on the show hull button, do nothing
+			# ignore UI
 			if BUTTONS_CONTAINER.get_global_rect().has_point(event.position): # !!! TODO !!!: this is hacky, i don't like it, figure out a cleaner way
 				return
-
-			# !! likely temporary !!
 			if OPEN_MENU.get_global_rect().has_point(event.position):
 				return
-
-			if DEBUG_CONTAINER.get_global_rect().has_point(event.position):
+			if DEBUG.is_enabled() and DEBUG_CONTAINER.get_global_rect().has_point(event.position):
 				return
-			
 			if SHOW_HULL_BUTTON.get_global_rect().has_point(event.position):
 				return
 

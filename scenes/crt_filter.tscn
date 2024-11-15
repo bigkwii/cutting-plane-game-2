@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://g6tm7g6rdrq6"]
+[gd_scene load_steps=6 format=3 uid="uid://g6tm7g6rdrq6"]
 
 [ext_resource type="Shader" path="res://assets/shaders/crt.gdshader" id="1_uliut"]
 
@@ -19,6 +19,43 @@ shader_parameter/roll_speed = 1.0
 shader_parameter/scan_line_strength = -5.0
 shader_parameter/pixel_strength = -4.0
 
+[sub_resource type="Animation" id="Animation_hj672"]
+resource_name = "buzz"
+length = 1.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("crt_canvas_layer/crt_color_rect:material:shader_parameter/noise_amount")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.266667, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.03, 0.3, 0.03]
+}
+
+[sub_resource type="Animation" id="Animation_eomuj"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("crt_canvas_layer/crt_color_rect:material:shader_parameter/noise_amount")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.03]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_bf1jc"]
+_data = {
+"RESET": SubResource("Animation_eomuj"),
+"buzz": SubResource("Animation_hj672")
+}
+
 [node name="crt_filter" type="Control"]
 layout_mode = 3
 anchors_preset = 0
@@ -31,3 +68,8 @@ material = SubResource("ShaderMaterial_ces05")
 offset_right = 1920.0
 offset_bottom = 1080.0
 mouse_filter = 2
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_bf1jc")
+}

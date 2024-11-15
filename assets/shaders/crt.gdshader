@@ -14,7 +14,7 @@ uniform sampler2D SCREEN_TEXTURE: hint_screen_texture;
 uniform vec2 resolution = vec2(960.0, 540.0);
 
 /** number of scan lines */
-uniform float scan_line_amount: hint_range(0.0, 1.0) = 0.1;
+uniform float scan_line_amount: hint_range(0.0, 1.0) = 1;
 /** crt curvature. this messes with click positions, so keep at 0 or very close to 0 */
 uniform float warp_amount: hint_range(0.0, 5.0) = 0.0;
 /** static noise amount */

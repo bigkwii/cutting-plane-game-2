@@ -14,6 +14,7 @@ script = ExtResource("1_b6t46")
 
 [node name="Control" type="Control" parent="CanvasLayer"]
 layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 64.0
@@ -51,12 +52,14 @@ offset_top = -380.0
 offset_right = 192.0
 grow_horizontal = 2
 grow_vertical = 0
-theme_override_constants/separation = 24
+theme_override_constants/separation = 8
 
-[node name="free_play_btn" type="Button" parent="CanvasLayer/Control/VBoxContainer"]
+[node name="tutorial_btn" type="Button" parent="CanvasLayer/Control/VBoxContainer"]
 layout_mode = 2
+tooltip_text = "W.I.P!!!"
 theme_override_fonts/font = ExtResource("3_7mkkd")
-text = "Free Play"
+disabled = true
+text = "How To Play"
 
 [node name="arcade_btn" type="Button" parent="CanvasLayer/Control/VBoxContainer"]
 layout_mode = 2
@@ -65,6 +68,39 @@ theme_override_fonts/font = ExtResource("3_7mkkd")
 disabled = true
 text = "Arcade"
 
+[node name="free_play_btn" type="Button" parent="CanvasLayer/Control/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_7mkkd")
+text = "Free Play"
+
+[node name="editor_btn" type="Button" parent="CanvasLayer/Control/VBoxContainer"]
+layout_mode = 2
+tooltip_text = "W.I.P!!!"
+theme_override_fonts/font = ExtResource("3_7mkkd")
+disabled = true
+text = "Level Editor"
+
+[node name="speedrun_btn" type="Button" parent="CanvasLayer/Control/VBoxContainer"]
+layout_mode = 2
+tooltip_text = "W.I.P!!!"
+theme_override_fonts/font = ExtResource("3_7mkkd")
+disabled = true
+text = "Speedrun"
+
+[node name="leaderboards_btn" type="Button" parent="CanvasLayer/Control/VBoxContainer"]
+layout_mode = 2
+tooltip_text = "W.I.P!!!"
+theme_override_fonts/font = ExtResource("3_7mkkd")
+disabled = true
+text = "Leaderboards"
+
+[node name="about_btn" type="Button" parent="CanvasLayer/Control/VBoxContainer"]
+layout_mode = 2
+tooltip_text = "W.I.P!!!"
+theme_override_fonts/font = ExtResource("3_7mkkd")
+disabled = true
+text = "About"
+
 [node name="exit_btn" type="Button" parent="CanvasLayer/Control/VBoxContainer"]
 layout_mode = 2
 tooltip_text = "W.I.P!!!"
@@ -72,6 +108,7 @@ theme_override_fonts/font = ExtResource("3_7mkkd")
 text = "Exit"
 
 [node name="Panel" type="Panel" parent="CanvasLayer/Control"]
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
