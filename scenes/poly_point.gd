@@ -15,6 +15,8 @@ extends Node2D
 @export var hover: bool = false
 ## scaling
 @export var SCALING: int = GLOBALS.DEFAULT_SCALING
+## flag to show debug label
+@export var debug_label_visible: bool = false
 
 @onready var DEBUG_LABEL = $debug_label
 
@@ -23,8 +25,8 @@ var is_integer: bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	if DEBUG.is_enabled():
-		DEBUG_LABEL.text = str(lattice_position)
+	DEBUG_LABEL.text = str(lattice_position)
+	DEBUG_LABEL.visible = debug_label_visible
 	if is_integral():
 		clickable = false
 

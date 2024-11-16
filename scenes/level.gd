@@ -44,7 +44,7 @@ var debug_cut_direction = Vector2(1, 0)
 @onready var GUIDE_GRID = $guide_grid
 @onready var POLYGON = $polygon
 @onready var CAMERA = $camera
-@onready var CLICK_VFXS = $vfx/click_vfxs
+# @onready var CLICK_VFXS = $vfx/click_vfxs # moved to game scene
 # - hud elements -
 @onready var HUD = $CanvasLayer/HUD
 @onready var NAME_LABEL = $CanvasLayer/HUD/name_label
@@ -56,7 +56,7 @@ var debug_cut_direction = Vector2(1, 0)
 @onready var H_SPLIT_CUT_BUTTON = $CanvasLayer/HUD/cut_buttons/h_split
 @onready var V_SPLIT_CUT_BUTTON = $CanvasLayer/HUD/cut_buttons/v_split
 # - proloaded scenes -
-@onready var CLICK_VFX = preload("res://scenes/click_vfx.tscn")
+# @onready var CLICK_VFX = preload("res://scenes/click_vfx.tscn") # moved to game scene
 # - debug cut button and input -
 @onready var DEBUG_CONTAINER = $CanvasLayer/HUD/debug_buttons
 @onready var DEBUG_CUT_BUTTON = $CanvasLayer/HUD/debug_buttons/debug_cut
@@ -103,7 +103,7 @@ func _ready(): # TODO: messy. separate these into functions
 	# DEFAULT SELECTED CUT
 	CIRCLE_CUT_BUTTON.selected = true
 	# ONLY SHOW DEBUG CUT IF DEBUG IS ENABLED!
-	DEBUG_CONTAINER.visible = DEBUG.is_enabled()
+	DEBUG_CONTAINER.visible = DEBUG_CONTAINER.visible and DEBUG.is_enabled()
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -116,7 +116,6 @@ func _input(event):
 	# handle clicking with mouse 1
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and not event.pressed and not is_cutting: # not event.pressed = released
-
 			# ignore UI
 			if CIRCLE_CUT_BUTTON.get_global_rect().has_point(event.position):
 				return
@@ -132,9 +131,8 @@ func _input(event):
 				return
 			if SHOW_HULL_BUTTON.get_global_rect().has_point(event.position):
 				return
-
 			# play click vfx
-			_play_click_vfx(get_global_mouse_position())
+			# _play_click_vfx(get_global_mouse_position()) # moved to game scene
 			# get the clicked lattice position
 			var clicked_lattice_pos = snapped( (get_global_mouse_position() - OFFSET) / SCALING , Vector2(GLOBALS.CLICK_EPSILON, GLOBALS.CLICK_EPSILON) )
 			DEBUG.log( "Clicked @ lattice pos: " + str( clicked_lattice_pos ) )
@@ -293,11 +291,11 @@ func _handle_gomory_cut_click():
 	await POLYGON.gomory_cut(mouse_lattice_pos)
 
 # click vfx
-func _play_click_vfx(pos: Vector2):
-	var click_vfx = CLICK_VFX.instantiate()
-	CLICK_VFXS.add_child(click_vfx)
-	click_vfx.position = pos
-	click_vfx.play_click()
+# func _play_click_vfx(pos: Vector2):
+# 	var click_vfx = CLICK_VFX.instantiate()
+# 	CLICK_VFXS.add_child(click_vfx)
+# 	click_vfx.position = pos
+# 	click_vfx.play_click()
 
 func _on_open_menu_pressed():
 	open_menu.emit()

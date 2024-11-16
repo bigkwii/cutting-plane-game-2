@@ -2,7 +2,7 @@ extends Node2D
 
 @onready var POLYGON = $polygon
 @onready var VFXS = $vfxs
-@onready var FREE_PLAY_LEVEL_SELECT = $CanvasLayer/Control/Panel
+@onready var FREE_PLAY_LEVEL_SELECT = $CanvasLayer/UI/free_play_level_select
 
 # - signals -
 signal start_free_play(level_path: String)
@@ -52,10 +52,10 @@ func _on_x_btn_pressed():
 	if FREE_PLAY_LEVEL_SELECT.visible:
 		FREE_PLAY_LEVEL_SELECT.visible = false
 
+# - free play level selector -
 
 func _on_lvl_1_btn_pressed():
 	start_free_play.emit("res://levels/demo/1.json")
-
 
 func _on_lvl_2_btn_pressed():
 	start_free_play.emit("res://levels/demo/2.json")
@@ -64,26 +64,20 @@ func _on_lvl_2_btn_pressed():
 func _on_lvl_3_btn_pressed():
 	start_free_play.emit("res://levels/demo/3.json")
 
-
 func _on_lvl_4_btn_pressed():
 	start_free_play.emit("res://levels/demo/4.json")
-
 
 func _on_lvl_5_btn_pressed():
 	start_free_play.emit("res://levels/demo/5.json")
 
-
 func _on_lvl_6_btn_pressed():
 	start_free_play.emit("res://levels/demo/6.json")
-
 
 func _on_lvl_7_btn_pressed():
 	start_free_play.emit("res://levels/demo/7.json")
 
-
 func _on_lvl_8_btn_pressed():
 	start_free_play.emit("res://levels/demo/8.json")
-
 
 func _on_lvl_9_btn_pressed():
 	start_free_play.emit("res://levels/demo/9.json")

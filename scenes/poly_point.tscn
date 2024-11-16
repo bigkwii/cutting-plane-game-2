@@ -7,6 +7,7 @@
 script = ExtResource("1_ebfn4")
 
 [node name="debug_label" type="Label" parent="."]
+visible = false
 offset_right = 40.0
 offset_bottom = 23.0
 scale = Vector2(0.1, 0.1)

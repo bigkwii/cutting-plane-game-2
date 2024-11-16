@@ -16,6 +16,7 @@ script = ExtResource("1_7muqx")
 [node name="guide_grid" parent="." instance=ExtResource("3_mg6o6")]
 
 [node name="polygon" parent="." instance=ExtResource("3_b5vrg")]
+debug_labels_visible = true
 
 [node name="camera" parent="." instance=ExtResource("4_oqnx0")]
 
@@ -23,6 +24,7 @@ script = ExtResource("1_7muqx")
 
 [node name="HUD" type="Control" parent="CanvasLayer"]
 layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 64.0
@@ -41,6 +43,7 @@ offset_top = 40.0
 
 [node name="debug_buttons" type="VBoxContainer" parent="CanvasLayer/HUD"]
 process_mode = 1
+visible = false
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 1.0

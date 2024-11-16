@@ -15,6 +15,9 @@ extends Node2D
 ## Make sure to use Lattice coordinates and to follow a CCW winding order.
 @export var initial_vertices: Array[Vector2] = []
 
+## flag to show debug labels
+@export var debug_labels_visible: bool = false
+
 ## packed version of the vertices array for easy geometry calculations
 var packed_vertices: PackedVector2Array = []
 
@@ -36,8 +39,8 @@ var CUT_PIECE_SCENE = preload("res://scenes/cut_piece.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	# build_polygon() # commenting this out because the level scene will handle the creation of the polygon
-	pass
+	# only draw centroid if debug is enabled
+	CENTROID.visible = CENTROID.visible and DEBUG.is_enabled()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -64,6 +67,7 @@ func _add_new_vertex(lattice_pos: Vector2):
 	new_vert.position = lattice_pos * SCALING + OFFSET
 	new_vert.color = color
 	new_vert.SCALING = SCALING
+	new_vert.debug_label_visible = debug_labels_visible
 	VERTS.add_child(new_vert)
 
 ## Builds the Polygon given vertices on initial_vertices. Does not clear the previous vertices.
