@@ -4,6 +4,10 @@ extends Node2D
 @onready var VFXS = $vfxs
 @onready var FREE_PLAY_LEVEL_SELECT = $CanvasLayer/Control/Panel
 
+# - signals -
+signal start_free_play(level_path: String)
+
+# - preloaded scenes -
 var cut_vfx = preload("res://scenes/cut_vfx.tscn")
 var level_scene = preload("res://scenes/level.tscn")
 
@@ -50,72 +54,36 @@ func _on_x_btn_pressed():
 
 
 func _on_lvl_1_btn_pressed():
-	var level = level_scene.instantiate()
-	level.level_json_path = "res://levels/demo/1.json"
-	get_tree().get_root().add_child(level)
-	get_tree().current_scene = level
-	queue_free()
+	start_free_play.emit("res://levels/demo/1.json")
 
 
 func _on_lvl_2_btn_pressed():
-	var level = level_scene.instantiate()
-	level.level_json_path = "res://levels/demo/2.json"
-	get_tree().get_root().add_child(level)
-	get_tree().current_scene = level
-	queue_free()
+	start_free_play.emit("res://levels/demo/2.json")
 
 
 func _on_lvl_3_btn_pressed():
-	var level = level_scene.instantiate()
-	level.level_json_path = "res://levels/demo/3.json"
-	get_tree().get_root().add_child(level)
-	get_tree().current_scene = level
-	queue_free()
+	start_free_play.emit("res://levels/demo/3.json")
 
 
 func _on_lvl_4_btn_pressed():
-	var level = level_scene.instantiate()
-	level.level_json_path = "res://levels/demo/4.json"
-	get_tree().get_root().add_child(level)
-	get_tree().current_scene = level
-	queue_free()
+	start_free_play.emit("res://levels/demo/4.json")
 
 
 func _on_lvl_5_btn_pressed():
-	var level = level_scene.instantiate()
-	level.level_json_path = "res://levels/demo/5.json"
-	get_tree().get_root().add_child(level)
-	get_tree().current_scene = level
-	queue_free()
+	start_free_play.emit("res://levels/demo/5.json")
 
 
 func _on_lvl_6_btn_pressed():
-	var level = level_scene.instantiate()
-	level.level_json_path = "res://levels/demo/6.json"
-	get_tree().get_root().add_child(level)
-	get_tree().current_scene = level
-	queue_free()
+	start_free_play.emit("res://levels/demo/6.json")
 
 
 func _on_lvl_7_btn_pressed():
-	var level = level_scene.instantiate()
-	level.level_json_path = "res://levels/demo/7.json"
-	get_tree().get_root().add_child(level)
-	get_tree().current_scene = level
-	queue_free()
+	start_free_play.emit("res://levels/demo/7.json")
 
 
 func _on_lvl_8_btn_pressed():
-	var level = level_scene.instantiate()
-	level.level_json_path = "res://levels/demo/8.json"
-	get_tree().get_root().add_child(level)
-	get_tree().current_scene = level
-	queue_free()
+	start_free_play.emit("res://levels/demo/8.json")
 
 
 func _on_lvl_9_btn_pressed():
-	var level = level_scene.instantiate()
-	level.level_json_path = "res://levels/demo/9.json"
-	get_tree().get_root().add_child(level)
-	get_tree().current_scene = level
-	queue_free()
+	start_free_play.emit("res://levels/demo/9.json")

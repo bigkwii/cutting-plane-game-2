@@ -320,23 +320,6 @@ func cut_polygon(line_point: Vector2, line_dir: Vector2, allow_hull_cutting: boo
 		cut_piece_direction = -cut_piece_direction
 	_make_cut_piece(new_polygons[polygon_to_be_removed_index], cut_piece_direction)
 
-	# area checks for score TODO: put this in a separate function and have it be called by level.tscn
-	var hull_area: float = polygon_area(CONVEX_INTEGER_HULL.convex_integer_hull)
-	var poly_area: float = polygon_area(packed_vertices)
-	var ratio = hull_area / poly_area
-	if is_integral():
-		DEBUG.log("Perfect. RANK S (%s)" % ratio, 10)
-	elif ratio >= 0.975:
-		DEBUG.log("Excellent. RANK A (%s)" % ratio, 10)
-	elif ratio >= 0.95:
-		DEBUG.log("Very good. RANK B (%s)" % ratio, 10)
-	elif ratio >= 0.90:
-		DEBUG.log("Good. RANK C (%s)" % ratio, 10)
-	elif ratio >= 0.80:
-		DEBUG.log("Ok. RANK D (%s)" % ratio, 10)
-	else:
-		DEBUG.log("You can do better. NO RANK (%s)" % ratio, 10)
-
 	return true
 
 ## returns true if a cut made with this line WOULD cut the polygon TODO: deprecated?
@@ -692,7 +675,7 @@ func get_gmi(a_lattice: Vector2, a_slack: Vector2, b: float, inverse_basis_rows:
 	return [GMIaLattice, GMIaSlack, GMIb]  # GMI cut successful
 
 # -- placeholder cut animations --
-# TODO: make circle and split animations interruplible (?)
+# TODO: make circle and split animations interruplible (?) nope.
 
 func _play_cut_animation(line_point: Vector2, line_dir: Vector2) -> void:
 	var new_cut_vfx = CUT_VFX_SCENE.instantiate()
@@ -757,3 +740,22 @@ func _make_cut_piece(lattice_verts: PackedVector2Array, initial_velocity_dir: Ve
 	new_cut_piece.color = color
 	new_cut_piece.initial_velocity_dir = initial_velocity_dir
 	CUT_PIECES.add_child(new_cut_piece)
+
+## calculates the rank for a level based on the ratio of the area of the convex hull to the area of the polygon
+func get_rank():
+	# area checks for score TODO: put this in a separate function and have it be called by level.tscn
+	var hull_area: float = polygon_area(CONVEX_INTEGER_HULL.convex_integer_hull)
+	var poly_area: float = polygon_area(packed_vertices)
+	var ratio = hull_area / poly_area
+	if is_integral():
+		return "S" # Perfect. RANK S
+	elif ratio >= 0.975:
+		return "A" # Excellent. RANK A
+	elif ratio >= 0.95:
+		return "B" # Very good. RANK B
+	elif ratio >= 0.90:
+		return "C" # Good. RANK C
+	elif ratio >= 0.80:
+		return "D" # Ok. RANK D
+	else:
+		return "-" # You can do better. NO RANK

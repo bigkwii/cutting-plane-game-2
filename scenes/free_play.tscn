@@ -1,3 +1,231 @@
-[gd_scene format=3 uid="uid://cx0x4k7do4xil"]
+[gd_scene load_steps=4 format=3 uid="uid://cx0x4k7do4xil"]
+
+[ext_resource type="Script" path="res://scenes/free_play.gd" id="1_1ybha"]
+[ext_resource type="Theme" uid="uid://bqljbjsn8elrs" path="res://assets/themes/default.tres" id="3_p0vbc"]
+[ext_resource type="FontFile" uid="uid://bvvtosdeupbva" path="res://assets/fonts/extrathick.ttf" id="4_wi21x"]
 
 [node name="free_play" type="Node2D"]
+script = ExtResource("1_1ybha")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="HUD_TOP" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 64.0
+offset_top = 64.0
+offset_right = -64.0
+offset_bottom = -952.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("3_p0vbc")
+
+[node name="gamemode_label" type="Label" parent="CanvasLayer/HUD_TOP"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+theme = ExtResource("3_p0vbc")
+theme_override_fonts/font = ExtResource("4_wi21x")
+theme_override_font_sizes/font_size = 30
+text = "Free Play Mode"
+
+[node name="MENU" type="Control" parent="CanvasLayer"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("3_p0vbc")
+
+[node name="panel" type="Panel" parent="CanvasLayer/MENU"]
+process_mode = 2
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -446.0
+offset_top = -286.0
+offset_right = 446.0
+offset_bottom = 286.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MENU/panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -226.0
+offset_top = -142.0
+offset_right = 226.0
+offset_bottom = 142.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 64
+
+[node name="Label" type="Label" parent="CanvasLayer/MENU/panel/VBoxContainer"]
+layout_mode = 2
+text = "Free Play"
+horizontal_alignment = 1
+
+[node name="reload" type="Button" parent="CanvasLayer/MENU/panel/VBoxContainer"]
+layout_mode = 2
+text = "Reload Level"
+
+[node name="selector" type="Button" parent="CanvasLayer/MENU/panel/VBoxContainer"]
+layout_mode = 2
+text = "Change Level"
+
+[node name="exit" type="Button" parent="CanvasLayer/MENU/panel/VBoxContainer"]
+layout_mode = 2
+text = "Back to
+Main Menu"
+
+[node name="x" type="Button" parent="CanvasLayer/MENU/panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_top = 32.0
+offset_right = -32.0
+grow_horizontal = 0
+text = "X"
+
+[node name="LEVEL_SELECTOR" type="Control" parent="CanvasLayer"]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="panel" type="Panel" parent="CanvasLayer/LEVEL_SELECTOR"]
+process_mode = 2
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 108.0
+offset_top = 96.0
+offset_right = 1772.0
+offset_bottom = 944.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("3_p0vbc")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/LEVEL_SELECTOR/panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -610.5
+offset_top = 32.0
+offset_right = 610.5
+offset_bottom = 110.0
+grow_horizontal = 2
+
+[node name="free_play_desc" type="Label" parent="CanvasLayer/LEVEL_SELECTOR/panel/VBoxContainer"]
+layout_mode = 2
+text = "Select Level"
+horizontal_alignment = 1
+
+[node name="GridContainer" type="GridContainer" parent="CanvasLayer/LEVEL_SELECTOR/panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -598.0
+offset_top = -200.0
+offset_right = 598.0
+offset_bottom = 224.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/h_separation = 128
+theme_override_constants/v_separation = 64
+columns = 3
+
+[node name="lvl1_btn" type="Button" parent="CanvasLayer/LEVEL_SELECTOR/panel/GridContainer"]
+layout_mode = 2
+theme = ExtResource("3_p0vbc")
+text = "Level 1
+After Eight"
+
+[node name="lvl2_btn" type="Button" parent="CanvasLayer/LEVEL_SELECTOR/panel/GridContainer"]
+layout_mode = 2
+text = "Level 2
+8-bit Shoe"
+
+[node name="lvl3_btn" type="Button" parent="CanvasLayer/LEVEL_SELECTOR/panel/GridContainer"]
+layout_mode = 2
+text = "Level 3
+Falling Pint"
+
+[node name="lvl4_btn" type="Button" parent="CanvasLayer/LEVEL_SELECTOR/panel/GridContainer"]
+layout_mode = 2
+text = "Level 4
+Aubergine"
+
+[node name="lvl5_btn" type="Button" parent="CanvasLayer/LEVEL_SELECTOR/panel/GridContainer"]
+layout_mode = 2
+text = "Level 5
+Lapiz Cola"
+
+[node name="lvl6_btn" type="Button" parent="CanvasLayer/LEVEL_SELECTOR/panel/GridContainer"]
+layout_mode = 2
+text = "Level 6
+Ice Cream"
+
+[node name="lvl7_btn" type="Button" parent="CanvasLayer/LEVEL_SELECTOR/panel/GridContainer"]
+layout_mode = 2
+text = "Level 7
+Pyramid"
+
+[node name="lvl8_btn" type="Button" parent="CanvasLayer/LEVEL_SELECTOR/panel/GridContainer"]
+layout_mode = 2
+text = "Level 8
+Igloo"
+
+[node name="lvl9_btn" type="Button" parent="CanvasLayer/LEVEL_SELECTOR/panel/GridContainer"]
+layout_mode = 2
+text = "Level 9
+Shine Bright
+Like a
+Diamond"
+
+[node name="selector_x_btn" type="Button" parent="CanvasLayer/LEVEL_SELECTOR/panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_top = 32.0
+offset_right = -32.0
+grow_horizontal = 0
+text = " X "
+
+[connection signal="pressed" from="CanvasLayer/MENU/panel/VBoxContainer/reload" to="." method="_on_reload_pressed"]
+[connection signal="pressed" from="CanvasLayer/MENU/panel/VBoxContainer/selector" to="." method="_on_selector_pressed"]
+[connection signal="pressed" from="CanvasLayer/MENU/panel/VBoxContainer/exit" to="." method="_on_exit_pressed"]
+[connection signal="pressed" from="CanvasLayer/MENU/panel/x" to="." method="_on_x_pressed"]
+[connection signal="pressed" from="CanvasLayer/LEVEL_SELECTOR/panel/GridContainer/lvl1_btn" to="." method="_on_lvl_1_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/LEVEL_SELECTOR/panel/GridContainer/lvl2_btn" to="." method="_on_lvl_2_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/LEVEL_SELECTOR/panel/GridContainer/lvl3_btn" to="." method="_on_lvl_3_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/LEVEL_SELECTOR/panel/GridContainer/lvl4_btn" to="." method="_on_lvl_4_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/LEVEL_SELECTOR/panel/GridContainer/lvl5_btn" to="." method="_on_lvl_5_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/LEVEL_SELECTOR/panel/GridContainer/lvl6_btn" to="." method="_on_lvl_6_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/LEVEL_SELECTOR/panel/GridContainer/lvl7_btn" to="." method="_on_lvl_7_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/LEVEL_SELECTOR/panel/GridContainer/lvl8_btn" to="." method="_on_lvl_8_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/LEVEL_SELECTOR/panel/GridContainer/lvl9_btn" to="." method="_on_lvl_9_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/LEVEL_SELECTOR/panel/selector_x_btn" to="." method="_on_selector_x_btn_pressed"]

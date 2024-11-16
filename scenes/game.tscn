@@ -1,19 +1,17 @@
-[gd_scene load_steps=6 format=3 uid="uid://df2roj2vetpki"]
+[gd_scene load_steps=4 format=3 uid="uid://df2roj2vetpki"]
 
-[ext_resource type="PackedScene" uid="uid://dy0r3jrpws0sn" path="res://scenes/arcade.tscn" id="1_15cia"]
+[ext_resource type="Script" path="res://scenes/game.gd" id="1_iislu"]
 [ext_resource type="PackedScene" uid="uid://bjgl665nkg4ka" path="res://scenes/testing/test_menu.tscn" id="1_r0aji"]
-[ext_resource type="PackedScene" uid="uid://ygxl8dhgym47" path="res://scenes/tutorial.tscn" id="2_5bfm6"]
 [ext_resource type="PackedScene" uid="uid://g6tm7g6rdrq6" path="res://scenes/crt_filter.tscn" id="2_e2gbo"]
-[ext_resource type="PackedScene" uid="uid://c5xxlw3n3vn14" path="res://scenes/editor.tscn" id="4_a48fi"]
 
 [node name="game" type="Node2D"]
+script = ExtResource("1_iislu")
 
-[node name="test_menu" parent="." instance=ExtResource("1_r0aji")]
+[node name="selected_gamemode" type="Node2D" parent="."]
 
-[node name="tutorial" parent="." instance=ExtResource("2_5bfm6")]
-
-[node name="arcade" parent="." instance=ExtResource("1_15cia")]
-
-[node name="editor" parent="." instance=ExtResource("4_a48fi")]
+[node name="test_menu" parent="selected_gamemode" instance=ExtResource("1_r0aji")]
 
 [node name="crt_filter" parent="." instance=ExtResource("2_e2gbo")]
+layer = 128
+
+[connection signal="start_free_play" from="selected_gamemode/test_menu" to="." method="_on_test_menu_start_free_play"]

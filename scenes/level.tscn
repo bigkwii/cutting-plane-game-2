@@ -23,7 +23,6 @@ script = ExtResource("1_7muqx")
 
 [node name="HUD" type="Control" parent="CanvasLayer"]
 layout_mode = 3
-anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 64.0
@@ -32,21 +31,24 @@ offset_right = -64.0
 offset_bottom = -64.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 theme = ExtResource("6_2bsft")
 
 [node name="name_label" type="Label" parent="CanvasLayer/HUD"]
 layout_mode = 1
-offset_right = 40.0
-offset_bottom = 52.0
+anchors_preset = -1
+offset_top = 40.0
 
 [node name="debug_buttons" type="VBoxContainer" parent="CanvasLayer/HUD"]
 process_mode = 1
 layout_mode = 1
-anchors_preset = 2
+anchors_preset = -1
 anchor_top = 1.0
 anchor_bottom = 1.0
+offset_left = 256.0
 offset_top = -124.0
 offset_right = 168.0
+offset_bottom = -256.0
 grow_vertical = 0
 
 [node name="debug_cut" parent="CanvasLayer/HUD/debug_buttons" instance=ExtResource("7_1qqha")]
@@ -125,70 +127,20 @@ Menu"
 
 [node name="score_container" type="VBoxContainer" parent="CanvasLayer/HUD"]
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.5
+anchors_preset = 2
 anchor_top = 1.0
-anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -0.5
-offset_right = 0.5
-offset_bottom = -64.0
-grow_horizontal = 2
+offset_top = -52.0
+offset_right = 235.0
 grow_vertical = 0
 
 [node name="level_score_label" type="Label" parent="CanvasLayer/HUD/score_container"]
 layout_mode = 2
 text = "SCORE: "
 
-[node name="panel" type="Panel" parent="CanvasLayer/HUD"]
-process_mode = 2
-visible = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -446.0
-offset_top = -286.0
-offset_right = 446.0
-offset_bottom = 286.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Label" type="Label" parent="CanvasLayer/HUD/panel"]
-layout_mode = 0
-offset_left = 366.0
-offset_top = 34.0
-offset_right = 527.0
-offset_bottom = 103.0
-text = "Menu"
-
-[node name="reload" type="Button" parent="CanvasLayer/HUD/panel"]
-layout_mode = 0
-offset_left = 222.0
-offset_top = 138.0
-offset_right = 674.0
-offset_bottom = 250.0
-text = "Reload Scene
-(Ctrl+R)"
-
-[node name="exit" type="Button" parent="CanvasLayer/HUD/panel"]
-layout_mode = 0
-offset_left = 286.0
-offset_top = 290.0
-offset_right = 611.0
-offset_bottom = 402.0
-text = "Back to
-Main Menu"
-
-[node name="x" type="Button" parent="CanvasLayer/HUD/panel"]
-layout_mode = 0
-offset_left = 804.0
-offset_top = 34.0
-offset_right = 852.0
-offset_bottom = 94.0
-text = "X"
+[node name="level_score" type="Label" parent="CanvasLayer/HUD/score_container"]
+layout_mode = 2
+text = "0"
 
 [node name="vfx" type="Node2D" parent="."]
 
@@ -204,6 +156,3 @@ text = "X"
 [connection signal="button_down" from="CanvasLayer/HUD/show_hull" to="." method="_on_show_hull_button_down"]
 [connection signal="button_up" from="CanvasLayer/HUD/show_hull" to="." method="_on_show_hull_button_up"]
 [connection signal="pressed" from="CanvasLayer/HUD/open_menu" to="." method="_on_open_menu_pressed"]
-[connection signal="pressed" from="CanvasLayer/HUD/panel/reload" to="." method="_on_reload_pressed"]
-[connection signal="pressed" from="CanvasLayer/HUD/panel/exit" to="." method="_on_exit_pressed"]
-[connection signal="pressed" from="CanvasLayer/HUD/panel/x" to="." method="_on_x_pressed"]
