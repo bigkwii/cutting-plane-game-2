@@ -20,8 +20,8 @@ func _draw():
 	draw_circle(Vector2(0, 0), growing_factor * radius, color, false, 1.5)
 
 # play the grow animation
-func play_grow():
-	ANIM_PLAYER.play("grow")
+func play_grow(speed: float = 1.0):
+	ANIM_PLAYER.play("grow", speed)
 
 # play the success animation
 func play_success():

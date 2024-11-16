@@ -27,8 +27,8 @@ func _draw():
 		draw_line(Vector2(-1 * growing_factor * width, -length), Vector2(-1 * growing_factor * width, length), color, 1.5)
 
 # play the grow animation
-func play_grow():
-	ANIM_PLAYER.play("grow")
+func play_grow(speed: float = 1.0):
+	ANIM_PLAYER.play("grow", speed)
 
 # play the success animation
 func play_success():

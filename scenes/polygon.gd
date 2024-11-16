@@ -416,8 +416,10 @@ func circle_cut(clicked_lattice_pos: Vector2) -> void:
 	# the radius of the circle will be the distance to the closest lattice point
 	var circle_radius = (closest_lattice_point - circle_center).length()
 	var intersection_points = circle_intersects_polygon(packed_vertices, circle_center, circle_radius)
-	# placeholder circle animation. TODO: animation should be interruptible
-	_play_circle_animation(circle_center, circle_radius)
+	# circle grow animation.
+	# grow_anim_speed depends on the circle radius, such that the animation lasts the same time regardless of the radius
+	var grow_anim_speed = circle_radius / 100
+	_play_circle_animation(circle_center, circle_radius, grow_anim_speed)
 	await CIRCLE_VFX.grow_animation_finished
 
 	# make every valid cut possible
@@ -493,8 +495,9 @@ func _base_split_cut(clicked_lattice_pos: Vector2, is_horizontal: bool) -> void:
 			line_point_2 = Vector2( closest_x + 2 * (clicked_lattice_pos.x - closest_x ), clicked_lattice_pos.y )
 			line_dir_2 = Vector2(0, 1)
 			width = abs(clicked_lattice_pos.x - closest_x)
-	# !!! PLACEHOLDER SPLIT ANIMATION !!!
-	_play_split_animation(clicked_lattice_pos, width, is_horizontal)
+	# grow_anim_speed depends on the circle radius, such that the animation lasts the same time regardless of the radius
+	var grow_anim_speed = width / 100
+	_play_split_animation(clicked_lattice_pos, width, is_horizontal, grow_anim_speed)
 	await SPLIT_VFX.grow_animation_finished
 	# check if the lines intersect the polygon
 	var intersection_points_1 = line_intersects_polygon(packed_vertices, line_point_1, line_dir_1)
@@ -684,10 +687,10 @@ func _play_cut_animation(line_point: Vector2, line_dir: Vector2) -> void:
 	new_cut_vfx.rotation = line_dir.angle()
 	new_cut_vfx.play()
 
-func _play_circle_animation(circle_center: Vector2, circle_radius: float) -> void:
+func _play_circle_animation(circle_center: Vector2, circle_radius: float, speed: float = 1.0) -> void:
 	CIRCLE_VFX.global_position = circle_center * SCALING + OFFSET
 	CIRCLE_VFX.radius = circle_radius * SCALING
-	CIRCLE_VFX.play_grow()
+	CIRCLE_VFX.play_grow(speed)
 
 func _play_circle_success_animation() -> void:
 	CIRCLE_VFX.play_success()
@@ -695,11 +698,11 @@ func _play_circle_success_animation() -> void:
 func _play_circle_failure_animation() -> void:
 	CIRCLE_VFX.play_failure()
 
-func _play_split_animation(origin: Vector2, width: float, is_horizontal: bool) -> void:
+func _play_split_animation(origin: Vector2, width: float, is_horizontal: bool, speed: float = 1.0) -> void:
 	SPLIT_VFX.global_position = origin * SCALING + OFFSET
 	SPLIT_VFX.width = width * SCALING
 	SPLIT_VFX.is_horizontal = is_horizontal
-	SPLIT_VFX.play_grow()
+	SPLIT_VFX.play_grow(speed)
 
 func _play_split_success_animation() -> void:
 	SPLIT_VFX.play_success()

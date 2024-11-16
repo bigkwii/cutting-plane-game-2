@@ -208,10 +208,10 @@ func _unselect_all_cut_buttons():
 # -- button callbacks --
 # when the show hull button is HELD, show the convex hull
 func _on_show_hull_button_down():
-	POLYGON.CONVEX_INTEGER_HULL.visible = true
+	POLYGON.CONVEX_INTEGER_HULL.play_show_hull()
 
 func _on_show_hull_button_up():
-	POLYGON.CONVEX_INTEGER_HULL.visible = false
+	POLYGON.CONVEX_INTEGER_HULL.play_idle()
 
 # when the debug cut button is PRESSED, set the cut mode to DEBUG_CUT
 func _on_debug_cut_pressed():
