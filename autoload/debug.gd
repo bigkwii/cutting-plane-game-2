@@ -20,7 +20,7 @@ func _ready() -> void:
 	add_child(canvas_layer)
 	canvas_layer.layer = 1_000_000 # on top of everything
 	canvas_layer.add_child(log_container)
-	
+
 	fps_avg_label.set("theme_override_constants/outline_size", 2)
 	fps_avg_label.set("theme_override_colors/font_color", Color(0, 1, 0, 1))
 	fps_avg_label.set("theme_override_colors/font_outline_color", Color(0, 0, 0, 1))
@@ -35,6 +35,9 @@ func _ready() -> void:
 
 	fps_container.set("layout_direction", Control.LAYOUT_DIRECTION_RTL)
 	canvas_layer.add_child(fps_container)
+
+	fps_container.set("mouse_filter", Control.MOUSE_FILTER_IGNORE)
+	log_container.set("mouse_filter", Control.MOUSE_FILTER_IGNORE)
 
 	show_fps = true
 
