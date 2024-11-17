@@ -34,7 +34,7 @@ func _input(event):
 			zoom_out()
 
 		# Handle panning start/stop
-		if event.button_index == MOUSE_BUTTON_RIGHT or event.button_index == MOUSE_BUTTON_MIDDLE:
+		if event.button_index == MOUSE_BUTTON_LEFT or event.button_index == MOUSE_BUTTON_RIGHT or event.button_index == MOUSE_BUTTON_MIDDLE:
 			if event.pressed:
 				is_panning = true
 				last_mouse_pos = event.position

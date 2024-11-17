@@ -21,15 +21,17 @@ func _ready():
 
 func _input(event):
 	if event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed: # play on press
+			_play_click_vfx(get_global_mouse_position(), true)
+		if event.button_index == MOUSE_BUTTON_LEFT and not event.pressed: # play on release
 			_play_click_vfx(get_global_mouse_position())
 
 # - vfx -
-func _play_click_vfx(pos: Vector2):
+func _play_click_vfx(pos: Vector2, backwards: bool = false):
 	var click_vfx = CLICK_VFX.instantiate()
 	CLICK_VFXS.add_child(click_vfx)
 	click_vfx.position = pos
-	click_vfx.play_click()
+	click_vfx.play_click(backwards)
 
 # - signal callbacks -
 

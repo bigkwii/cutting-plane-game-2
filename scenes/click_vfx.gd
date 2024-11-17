@@ -17,8 +17,11 @@ func _process(_delta):
 func _draw():
 	draw_circle(Vector2(0, 0), growing_factor * radius, color, false, 1)
 
-func play_click():
-	ANIM_PLAYER.play("click")
+func play_click(backwards = false):
+	if backwards:
+		ANIM_PLAYER.play_backwards("click")
+	else:
+		ANIM_PLAYER.play("click")
 
 func _on_animation_player_animation_finished(anim_name:StringName):
 	if anim_name == "click":

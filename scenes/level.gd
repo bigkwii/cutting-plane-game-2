@@ -25,6 +25,10 @@ signal open_menu
 @export_file("*.json") var level_json_path: String = "res://levels/default.json" # so it shows up on editor
 ## level name
 var level_name: String
+## flag to determine if the user is currently dragging the camera with mouse1
+var is_m1_dragging = false
+## need to save the clicked position to differenciate between click and drag
+var clicked_pos_at_drag_start = Vector2(0, 0)
 ## determines if a cut is currently being made
 var is_cutting = false
 # - cut mode stuff -
@@ -115,7 +119,15 @@ func _input(event):
 		_on_open_menu_pressed()
 	# handle clicking with mouse 1
 	if event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_LEFT and not event.pressed and not is_cutting: # not event.pressed = released
+		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			is_m1_dragging = true
+			clicked_pos_at_drag_start = event.position
+		elif event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
+			is_m1_dragging = false
+			# if this happened, it was a drag (allow for some error)
+			if abs(event.position - clicked_pos_at_drag_start) > Vector2(GLOBALS.CLICK_EPSILON, GLOBALS.CLICK_EPSILON):
+				return
+		if event.button_index == MOUSE_BUTTON_LEFT and not event.pressed and not is_m1_dragging and not is_cutting: # not event.pressed = released
 			# ignore UI
 			if CIRCLE_CUT_BUTTON.get_global_rect().has_point(event.position):
 				return
