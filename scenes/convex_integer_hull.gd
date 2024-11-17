@@ -32,14 +32,11 @@ func _draw():
 		draw_polyline(points, Color(0, 0, 1, alpha), 2) # solid border
 
 func play_show_hull():
-	DEBUG.log("convex_integer_hull.gd: Playing show hull animation", 10)
 	ANIM_PLAYER.play("show_hull")
 
 func play_idle():
-	DEBUG.log("convex_integer_hull.gd: Playing idle animation", 10)
 	ANIM_PLAYER.play("idle")
 
 func play_hidden():
-	DEBUG.log("convex_integer_hull.gd: Playing hidden animation", 10)
 	ANIM_PLAYER.play("hidden")
 
