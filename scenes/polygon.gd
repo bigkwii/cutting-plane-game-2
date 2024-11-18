@@ -579,7 +579,6 @@ func _base_split_cut(clicked_lattice_pos: Vector2, is_horizontal: bool) -> Array
 		var total_area_shaved = 0.0
 		for shaved_off_area in shaved_off_areas:
 			total_area_shaved += shaved_off_area
-		DEBUG.log("_split_cut: Total area shaved: %s" % total_area_shaved, 10)
 		return [valid_cuts, total_area_shaved]
 
 func h_split_cut(clicked_lattice_pos: Vector2) -> Array:
@@ -695,7 +694,6 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> Array:
 	gomory_mode_selected(true)
 	if is_valid_cut:
 		# TODO: this is where the gomory cut animation should be played
-		DEBUG.log("gomory_cut: total area shaved: %s" % shaved_off_area, 10)
 		return [1, shaved_off_area]
 	else:
 		# same here. could get away just playing it before this if else branch
@@ -800,7 +798,6 @@ func _make_cut_piece(lattice_verts: PackedVector2Array, initial_velocity_dir: Ve
 
 ## calculates the rank for a level based on the ratio of the area of the convex hull to the area of the polygon
 func get_rank():
-	# area checks for score TODO: put this in a separate function and have it be called by level.tscn
 	var hull_area: float = polygon_area(CONVEX_INTEGER_HULL.convex_integer_hull)
 	var poly_area: float = polygon_area(packed_vertices)
 	var ratio = hull_area / poly_area

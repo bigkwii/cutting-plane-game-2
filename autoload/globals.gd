@@ -18,7 +18,7 @@ extends Node
 ## epsilon for snapping to grid when clicking
 var CLICK_EPSILON = 0.01
 ## epsilon for determining when a MOUSE_1 drag was small enough to be considered a stationary click
-var MOUSE_1_DRAG_EPSILON = 5
+var MOUSE_1_DRAG_EPSILON = 10
 ## epsilon for determining when a touch control drag was small enough to be considered a stationary click
 var TOUCH_DRAG_EPSILON = 10
 ## epsilon for geometric calculations
