@@ -4,3 +4,9 @@
 
 [node name="camera" type="Camera2D"]
 script = ExtResource("1_pu3b3")
+
+[node name="m1_drag_timer" type="Timer" parent="."]
+wait_time = 0.083
+one_shot = true
+
+[connection signal="timeout" from="m1_drag_timer" to="." method="_on_m1_drag_timer_timeout"]

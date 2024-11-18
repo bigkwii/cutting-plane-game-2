@@ -124,7 +124,7 @@ func _input(event):
 			clicked_pos_at_drag_start = event.position
 		elif event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
 			is_m1_dragging = false
-			# if this happens, it was a drag (allow for some tolerance)
+			# if this happens, it was a drag and not a click (allow for some tolerance)
 			if abs(event.position - clicked_pos_at_drag_start) > Vector2(GLOBALS.MOUSE_1_DRAG_EPSILON, GLOBALS.MOUSE_1_DRAG_EPSILON):
 				return
 		if event.button_index == MOUSE_BUTTON_LEFT and not event.pressed and not is_m1_dragging and not is_cutting: # not event.pressed = released
