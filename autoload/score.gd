@@ -2,7 +2,7 @@ extends Node
 ## scoring constants
 
 ## how much score to give by cut unit area
-var SCORE_BY_UNIT_AREA = 1_000
+var SCORE_BY_UNIT_AREA = 1
 ## how much bonus score to award for no rank
 var NO_RANK = 0
 ## how much bonus score to award for a D rank

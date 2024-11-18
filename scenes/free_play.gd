@@ -20,7 +20,7 @@ signal quit_gamemode
 func _ready():
 	LEVEL = LEVEL_SCENE.instantiate()
 	LEVEL.level_json_path = level_json_path
-	LEVEL.INFINITE_BUDGET = true
+	LEVEL.INFINITE_BUDGET = false
 	add_child(LEVEL)
 	LEVEL.open_menu.connect(_on_level_open_menu)
 
@@ -38,7 +38,7 @@ func reload_level():
 	LEVEL.queue_free()
 	LEVEL = LEVEL_SCENE.instantiate()
 	LEVEL.level_json_path = level_json_path
-	LEVEL.INFINITE_BUDGET = true
+	LEVEL.INFINITE_BUDGET = false
 	add_child(LEVEL)
 	LEVEL.open_menu.connect(_on_level_open_menu)
 

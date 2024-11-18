@@ -32,7 +32,7 @@ var clicked_pos_at_drag_start = Vector2(0, 0)
 ## determines if a cut is currently being made
 var is_cutting = false
 # - cut mode stuff -
-enum CUT_MODES { DEBUG_CUT, CIRCLE_CUT, GOMORY_CUT, H_SPLIT_CUT, V_SPLIT_CUT }
+enum CUT_MODES { DEBUG_CUT, CIRCLE_CUT, GOMORY_CUT, H_SPLIT_CUT, V_SPLIT_CUT, NONE }
 var cut_mode = CUT_MODES.CIRCLE_CUT
 # cut budgets (-1 means infinite)
 var circle_cut_budget = -1
@@ -59,6 +59,7 @@ var debug_cut_direction = Vector2(1, 0)
 @onready var GOMORY_CUT_BUTTON = $CanvasLayer/HUD/cut_buttons/gomory
 @onready var H_SPLIT_CUT_BUTTON = $CanvasLayer/HUD/cut_buttons/h_split
 @onready var V_SPLIT_CUT_BUTTON = $CanvasLayer/HUD/cut_buttons/v_split
+@onready var SCORE_LABEL = $CanvasLayer/HUD/score_container/score_label
 # - proloaded scenes -
 # @onready var CLICK_VFX = preload("res://scenes/click_vfx.tscn") # moved to game scene
 # - debug cut button and input -
@@ -104,6 +105,11 @@ func _ready(): # TODO: messy. separate these into functions
 		GOMORY_CUT_BUTTON.budget = gomory_cut_budget
 		H_SPLIT_CUT_BUTTON.budget = split_cut_budget
 		V_SPLIT_CUT_BUTTON.budget = split_cut_budget
+		# set as disabled if budget is 0
+		CIRCLE_CUT_BUTTON.disabled = circle_cut_budget == 0
+		GOMORY_CUT_BUTTON.disabled = gomory_cut_budget == 0
+		H_SPLIT_CUT_BUTTON.disabled = split_cut_budget == 0
+		V_SPLIT_CUT_BUTTON.disabled = split_cut_budget == 0
 	# DEFAULT SELECTED CUT
 	CIRCLE_CUT_BUTTON.selected = true
 	# ONLY SHOW DEBUG CUT IF DEBUG IS ENABLED!
@@ -157,21 +163,123 @@ func _input(event):
 			# these awaits are temporary, until animation cancelling is implemented.
 			# once it is, it should await a signal instead of the function call. something like "cut_finished"
 			# NOTE: animation cancelling is pretty useless. i'll leave these comments here for now, but i think this feature is better off scrapped
+			# TODO: maybe wrap scoring logic in a function because it's (almost) the same for all cuts
 			elif cut_mode == CUT_MODES.CIRCLE_CUT and circle_cut_budget != 0:
 				is_cutting = true
-				await POLYGON.circle_cut(clicked_lattice_pos)
+				var circle_cut_result = await POLYGON.circle_cut(clicked_lattice_pos)
+				if circle_cut_result[0] == 0: # no valid cuts
+					is_cutting = false
+					return
+				elif circle_cut_result[0] == 1: # exactly one cut
+					score += roundi( circle_cut_result[1] * SCORE.SCORE_BY_UNIT_AREA )
+				else: # multiple cut bonus
+					score += roundi( circle_cut_result[1] * SCORE.SCORE_BY_UNIT_AREA * SCORE.MULTIPLE_CUT_BONUS_MULTIPLIER)
+				circle_cut_budget = circle_cut_budget - 1 if not INFINITE_BUDGET else -1
+				SCORE_LABEL.text = str(score)
+				CIRCLE_CUT_BUTTON.budget = circle_cut_budget
+				# if the budget is 0, disable the button and select the next cut mode whose budget is not 0. if all are 0, select none
+				if circle_cut_budget == 0:
+					CIRCLE_CUT_BUTTON.disabled = true
+					if gomory_cut_budget != 0:
+						cut_mode = CUT_MODES.GOMORY_CUT
+						_unselect_all_cut_buttons()
+						GOMORY_CUT_BUTTON.selected = true
+						_handle_gomory_cut_selected(true)
+					elif split_cut_budget != 0:
+						cut_mode = CUT_MODES.H_SPLIT_CUT
+						_unselect_all_cut_buttons()
+						H_SPLIT_CUT_BUTTON.selected = true
+					else:
+						cut_mode = CUT_MODES.NONE
 				is_cutting = false
 			elif cut_mode == CUT_MODES.H_SPLIT_CUT and split_cut_budget != 0:
 				is_cutting = true
-				await POLYGON.h_split_cut(clicked_lattice_pos)
+				var h_split_cut_result = await POLYGON.h_split_cut(clicked_lattice_pos)
+				if h_split_cut_result[0] == 0: # no valid cuts
+					is_cutting = false
+					return
+				elif h_split_cut_result[0] == 1: # exactly one cut
+					score += roundi( h_split_cut_result[1] * SCORE.SCORE_BY_UNIT_AREA )
+				else: # multiple cut bonus
+					score += roundi( h_split_cut_result[1] * SCORE.SCORE_BY_UNIT_AREA * SCORE.MULTIPLE_CUT_BONUS_MULTIPLIER)
+				split_cut_budget = split_cut_budget - 1 if not INFINITE_BUDGET else -1
+				SCORE_LABEL.text = str(score)
+				H_SPLIT_CUT_BUTTON.budget = split_cut_budget # they're shared
+				V_SPLIT_CUT_BUTTON.budget = split_cut_budget
+				# if the budget is 0, disable the button and select the next cut mode whose budget is not 0. if all are 0, select none
+				if split_cut_budget == 0:
+					H_SPLIT_CUT_BUTTON.disabled = true
+					V_SPLIT_CUT_BUTTON.disabled = true
+					# select the next cut mode whose budget is not 0. if all are 0, select none
+					if circle_cut_budget != 0:
+						cut_mode = CUT_MODES.CIRCLE_CUT
+						_unselect_all_cut_buttons()
+						CIRCLE_CUT_BUTTON.selected = true
+					elif gomory_cut_budget != 0:
+						cut_mode = CUT_MODES.GOMORY_CUT
+						_unselect_all_cut_buttons()
+						GOMORY_CUT_BUTTON.selected = true
+						_handle_gomory_cut_selected(true)
+					else:
+						cut_mode = CUT_MODES.NONE
 				is_cutting = false
 			elif cut_mode == CUT_MODES.V_SPLIT_CUT and split_cut_budget != 0:
 				is_cutting = true
-				await POLYGON.v_split_cut(clicked_lattice_pos)
+				var v_split_cut_result = await POLYGON.v_split_cut(clicked_lattice_pos)
+				if v_split_cut_result[0] == 0: # no valid cuts
+					is_cutting = false
+					return
+				elif v_split_cut_result[0] == 1: # exactly one cut
+					score += roundi( v_split_cut_result[1] * SCORE.SCORE_BY_UNIT_AREA )
+				else: # multiple cut bonus
+					score += roundi( v_split_cut_result[1] * SCORE.SCORE_BY_UNIT_AREA * SCORE.MULTIPLE_CUT_BONUS_MULTIPLIER)
+				split_cut_budget = split_cut_budget - 1 if not INFINITE_BUDGET else -1
+				SCORE_LABEL.text = str(score)
+				H_SPLIT_CUT_BUTTON.budget = split_cut_budget # they're shared
+				V_SPLIT_CUT_BUTTON.budget = split_cut_budget
+				# if the budget is 0, disable the button and select the next cut mode whose budget is not 0. if all are 0, select none
+				if split_cut_budget == 0:
+					H_SPLIT_CUT_BUTTON.disabled = true
+					V_SPLIT_CUT_BUTTON.disabled = true
+					# select the next cut mode whose budget is not 0. if all are 0, select none
+					if circle_cut_budget != 0:
+						cut_mode = CUT_MODES.CIRCLE_CUT
+						_unselect_all_cut_buttons()
+						CIRCLE_CUT_BUTTON.selected = true
+					elif gomory_cut_budget != 0:
+						cut_mode = CUT_MODES.GOMORY_CUT
+						_unselect_all_cut_buttons()
+						GOMORY_CUT_BUTTON.selected = true
+						_handle_gomory_cut_selected(true)
+					else:
+						cut_mode = CUT_MODES.NONE
 				is_cutting = false
 			elif cut_mode == CUT_MODES.GOMORY_CUT and gomory_cut_budget != 0: # gomory cut is handled differently
 				is_cutting = true
-				_handle_gomory_cut_click()
+				var gomory_cut_result = await _handle_gomory_cut_click()
+				if gomory_cut_result[0] == 0: # no valid cuts
+					is_cutting = false
+					return
+				elif gomory_cut_result[0] == 1: # exactly one cut (gomory cuts are always 1 cut tops)
+					score += roundi(gomory_cut_result[1] * SCORE.SCORE_BY_UNIT_AREA)
+				gomory_cut_budget = gomory_cut_budget - 1 if not INFINITE_BUDGET else -1
+				SCORE_LABEL.text = str(score)
+				GOMORY_CUT_BUTTON.budget = gomory_cut_budget
+				# if the budget is 0, disable the button and select the next cut mode whose budget is not 0. if all are 0, select none
+				if gomory_cut_budget == 0:
+					GOMORY_CUT_BUTTON.disabled = true
+					_handle_gomory_cut_selected(false)
+					# select the next cut mode whose budget is not 0. if all are 0, select none
+					if circle_cut_budget != 0:
+						cut_mode = CUT_MODES.CIRCLE_CUT
+						_unselect_all_cut_buttons()
+						CIRCLE_CUT_BUTTON.selected = true
+					elif split_cut_budget != 0:
+						cut_mode = CUT_MODES.H_SPLIT_CUT
+						_unselect_all_cut_buttons()
+						H_SPLIT_CUT_BUTTON.selected = true
+					else:
+						cut_mode = CUT_MODES.NONE
 				is_cutting = false
 			else: # if somehow, no cut mode is selected
 				DEBUG.log("No cut mode selected!")
@@ -296,11 +404,11 @@ func _handle_gomory_cut_hover():
 	POLYGON.update_verts_hover_vfx(mouse_lattice_pos)
 
 ## function to handle the gomory cut click interaction. the polygon scene is responsible of validating this click
-func _handle_gomory_cut_click():
+func _handle_gomory_cut_click() -> Array:
 	if cut_mode != CUT_MODES.GOMORY_CUT: # prob unneccesary
-		return
+		return [0, 0.0]
 	var mouse_lattice_pos = (get_global_mouse_position() - OFFSET) / SCALING
-	await POLYGON.gomory_cut(mouse_lattice_pos)
+	return await POLYGON.gomory_cut(mouse_lattice_pos)
 
 # click vfx
 # func _play_click_vfx(pos: Vector2):

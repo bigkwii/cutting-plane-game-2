@@ -295,17 +295,17 @@ func would_cut_hull(line_point: Vector2, line_dir: Vector2) -> bool:
 ## [br][br]
 ## line_point, line_dir: point and direction of the line
 ## [br][br]
-## returns true if the cut was successful, false otherwise
-func cut_polygon(line_point: Vector2, line_dir: Vector2, allow_hull_cutting: bool = false) -> bool:
+## returns an array containing: [bool: if the cut was successful, float: area shaved off by the cut]
+func cut_polygon(line_point: Vector2, line_dir: Vector2, allow_hull_cutting: bool = false) -> Array:
 	var centroid: Vector2 = CENTROID.lattice_position
 	var polygon_verts = packed_vertices
 	var new_polygons = split_polygon(polygon_verts, line_point, line_dir)
 	if new_polygons.size() == 0:
 		DEBUG.log("cut_polygon: No new polygons found.")
-		return false
+		return [false, 0.0]
 	if not allow_hull_cutting and would_cut_hull(line_point, line_dir):
 		DEBUG.log("cut_polygon: Hull cutting detected. Aborting.")
-		return false
+		return [false, 0.0]
 	# play the cut animation
 	_play_cut_animation(line_point, line_dir)
 	var polygon_to_be_kept_index: int = 0 if Geometry2D.is_point_in_polygon(centroid, new_polygons[0]) else 1
@@ -323,8 +323,9 @@ func cut_polygon(line_point: Vector2, line_dir: Vector2, allow_hull_cutting: boo
 	if cut_piece_direction.dot(centroid - intersection_points[0]) > 0:
 		cut_piece_direction = -cut_piece_direction
 	_make_cut_piece(new_polygons[polygon_to_be_removed_index], cut_piece_direction)
-
-	return true
+	# get area of the shaved off part
+	var shaved_off_area = polygon_area(new_polygons[polygon_to_be_removed_index])
+	return [true, shaved_off_area]
 
 ## returns true if a cut made with this line WOULD cut the polygon TODO: deprecated?
 ## [br][br]
@@ -404,10 +405,11 @@ func circle_intersects_polygon(polygon: PackedVector2Array, circle_center: Vecto
 ## if it intersects, cuts in the direction described by the intersection points.
 ## [br][br]
 ## clicked_lattice_pos: Vector2 the lattice position where the click happened
-func circle_cut(clicked_lattice_pos: Vector2) -> void:
+## [br][br]
+## returns an array containing: [int: number of valid cuts made, float: the total area shaved]
+func circle_cut(clicked_lattice_pos: Vector2) -> Array:
 	var circle_center = clicked_lattice_pos
 	# get the closest point with integer coordinates to the circle center
-	# !!! TODO: optimize this !!!
 	var candidates: Array[Vector2] = []
 	candidates.append(Vector2(floor(circle_center.x), floor(circle_center.y)))
 	candidates.append(Vector2(floor(circle_center.x), ceil(circle_center.y)))
@@ -429,6 +431,7 @@ func circle_cut(clicked_lattice_pos: Vector2) -> void:
 	# make every valid cut possible
 	var already_made_cuts = []
 	var valid_cuts = 0
+	var shaved_off_areas = []
 	for cut_start in intersection_points:
 		for cut_end in intersection_points:
 			if cut_start == cut_end:
@@ -437,15 +440,25 @@ func circle_cut(clicked_lattice_pos: Vector2) -> void:
 				continue
 			if [cut_start, cut_end] in already_made_cuts or [cut_end, cut_start] in already_made_cuts:
 				continue
-			var is_valid_cut = cut_polygon(cut_start, cut_end - cut_start)
+			# make the cut, validate, and if valid, add the shaved off area to the total
+			var cut_result = cut_polygon(cut_start, cut_end - cut_start)
+			var is_valid_cut = cut_result[0]
+			var shaved_off_area = cut_result[1]
 			valid_cuts += 1 if is_valid_cut else 0
+			if is_valid_cut:
+				shaved_off_areas.append(shaved_off_area)
 			already_made_cuts.append([cut_start, cut_end])
 	if valid_cuts == 0:
 		DEBUG.log("circle_cut: No valid cuts found.")
 		_play_circle_failure_animation()
+		return [0, 0.0]
 	else:
 		DEBUG.log("circle_cut: Made %s valid cuts." % valid_cuts)
 		_play_circle_success_animation()
+		var total_area_shaved = 0.0
+		for shaved_off_area in shaved_off_areas:
+			total_area_shaved += shaved_off_area
+		return [valid_cuts, total_area_shaved]
 
 
 ## extends 2 parallel lines from the clicked lattice position until one of the hits the lattice grid.
@@ -459,9 +472,11 @@ func circle_cut(clicked_lattice_pos: Vector2) -> void:
 ## note: there may be 2 of these. In which case, make both cuts and award bonus points.
 ## [br][br]
 ## clicked_lattice_pos: Vector2 the lattice position where the click happened
-## [br]
+## [br][br]
 ## is_horizontal: bool if the cut is horizontal or vertical
-func _base_split_cut(clicked_lattice_pos: Vector2, is_horizontal: bool) -> void:
+## [br][br]
+## returns an array containing: [int: number of valid cuts made, float: the total area shaved]
+func _base_split_cut(clicked_lattice_pos: Vector2, is_horizontal: bool) -> Array:
 	var line_point_1: Vector2
 	var line_dir_1: Vector2
 	var line_point_2: Vector2
@@ -507,13 +522,22 @@ func _base_split_cut(clicked_lattice_pos: Vector2, is_horizontal: bool) -> void:
 	var intersection_points_1 = line_intersects_polygon(packed_vertices, line_point_1, line_dir_1)
 	var intersection_points_2 = line_intersects_polygon(packed_vertices, line_point_2, line_dir_2)
 	var valid_cuts = 0
+	var shaved_off_areas = []
 	# if only one of the lines intersects the polygon, cut in that direction
 	if intersection_points_1.size() > 0 and intersection_points_2.size() == 0:
-		var is_valid_cut = cut_polygon(line_point_1, line_dir_1)
+		var cut_result = cut_polygon(line_point_1, line_dir_1)
+		var is_valid_cut = cut_result[0]
+		var shaved_off_area = cut_result[1]
 		valid_cuts += 1 if is_valid_cut else 0
+		if is_valid_cut:
+			shaved_off_areas.append(shaved_off_area)
 	elif intersection_points_1.size() == 0 and intersection_points_2.size() > 0:
-		var is_valid_cut = cut_polygon(line_point_2, line_dir_2)
+		var cut_result = cut_polygon(line_point_2, line_dir_2)
+		var is_valid_cut = cut_result[0]
+		var shaved_off_area = cut_result[1]
 		valid_cuts += 1 if is_valid_cut else 0
+		if is_valid_cut:
+			shaved_off_areas.append(shaved_off_area)
 	# if both lines intersect the polygon, the potential cuts to be made are from the "top" intersection points of lines 1 and 2, and the "bottom" lines
 	# TODO: Ugh... ugly ass code. simplify this
 	elif intersection_points_1.size() > 0 and intersection_points_2.size() > 0:
@@ -535,24 +559,41 @@ func _base_split_cut(clicked_lattice_pos: Vector2, is_horizontal: bool) -> void:
 			if intersection[coord_int] < bottom_intersection_2[coord_int]:
 				bottom_intersection_2 = intersection
 		# make the cuts
-		var is_valid_cut_1 = cut_polygon(top_intersection_1, top_intersection_2 - top_intersection_1)
-		var is_valid_cut_2 = cut_polygon(bottom_intersection_1, bottom_intersection_2 - bottom_intersection_1)
+		var cut_result_1 = cut_polygon(top_intersection_1, top_intersection_2 - top_intersection_1)
+		var cut_result_2 = cut_polygon(bottom_intersection_1, bottom_intersection_2 - bottom_intersection_1)
+		var is_valid_cut_1 = cut_result_1[0]
+		var is_valid_cut_2 = cut_result_2[0]
 		valid_cuts += 1 if is_valid_cut_1 else 0
 		valid_cuts += 1 if is_valid_cut_2 else 0
+		if is_valid_cut_1:
+			shaved_off_areas.append(cut_result_1[1])
+		if is_valid_cut_2:
+			shaved_off_areas.append(cut_result_2[1])
 	if valid_cuts == 0:
 		DEBUG.log("_split_cut: No valid cuts found.")
 		_play_split_failure_animation()
+		return [0, 0.0]
 	else:
 		DEBUG.log("_split_cut: Made %s valid cuts." % valid_cuts)
 		_play_split_success_animation()
+		var total_area_shaved = 0.0
+		for shaved_off_area in shaved_off_areas:
+			total_area_shaved += shaved_off_area
+		DEBUG.log("_split_cut: Total area shaved: %s" % total_area_shaved, 10)
+		return [valid_cuts, total_area_shaved]
 
-func h_split_cut(clicked_lattice_pos: Vector2) -> void:
-	_base_split_cut(clicked_lattice_pos, true)
+func h_split_cut(clicked_lattice_pos: Vector2) -> Array:
+	return await _base_split_cut(clicked_lattice_pos, true)
 
-func v_split_cut(clicked_lattice_pos: Vector2) -> void:
-	_base_split_cut(clicked_lattice_pos, false)
+func v_split_cut(clicked_lattice_pos: Vector2) -> Array:
+	return await _base_split_cut(clicked_lattice_pos, false)
 
-func gomory_cut(clicked_lattice_pos: Vector2) -> void:
+## gomory cut. selects a vertex to be used as the maximum point of the gomory mixed integer cut algorithm and performs said cut.
+## [br][br]
+## clicked_lattice_pos: Vector2 the lattice position where the click happened
+## [br][br]
+## returns an array containing: [int: number of valid cuts made, float: the total area shaved]
+func gomory_cut(clicked_lattice_pos: Vector2) -> Array:
 	# vertex selection
 	var selected_index: int = -1
 	var closest_distance: float = INF
@@ -565,7 +606,7 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> void:
 			selected_index = i
 	if selected_index == -1:
 		DEBUG.log("gomory_cut: No vertex in range")
-		return
+		return [0, 0.0]
 	DEBUG.log("gomory_cut: selected vertex: %s" % packed_vertices[selected_index])
 	
 	# gomory mixed integer cut algorithm (logic ripped straight from the demo)
@@ -647,9 +688,18 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> void:
 	var line_point = point1
 	var line_dir = point2 - point1
 	# Perform the cut on the polygon
-	cut_polygon(line_point, line_dir)
+	var cut_result = cut_polygon(line_point, line_dir)
+	var is_valid_cut = cut_result[0]
+	var shaved_off_area = cut_result[1]
 	# this is to update the hover vfx on the verts. i know, it's a bit hacky.
 	gomory_mode_selected(true)
+	if is_valid_cut:
+		# TODO: this is where the gomory cut animation should be played
+		DEBUG.log("gomory_cut: total area shaved: %s" % shaved_off_area, 10)
+		return [1, shaved_off_area]
+	else:
+		# same here. could get away just playing it before this if else branch
+		return [0, 0.0]
 
 ## Function to compute inverse basis rows (ripped straight from the demo)
 func compute_inverse_basis_rows(a: float, b: float, c: float, d: float) -> Array[Vector2]:

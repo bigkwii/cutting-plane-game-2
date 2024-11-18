@@ -137,11 +137,11 @@ offset_top = -52.0
 offset_right = 235.0
 grow_vertical = 0
 
-[node name="level_score_label" type="Label" parent="CanvasLayer/HUD/score_container"]
+[node name="score_title" type="Label" parent="CanvasLayer/HUD/score_container"]
 layout_mode = 2
 text = "SCORE: "
 
-[node name="level_score" type="Label" parent="CanvasLayer/HUD/score_container"]
+[node name="score_label" type="Label" parent="CanvasLayer/HUD/score_container"]
 layout_mode = 2
 text = "0"
 
