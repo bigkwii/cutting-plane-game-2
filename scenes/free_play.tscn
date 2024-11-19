@@ -34,6 +34,7 @@ theme_override_font_sizes/font_size = 30
 text = "Free Play Mode"
 
 [node name="MENU" type="Control" parent="CanvasLayer"]
+process_mode = 2
 visible = false
 layout_mode = 3
 anchors_preset = 15
@@ -44,7 +45,6 @@ grow_vertical = 2
 theme = ExtResource("3_p0vbc")
 
 [node name="panel" type="Panel" parent="CanvasLayer/MENU"]
-process_mode = 2
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5

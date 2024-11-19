@@ -19,6 +19,20 @@ tracks/0/keys = {
 "update": 1,
 "values": [true]
 }
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(1.5),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"toggle_pause"
+}]
+}
 
 [sub_resource type="Animation" id="Animation_45olp"]
 length = 0.001
@@ -92,6 +106,7 @@ theme_override_font_sizes/font_size = 30
 text = "0"
 
 [node name="MENU" type="Control" parent="CanvasLayer"]
+process_mode = 2
 visible = false
 layout_mode = 3
 anchors_preset = 15
@@ -103,7 +118,6 @@ mouse_filter = 2
 theme = ExtResource("2_gfycv")
 
 [node name="panel" type="Panel" parent="CanvasLayer/MENU"]
-process_mode = 2
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -152,6 +166,7 @@ grow_horizontal = 0
 text = "X"
 
 [node name="LEVEL_FINISH_POPUP" type="Control" parent="CanvasLayer"]
+process_mode = 2
 visible = false
 layout_mode = 3
 anchors_preset = 15
@@ -266,7 +281,7 @@ grow_vertical = 0
 text = ">>NEXT LEVEL"
 
 [node name="GAME_FINISH_POPUP" type="Control" parent="CanvasLayer"]
-visible = false
+process_mode = 2
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -306,8 +321,23 @@ theme_override_constants/separation = 128
 
 [node name="Label" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer"]
 layout_mode = 2
-text = "Arcade"
+text = "Arcade Mode Results"
 horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="submit_btn" type="Button" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Submit
+Score"
+
+[node name="name_entry" type="LineEdit" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Enter Name..."
+caret_blink = true
 
 [node name="exit" type="Button" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer"]
 layout_mode = 2

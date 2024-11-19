@@ -61,6 +61,7 @@ func load_level(level_json_path: String):
 	LEVEL.open_menu.connect(_on_level_open_menu)
 	LEVEL.level_completed.connect(_on_level_completed)
 	LEVEL.cut_made.connect(_on_cut_made)
+	get_tree().paused = false
 
 func _on_level_open_menu():
 	get_tree().paused = true
@@ -96,7 +97,6 @@ func _on_level_completed(rank: String, rank_bonus: int, budget_bonus: int, remai
 	play_level_finish_anim()
 
 func _on_next_level_btn_pressed():
-	DEBUG.log("Next level button pressed", 10)
 	if current_level_idx < level_paths.size() - 1:
 		current_level_idx += 1
 		load_level(level_paths[current_level_idx])
@@ -107,8 +107,14 @@ func _on_next_level_btn_pressed():
 		pass
 
 # - animations for coordinating popus with crt filter -
+## this animation open the menu at the end and pauses the game
 func play_level_finish_anim():
 	ANIM_PLAYER.play("level_finish")
 
+## this animation open the menu at the end and pauses the game
 func play_next_level_anim():
 	ANIM_PLAYER.play("next_level")
+
+## toggles pause
+func toggle_pause():
+	get_tree().paused = !get_tree().paused

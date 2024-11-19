@@ -39,7 +39,7 @@ text = "Toggle
 CRT
 filter"
 
-[node name="RichTextLabel" type="Label" parent="CanvasLayer/UI"]
+[node name="title" type="Label" parent="CanvasLayer/UI"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
