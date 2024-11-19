@@ -38,6 +38,18 @@ var budget_circle_color = Color(1.0, 1.0, 1.0)
 ## where to draw the budget circle
 var _budget_circle_position = Vector2(0, 0)
 
+## flag to determine when to draw the circle cut icon
+var _draw_circle_cut_icon: bool = false
+
+## flag to determine when to draw the v split cut icon
+var _draw_v_split_cut_icon: bool = false
+
+## flag to determine when to draw the h split cut icon
+var _draw_h_split_cut_icon: bool = false
+
+## color of the icons
+var icon_color = Color(1.0, 1.0, 1.0)
+
 # - child nodes -
 @onready var BUDGET_LEFT_LABEL = $budget_left_label
 
@@ -51,22 +63,67 @@ func _draw():
 		draw_circle(_budget_circle_position, budget_circle_radius, budget_circle_color)
 	else:
 		BUDGET_LEFT_LABEL.visible = false
+	# draw the cut type icon
+	# NOTE: THIS IS A TERRIBLE WAY TO DO THIS. I'M SORRYYYYYYYYYYYYY
+	if _draw_circle_cut_icon:
+		# get exact center of the button
+		var center = size / 2
+		# draw a circle
+		if disabled:
+			draw_circle(center, 25, Color(0.87, 0.87, 0.87, 0.19), false, 4.0)
+		else:
+			draw_circle(center, 25, icon_color, false, 4.0)
+	if _draw_v_split_cut_icon:
+		# get exact center of the button
+		var center = size / 2
+		# draw 2 vertical lines
+		if disabled:
+			draw_line(Vector2(center.x - 10, center.y - 25), Vector2(center.x - 10, center.y + 25), Color(0.87, 0.87, 0.87, 0.19), 4.0)
+			draw_line(Vector2(center.x + 10, center.y - 25), Vector2(center.x + 10, center.y + 25), Color(0.87, 0.87, 0.87, 0.19), 4.0)
+		else:
+			draw_line(Vector2(center.x - 10, center.y - 25), Vector2(center.x - 10, center.y + 25), icon_color, 4.0)
+			draw_line(Vector2(center.x + 10, center.y - 25), Vector2(center.x + 10, center.y + 25), icon_color, 4.0)
+	if _draw_h_split_cut_icon:
+		# get exact center of the button
+		var center = size / 2
+		# draw 2 horizontal lines
+		if disabled:
+			draw_line(Vector2(center.x - 25, center.y - 10), Vector2(center.x + 25, center.y - 10), Color(0.87, 0.87, 0.87, 0.19), 4.0)
+			draw_line(Vector2(center.x - 25, center.y + 10), Vector2(center.x + 25, center.y + 10), Color(0.87, 0.87, 0.87, 0.19), 4.0)
+		else:
+			draw_line(Vector2(center.x - 25, center.y - 10), Vector2(center.x + 25, center.y - 10), icon_color, 4.0)
+			draw_line(Vector2(center.x - 25, center.y + 10), Vector2(center.x + 25, center.y + 10), icon_color, 4.0)
 
 func _ready():
 	_budget_circle_position = BUDGET_LEFT_LABEL.position + BUDGET_LEFT_LABEL.size / 2
 	queue_redraw()
 
-func _update_cut_type_icon(value: String):
+func _update_cut_type_icon(value: String): # NOTE: terrible way to do this
 	if value == "gomory":
 		text = "G"
+		_draw_circle_cut_icon = false
+		_draw_v_split_cut_icon = false
+		_draw_h_split_cut_icon = false
 	elif value == "circle":
-		text = "C"
+		text = ""
+		_draw_circle_cut_icon = true
+		_draw_v_split_cut_icon = false
+		_draw_h_split_cut_icon = false
 	elif value == "h_split":
-		text = "H"
+		text = ""
+		_draw_circle_cut_icon = false
+		_draw_v_split_cut_icon = false
+		_draw_h_split_cut_icon = true
 	elif value == "v_split":
-		text = "V"
+		text = ""
+		_draw_circle_cut_icon = false
+		_draw_v_split_cut_icon = true
+		_draw_h_split_cut_icon = false
 	elif value == "debug":
 		text = "D"
+		_draw_circle_cut_icon = false
+		_draw_v_split_cut_icon = false
+		_draw_h_split_cut_icon = false
 	queue_redraw()
 
 ## updates the budget label. called as part of the setter.
@@ -90,6 +147,7 @@ func _update_budget_label(value: int):
 
 ## sets the font color
 func _set_font_color(color: Color):
+	icon_color = color
 	add_theme_color_override("font_color", color)
 	add_theme_color_override("font_hover_color", color)
 	add_theme_color_override("font_focus_color", color)
