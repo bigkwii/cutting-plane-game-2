@@ -282,6 +282,7 @@ text = ">>NEXT LEVEL"
 
 [node name="GAME_FINISH_POPUP" type="Control" parent="CanvasLayer"]
 process_mode = 2
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -292,16 +293,13 @@ mouse_filter = 2
 theme = ExtResource("2_gfycv")
 
 [node name="panel" type="Panel" parent="CanvasLayer/GAME_FINISH_POPUP"]
+custom_minimum_size = Vector2(1024, 960)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -446.0
-offset_top = -286.0
-offset_right = 446.0
-offset_bottom = 286.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -309,19 +307,238 @@ grow_vertical = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
+anchor_top = 0.5
 anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -162.5
-offset_top = 64.0
-offset_right = 162.5
-offset_bottom = -64.0
+anchor_bottom = 0.5
+offset_left = -349.5
+offset_top = -386.0
+offset_right = 349.5
+offset_bottom = 386.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 128
+theme_override_constants/separation = 32
 
 [node name="Label" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer"]
 layout_mode = 2
 text = "Arcade Mode Results"
+horizontal_alignment = 1
+
+[node name="results" type="GridContainer" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/h_separation = 64
+theme_override_constants/v_separation = 32
+columns = 3
+
+[node name="lvl1" type="VBoxContainer" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results"]
+layout_mode = 2
+
+[node name="hbox" type="HBoxContainer" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl1"]
+layout_mode = 2
+
+[node name="title" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl1/hbox"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_0205m")
+theme_override_font_sizes/font_size = 30
+text = "Lvl 1: "
+
+[node name="rank" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl1/hbox"]
+layout_mode = 2
+text = "-"
+
+[node name="score" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl1"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_0205m")
+theme_override_font_sizes/font_size = 30
+text = "0"
+
+[node name="lvl2" type="VBoxContainer" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results"]
+layout_mode = 2
+
+[node name="hbox" type="HBoxContainer" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl2"]
+layout_mode = 2
+
+[node name="title" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl2/hbox"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_0205m")
+theme_override_font_sizes/font_size = 30
+text = "Lvl 2: "
+
+[node name="rank" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl2/hbox"]
+layout_mode = 2
+text = "-"
+
+[node name="score" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl2"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_0205m")
+theme_override_font_sizes/font_size = 30
+text = "0"
+
+[node name="lvl3" type="VBoxContainer" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results"]
+layout_mode = 2
+
+[node name="hbox" type="HBoxContainer" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl3"]
+layout_mode = 2
+
+[node name="title" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl3/hbox"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_0205m")
+theme_override_font_sizes/font_size = 30
+text = "Lvl 3: "
+
+[node name="rank" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl3/hbox"]
+layout_mode = 2
+text = "-"
+
+[node name="score" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl3"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_0205m")
+theme_override_font_sizes/font_size = 30
+text = "0"
+
+[node name="lvl4" type="VBoxContainer" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results"]
+layout_mode = 2
+
+[node name="hbox" type="HBoxContainer" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl4"]
+layout_mode = 2
+
+[node name="title" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl4/hbox"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_0205m")
+theme_override_font_sizes/font_size = 30
+text = "Lvl 4: "
+
+[node name="rank" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl4/hbox"]
+layout_mode = 2
+text = "-"
+
+[node name="score" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl4"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_0205m")
+theme_override_font_sizes/font_size = 30
+text = "0"
+
+[node name="lvl5" type="VBoxContainer" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results"]
+layout_mode = 2
+
+[node name="hbox" type="HBoxContainer" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl5"]
+layout_mode = 2
+
+[node name="title" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl5/hbox"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_0205m")
+theme_override_font_sizes/font_size = 30
+text = "Lvl 5: "
+
+[node name="rank" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl5/hbox"]
+layout_mode = 2
+text = "-"
+
+[node name="score" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl5"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_0205m")
+theme_override_font_sizes/font_size = 30
+text = "0"
+
+[node name="lvl6" type="VBoxContainer" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results"]
+layout_mode = 2
+
+[node name="hbox" type="HBoxContainer" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl6"]
+layout_mode = 2
+
+[node name="title" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl6/hbox"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_0205m")
+theme_override_font_sizes/font_size = 30
+text = "Lvl 6: "
+
+[node name="rank" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl6/hbox"]
+layout_mode = 2
+text = "-"
+
+[node name="score" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl6"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_0205m")
+theme_override_font_sizes/font_size = 30
+text = "0"
+
+[node name="lvl7" type="VBoxContainer" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results"]
+layout_mode = 2
+
+[node name="hbox" type="HBoxContainer" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl7"]
+layout_mode = 2
+
+[node name="title" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl7/hbox"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_0205m")
+theme_override_font_sizes/font_size = 30
+text = "Lvl 7: "
+
+[node name="rank" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl7/hbox"]
+layout_mode = 2
+text = "-"
+
+[node name="score" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl7"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_0205m")
+theme_override_font_sizes/font_size = 30
+text = "0"
+
+[node name="lvl8" type="VBoxContainer" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results"]
+layout_mode = 2
+
+[node name="hbox" type="HBoxContainer" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl8"]
+layout_mode = 2
+
+[node name="title" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl8/hbox"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_0205m")
+theme_override_font_sizes/font_size = 30
+text = "Lvl 8: "
+
+[node name="rank" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl8/hbox"]
+layout_mode = 2
+text = "-"
+
+[node name="score" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl8"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_0205m")
+theme_override_font_sizes/font_size = 30
+text = "0"
+
+[node name="lvl9" type="VBoxContainer" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results"]
+layout_mode = 2
+
+[node name="hbox" type="HBoxContainer" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl9"]
+layout_mode = 2
+
+[node name="title" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl9/hbox"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_0205m")
+theme_override_font_sizes/font_size = 30
+text = "Lvl 9: "
+
+[node name="rank" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl9/hbox"]
+layout_mode = 2
+text = "-"
+
+[node name="score" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl9"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_0205m")
+theme_override_font_sizes/font_size = 30
+text = "0"
+
+[node name="scoreHBoxContainer2" type="VBoxContainer" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="score_title" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/scoreHBoxContainer2"]
+layout_mode = 2
+text = "Total Score: "
+horizontal_alignment = 1
+
+[node name="score_label" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/scoreHBoxContainer2"]
+layout_mode = 2
 horizontal_alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer"]
@@ -330,13 +547,15 @@ alignment = 1
 
 [node name="submit_btn" type="Button" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
+disabled = true
 text = "Submit
 Score"
 
 [node name="name_entry" type="LineEdit" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-placeholder_text = "Enter Name..."
+placeholder_text = "Enter Name"
+max_length = 10
 caret_blink = true
 
 [node name="exit" type="Button" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer"]
@@ -352,3 +571,4 @@ libraries = {
 [connection signal="pressed" from="CanvasLayer/MENU/panel/VBoxContainer/exit" to="." method="_on_exit_pressed"]
 [connection signal="pressed" from="CanvasLayer/MENU/panel/x" to="." method="_on_x_pressed"]
 [connection signal="pressed" from="CanvasLayer/LEVEL_FINISH_POPUP/panel/next_level_btn" to="." method="_on_next_level_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/exit" to="." method="_on_exit_pressed"]

@@ -36,6 +36,32 @@ var results: Array[Dictionary] = []
 @onready var BUDGET_BONUS_DETAIL = $CanvasLayer/LEVEL_FINISH_POPUP/panel/VBoxContainer/VBoxContainer/VBoxContainer/detail
 @onready var LEVEL_FINISH_POPUP = $CanvasLayer/LEVEL_FINISH_POPUP
 @onready var NEXT_LEVEL_BTN = $CanvasLayer/LEVEL_FINISH_POPUP/panel/next_level_btn
+@onready var GAME_FINISH_POPUP = $CanvasLayer/GAME_FINISH_POPUP
+
+@onready var SUBMIT_SCORE_BTN = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/HBoxContainer/submit_btn
+@onready var SUBMIT_SCORE_NAME = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/HBoxContainer/name_entry
+
+@onready var GAME_FINISH_TOTAL_SCORE = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/scoreHBoxContainer2/score_label
+@onready var GAME_FINISH_EXIT_BTN = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/exit
+
+@onready var GAME_FINISH_LVL1_RANK = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl1/hbox/rank
+@onready var GAME_FINISH_LVL1_SCORE = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl1/score
+@onready var GAME_FINISH_LVL2_RANK = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl2/hbox/rank
+@onready var GAME_FINISH_LVL2_SCORE = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl2/score
+@onready var GAME_FINISH_LVL3_RANK = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl3/hbox/rank
+@onready var GAME_FINISH_LVL3_SCORE = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl3/score
+@onready var GAME_FINISH_LVL4_RANK = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl4/hbox/rank
+@onready var GAME_FINISH_LVL4_SCORE = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl4/score
+@onready var GAME_FINISH_LVL5_RANK = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl5/hbox/rank
+@onready var GAME_FINISH_LVL5_SCORE = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl5/score
+@onready var GAME_FINISH_LVL6_RANK = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl6/hbox/rank
+@onready var GAME_FINISH_LVL6_SCORE = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl6/score
+@onready var GAME_FINISH_LVL7_RANK = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl7/hbox/rank
+@onready var GAME_FINISH_LVL7_SCORE = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl7/score
+@onready var GAME_FINISH_LVL8_RANK = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl8/hbox/rank
+@onready var GAME_FINISH_LVL8_SCORE = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl8/score
+@onready var GAME_FINISH_LVL9_RANK = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl9/hbox/rank
+@onready var GAME_FINISH_LVL9_SCORE = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl9/score
 
 # - preloaded scenes -
 @onready var LEVEL_SCENE = preload("res://scenes/level.tscn")
@@ -102,9 +128,29 @@ func _on_next_level_btn_pressed():
 		load_level(level_paths[current_level_idx])
 		CRT.play_buzz()
 		LEVEL_FINISH_POPUP.visible = false
-	else:
-		# final popup
-		pass
+	else: # after final level
+		LEVEL_FINISH_POPUP.visible = false
+		GAME_FINISH_POPUP.visible = true
+		GAME_FINISH_TOTAL_SCORE.text = str(total_score)
+		# assign all the results
+		GAME_FINISH_LVL1_RANK.text = results[0]["rank"]
+		GAME_FINISH_LVL1_SCORE.text = str(results[0]["score"])
+		GAME_FINISH_LVL2_RANK.text = results[1]["rank"]
+		GAME_FINISH_LVL2_SCORE.text = str(results[1]["score"])
+		GAME_FINISH_LVL3_RANK.text = results[2]["rank"]
+		GAME_FINISH_LVL3_SCORE.text = str(results[2]["score"])
+		GAME_FINISH_LVL4_RANK.text = results[3]["rank"]
+		GAME_FINISH_LVL4_SCORE.text = str(results[3]["score"])
+		GAME_FINISH_LVL5_RANK.text = results[4]["rank"]
+		GAME_FINISH_LVL5_SCORE.text = str(results[4]["score"])
+		GAME_FINISH_LVL6_RANK.text = results[5]["rank"]
+		GAME_FINISH_LVL6_SCORE.text = str(results[5]["score"])
+		GAME_FINISH_LVL7_RANK.text = results[6]["rank"]
+		GAME_FINISH_LVL7_SCORE.text = str(results[6]["score"])
+		GAME_FINISH_LVL8_RANK.text = results[7]["rank"]
+		GAME_FINISH_LVL8_SCORE.text = str(results[7]["score"])
+		GAME_FINISH_LVL9_RANK.text = results[8]["rank"]
+		GAME_FINISH_LVL9_SCORE.text = str(results[8]["score"])
 
 # - animations for coordinating popus with crt filter -
 ## this animation open the menu at the end and pauses the game
