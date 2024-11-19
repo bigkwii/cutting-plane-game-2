@@ -1,8 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://df2roj2vetpki"]
+[gd_scene load_steps=4 format=3 uid="uid://df2roj2vetpki"]
 
 [ext_resource type="Script" path="res://scenes/game.gd" id="1_iislu"]
 [ext_resource type="PackedScene" uid="uid://bjgl665nkg4ka" path="res://scenes/testing/test_menu.tscn" id="1_r0aji"]
-[ext_resource type="PackedScene" uid="uid://g6tm7g6rdrq6" path="res://scenes/crt_filter.tscn" id="2_e2gbo"]
 [ext_resource type="PackedScene" uid="uid://cjnmmv3thk881" path="res://scenes/click_vfx.tscn" id="3_lxm4e"]
 
 [node name="game" type="Node2D"]
@@ -16,7 +15,5 @@ script = ExtResource("1_iislu")
 
 [node name="click_vfxs" parent="vfx" instance=ExtResource("3_lxm4e")]
 
-[node name="crt_filter" parent="." instance=ExtResource("2_e2gbo")]
-layer = 128
-
+[connection signal="start_arcade" from="selected_gamemode/test_menu" to="." method="_on_test_menu_start_arcade"]
 [connection signal="start_free_play" from="selected_gamemode/test_menu" to="." method="_on_test_menu_start_free_play"]

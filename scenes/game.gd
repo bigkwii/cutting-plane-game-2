@@ -47,5 +47,17 @@ func _on_free_play_quit_gamemode():
 	var TEST_MENU = TEST_MENU_SCENE.instantiate()
 	SELECTED_GAMEMODE.add_child(TEST_MENU)
 	TEST_MENU.start_free_play.connect(_on_test_menu_start_free_play)
+	TEST_MENU.start_arcade.connect(_on_test_menu_start_arcade)
 
+func _on_test_menu_start_arcade():
+	SELECTED_GAMEMODE.get_child(0).queue_free()
+	var ARCADE = ARCADE_SCENE.instantiate()
+	SELECTED_GAMEMODE.add_child(ARCADE)
+	ARCADE.quit_gamemode.connect(_on_arcade_quit_gamemode)
 
+func _on_arcade_quit_gamemode():
+	SELECTED_GAMEMODE.get_child(0).queue_free()
+	var TEST_MENU = TEST_MENU_SCENE.instantiate()
+	SELECTED_GAMEMODE.add_child(TEST_MENU)
+	TEST_MENU.start_free_play.connect(_on_test_menu_start_free_play)
+	TEST_MENU.start_arcade.connect(_on_test_menu_start_arcade)

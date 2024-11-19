@@ -15,6 +15,15 @@ var B_RANK = 5_000
 var A_RANK = 10_000
 ## how much bonus score to award for an S rank
 var S_RANK = 20_000
+## rank messages
+var RANK_MESSAGES = {
+	"-": "YOU CAN DO BETTER",
+	"D": "OKAY",
+	"C": "GOOD",
+	"B": "GREAT!",
+	"A": "AMAZING!!",
+	"S": "PERFECT!!!"
+}
 ## bonus multiplier for a cutting plane that produced more than one cut
 var MULTIPLE_CUT_BONUS_MULTIPLIER = 1.5
 ## how much bonus core to award for each leftover circle cut

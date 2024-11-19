@@ -66,7 +66,6 @@ text = "How To Play"
 layout_mode = 2
 tooltip_text = "W.I.P!!!"
 theme_override_fonts/font = ExtResource("3_7mkkd")
-disabled = true
 text = "Arcade"
 
 [node name="free_play_btn" type="Button" parent="CanvasLayer/UI/VBoxContainer"]
@@ -109,7 +108,6 @@ theme_override_fonts/font = ExtResource("3_7mkkd")
 text = "Exit"
 
 [node name="free_play_level_select" type="Panel" parent="CanvasLayer/UI"]
-visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -221,6 +219,71 @@ offset_right = -32.0
 grow_horizontal = 0
 text = " X "
 
+[node name="arcade_mode_popup" type="Panel" parent="CanvasLayer/UI"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 128.0
+offset_top = 128.0
+offset_right = -128.0
+offset_bottom = -128.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/arcade_mode_popup"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -649.5
+offset_top = 32.0
+offset_right = 649.5
+offset_bottom = 110.0
+grow_horizontal = 2
+
+[node name="arcade_label" type="Label" parent="CanvasLayer/UI/arcade_mode_popup/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("5_ba3wp")
+text = "Arcade"
+horizontal_alignment = 1
+
+[node name="arcade_desc" type="Label" parent="CanvasLayer/UI/arcade_mode_popup/VBoxContainer"]
+layout_mode = 2
+text = "Play all levels and go for a high score!"
+horizontal_alignment = 1
+
+[node name="start_arcade" type="Button" parent="CanvasLayer/UI/arcade_mode_popup"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -124.0
+offset_top = -82.0
+offset_right = 124.0
+offset_bottom = 82.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("2_b4vfd")
+theme_override_font_sizes/font_size = 120
+text = "Start
+Arcade
+Mode"
+
+[node name="arcade_x_btn" type="Button" parent="CanvasLayer/UI/arcade_mode_popup"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -48.0
+offset_top = 32.0
+offset_right = -32.0
+offset_bottom = 60.0
+grow_horizontal = 0
+text = " X "
+
 [node name="polygon" parent="." instance=ExtResource("2_3o1bf")]
 position = Vector2(960, 576)
 initial_vertices = Array[Vector2]([Vector2(-1.8, -1.5), Vector2(-1.5, -1.8), Vector2(1.5, -1.8), Vector2(1.8, -1.5), Vector2(1.8, 1.5), Vector2(1.5, 1.8), Vector2(-1.5, 1.8), Vector2(-1.8, 1.5)])
@@ -228,6 +291,7 @@ initial_vertices = Array[Vector2]([Vector2(-1.8, -1.5), Vector2(-1.5, -1.8), Vec
 [node name="vfxs" type="Node2D" parent="."]
 position = Vector2(960, 576)
 
+[connection signal="pressed" from="CanvasLayer/UI/VBoxContainer/arcade_btn" to="." method="_on_arcade_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/VBoxContainer/free_play_btn" to="." method="_on_free_play_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/VBoxContainer/exit_btn" to="." method="_on_exit_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/free_play_level_select/GridContainer/lvl1_btn" to="." method="_on_lvl_1_btn_pressed"]
@@ -240,3 +304,5 @@ position = Vector2(960, 576)
 [connection signal="pressed" from="CanvasLayer/UI/free_play_level_select/GridContainer/lvl8_btn" to="." method="_on_lvl_8_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/free_play_level_select/GridContainer/lvl9_btn" to="." method="_on_lvl_9_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/free_play_level_select/x_btn" to="." method="_on_x_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/UI/arcade_mode_popup/start_arcade" to="." method="_on_start_arcade_pressed"]
+[connection signal="pressed" from="CanvasLayer/UI/arcade_mode_popup/arcade_x_btn" to="." method="_on_arcade_x_btn_pressed"]

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scenes/testing/test.gd" id="1_ue41n"]
 [ext_resource type="PackedScene" uid="uid://bjgl665nkg4ka" path="res://scenes/testing/test_menu.tscn" id="2_4ner3"]
-[ext_resource type="PackedScene" uid="uid://g6tm7g6rdrq6" path="res://scenes/crt_filter.tscn" id="3_l2wn0"]
+[ext_resource type="PackedScene" uid="uid://g6tm7g6rdrq6" path="res://autoload/crt_filter.tscn" id="3_l2wn0"]
 
 [node name="test" type="Node2D"]
 script = ExtResource("1_ue41n")

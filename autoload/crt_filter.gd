@@ -1,11 +1,14 @@
 extends CanvasLayer
-## scene for CRT filter effect. mostly for controlling animations.
+## scene for CRT filter effect. mostly for controlling animations. Now a global scene!
 
 @onready var ANIM_PLAYER = $AnimationPlayer
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass
+func _input(event):
+	if event.is_action_pressed("toggle_crt_filter"):
+		visible = !visible
 
 ## buzz is 1.5s long
 func play_buzz(speed = 1.0):

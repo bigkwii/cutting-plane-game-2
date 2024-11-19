@@ -16,7 +16,7 @@ var DEFAULT_LEVEL_PATH = "res://levels/default.json"
 ## [br]remaining_circle: remaining circle cut budget
 ## [br]remaining_gomory: remaining gomory cut budget
 ## [br]remaining_split: remaining split cut budget
-signal level_completed(rank: String, bonus_score: int, remaining_circle: int, remaining_gomory: int, remaining_split: int)
+signal level_completed(rank: String, rank_bonus: int, budget_bonus: int, remaining_circle: int, remaining_gomory: int, remaining_split: int)
 ## emitted when a cut is made
 ## [br][br]
 ## args:
@@ -158,7 +158,7 @@ func _input(event):
 				return
 			if OPEN_MENU.get_global_rect().has_point(event.position): # consider moving this one to a higher scene
 				return
-			if DEBUG.is_enabled() and DEBUG_CONTAINER.get_global_rect().has_point(event.position):
+			if DEBUG_CONTAINER.visible and DEBUG_CONTAINER.get_global_rect().has_point(event.position):
 				return
 			if SHOW_HULL_BUTTON.get_global_rect().has_point(event.position):
 				return
@@ -185,16 +185,22 @@ func _input(event):
 					return
 				elif circle_cut_result[0] == 1: # exactly one cut
 					score += roundi( circle_cut_result[1] * SCORE.SCORE_BY_UNIT_AREA )
+					cut_made.emit(roundi( circle_cut_result[1] * SCORE.SCORE_BY_UNIT_AREA ))
 				else: # multiple cut bonus
 					score += roundi( circle_cut_result[1] * SCORE.SCORE_BY_UNIT_AREA * SCORE.MULTIPLE_CUT_BONUS_MULTIPLIER)
+					cut_made.emit(roundi( circle_cut_result[1] * SCORE.SCORE_BY_UNIT_AREA ))
 				circle_cut_budget = circle_cut_budget - 1 if not INFINITE_BUDGET else -1
 				SCORE_LABEL.text = str(score)
 				CIRCLE_CUT_BUTTON.budget = circle_cut_budget
-				cut_made.emit(score)
 				# if the polygon becomes integral early, emit the signal
 				if POLYGON.is_integral():
 					DEBUG.log("Polygon is integral! Rank: " + POLYGON.get_rank())
-					level_completed.emit( _check_rank() , circle_cut_budget, gomory_cut_budget, split_cut_budget )
+					var rank_and_bonus = _check_rank()
+					var rank = rank_and_bonus[0]
+					var rank_bonus = rank_and_bonus[1]
+					var budget_bonus = circle_cut_budget * SCORE.CIRCLE_CUT_BONUS + gomory_cut_budget * SCORE.GOMORY_CUT_BONUS + split_cut_budget * SCORE.SPLIT_CUT_BONUS
+					score += rank_bonus + budget_bonus
+					level_completed.emit( rank, rank_bonus, budget_bonus , circle_cut_budget, gomory_cut_budget, split_cut_budget )
 				# if the budget is 0, disable the button and select the next cut mode whose budget is not 0. if all are 0, select none
 				if circle_cut_budget == 0:
 					CIRCLE_CUT_BUTTON.disabled = true
@@ -211,7 +217,12 @@ func _input(event):
 						cut_mode = CUT_MODES.NONE
 						# end level now
 						DEBUG.log("Out of cuts! Rank: " + POLYGON.get_rank())
-						level_completed.emit( _check_rank() , circle_cut_budget, gomory_cut_budget, split_cut_budget )
+						var rank_and_bonus = _check_rank()
+						var rank = rank_and_bonus[0]
+						var rank_bonus = rank_and_bonus[1]
+						var budget_bonus = 0
+						score += rank_bonus + budget_bonus
+						level_completed.emit( rank, rank_bonus, budget_bonus , circle_cut_budget, gomory_cut_budget, split_cut_budget )
 				is_cutting = false
 			elif cut_mode == CUT_MODES.H_SPLIT_CUT and split_cut_budget != 0:
 				is_cutting = true
@@ -221,17 +232,23 @@ func _input(event):
 					return
 				elif h_split_cut_result[0] == 1: # exactly one cut
 					score += roundi( h_split_cut_result[1] * SCORE.SCORE_BY_UNIT_AREA )
+					cut_made.emit(roundi( h_split_cut_result[1] * SCORE.SCORE_BY_UNIT_AREA ))
 				else: # multiple cut bonus
 					score += roundi( h_split_cut_result[1] * SCORE.SCORE_BY_UNIT_AREA * SCORE.MULTIPLE_CUT_BONUS_MULTIPLIER)
+					cut_made.emit(roundi( h_split_cut_result[1] * SCORE.SCORE_BY_UNIT_AREA ))
 				split_cut_budget = split_cut_budget - 1 if not INFINITE_BUDGET else -1
 				SCORE_LABEL.text = str(score)
 				H_SPLIT_CUT_BUTTON.budget = split_cut_budget # they're shared
 				V_SPLIT_CUT_BUTTON.budget = split_cut_budget
-				cut_made.emit(score)
 				# if the polygon becomes integral early, emit the signal
 				if POLYGON.is_integral():
 					DEBUG.log("Polygon is integral! Rank: " + POLYGON.get_rank())
-					level_completed.emit( _check_rank() , circle_cut_budget, gomory_cut_budget, split_cut_budget )
+					var rank_and_bonus = _check_rank()
+					var rank = rank_and_bonus[0]
+					var rank_bonus = rank_and_bonus[1]
+					var budget_bonus = circle_cut_budget * SCORE.CIRCLE_CUT_BONUS + gomory_cut_budget * SCORE.GOMORY_CUT_BONUS + split_cut_budget * SCORE.SPLIT_CUT_BONUS
+					score += rank_bonus + budget_bonus
+					level_completed.emit( rank, rank_bonus, budget_bonus , circle_cut_budget, gomory_cut_budget, split_cut_budget )
 				# if the budget is 0, disable the button and select the next cut mode whose budget is not 0. if all are 0, select none
 				if split_cut_budget == 0:
 					H_SPLIT_CUT_BUTTON.disabled = true
@@ -250,7 +267,12 @@ func _input(event):
 						cut_mode = CUT_MODES.NONE
 						# end level now
 						DEBUG.log("Out of cuts! Rank: " + POLYGON.get_rank())
-						level_completed.emit( _check_rank() , circle_cut_budget, gomory_cut_budget, split_cut_budget )
+						var rank_and_bonus = _check_rank()
+						var rank = rank_and_bonus[0]
+						var rank_bonus = rank_and_bonus[1]
+						var budget_bonus = 0
+						score += rank_bonus + budget_bonus
+						level_completed.emit( rank, rank_bonus, budget_bonus , circle_cut_budget, gomory_cut_budget, split_cut_budget )
 				is_cutting = false
 			elif cut_mode == CUT_MODES.V_SPLIT_CUT and split_cut_budget != 0:
 				is_cutting = true
@@ -260,17 +282,23 @@ func _input(event):
 					return
 				elif v_split_cut_result[0] == 1: # exactly one cut
 					score += roundi( v_split_cut_result[1] * SCORE.SCORE_BY_UNIT_AREA )
+					cut_made.emit(roundi( v_split_cut_result[1] * SCORE.SCORE_BY_UNIT_AREA ))
 				else: # multiple cut bonus
 					score += roundi( v_split_cut_result[1] * SCORE.SCORE_BY_UNIT_AREA * SCORE.MULTIPLE_CUT_BONUS_MULTIPLIER)
+					cut_made.emit(roundi( v_split_cut_result[1] * SCORE.SCORE_BY_UNIT_AREA * SCORE.MULTIPLE_CUT_BONUS_MULTIPLIER))
 				split_cut_budget = split_cut_budget - 1 if not INFINITE_BUDGET else -1
 				SCORE_LABEL.text = str(score)
 				H_SPLIT_CUT_BUTTON.budget = split_cut_budget # they're shared
 				V_SPLIT_CUT_BUTTON.budget = split_cut_budget
-				cut_made.emit(score)
 				# if the polygon becomes integral early, emit the signal
 				if POLYGON.is_integral():
 					DEBUG.log("Polygon is integral! Rank: " + POLYGON.get_rank())
-					level_completed.emit( _check_rank() , circle_cut_budget, gomory_cut_budget, split_cut_budget )
+					var rank_and_bonus = _check_rank()
+					var rank = rank_and_bonus[0]
+					var rank_bonus = rank_and_bonus[1]
+					var budget_bonus = circle_cut_budget * SCORE.CIRCLE_CUT_BONUS + gomory_cut_budget * SCORE.GOMORY_CUT_BONUS + split_cut_budget * SCORE.SPLIT_CUT_BONUS
+					score += rank_bonus + budget_bonus
+					level_completed.emit( rank, rank_bonus, budget_bonus , circle_cut_budget, gomory_cut_budget, split_cut_budget )
 				# if the budget is 0, disable the button and select the next cut mode whose budget is not 0. if all are 0, select none
 				if split_cut_budget == 0:
 					H_SPLIT_CUT_BUTTON.disabled = true
@@ -289,7 +317,12 @@ func _input(event):
 						cut_mode = CUT_MODES.NONE
 						# end level now
 						DEBUG.log("Out of cuts! Rank: " + POLYGON.get_rank())
-						level_completed.emit( _check_rank() , circle_cut_budget, gomory_cut_budget, split_cut_budget )
+						var rank_and_bonus = _check_rank()
+						var rank = rank_and_bonus[0]
+						var rank_bonus = rank_and_bonus[1]
+						var budget_bonus = 0
+						score += rank_bonus + budget_bonus
+						level_completed.emit( rank, rank_bonus, budget_bonus , circle_cut_budget, gomory_cut_budget, split_cut_budget )
 				is_cutting = false
 			elif cut_mode == CUT_MODES.GOMORY_CUT and gomory_cut_budget != 0: # gomory cut is handled differently
 				is_cutting = true
@@ -299,14 +332,19 @@ func _input(event):
 					return
 				elif gomory_cut_result[0] == 1: # exactly one cut (gomory cuts are always 1 cut tops)
 					score += roundi(gomory_cut_result[1] * SCORE.SCORE_BY_UNIT_AREA)
+					cut_made.emit(roundi(gomory_cut_result[1] * SCORE.SCORE_BY_UNIT_AREA))
 				gomory_cut_budget = gomory_cut_budget - 1 if not INFINITE_BUDGET else -1
 				SCORE_LABEL.text = str(score)
 				GOMORY_CUT_BUTTON.budget = gomory_cut_budget
-				cut_made.emit(score)
 				# if the polygon becomes integral early, emit the signal
 				if POLYGON.is_integral():
 					DEBUG.log("Polygon is integral! Rank: " + POLYGON.get_rank())
-					level_completed.emit( _check_rank() , circle_cut_budget, gomory_cut_budget, split_cut_budget )
+					var rank_and_bonus = _check_rank()
+					var rank = rank_and_bonus[0]
+					var rank_bonus = rank_and_bonus[1]
+					var budget_bonus = circle_cut_budget * SCORE.CIRCLE_CUT_BONUS + gomory_cut_budget * SCORE.GOMORY_CUT_BONUS + split_cut_budget * SCORE.SPLIT_CUT_BONUS
+					score += rank_bonus + budget_bonus
+					level_completed.emit( rank, rank_bonus, budget_bonus , circle_cut_budget, gomory_cut_budget, split_cut_budget )
 				# if the budget is 0, disable the button and select the next cut mode whose budget is not 0. if all are 0, select none
 				if gomory_cut_budget == 0:
 					GOMORY_CUT_BUTTON.disabled = true
@@ -324,7 +362,12 @@ func _input(event):
 						cut_mode = CUT_MODES.NONE
 						# end level now
 						DEBUG.log("Out of cuts! Rank: " + POLYGON.get_rank())
-						level_completed.emit( _check_rank() , circle_cut_budget, gomory_cut_budget, split_cut_budget )
+						var rank_and_bonus = _check_rank()
+						var rank = rank_and_bonus[0]
+						var rank_bonus = rank_and_bonus[1]
+						var budget_bonus = 0
+						score += rank_bonus + budget_bonus
+						level_completed.emit( rank, rank_bonus, budget_bonus , circle_cut_budget, gomory_cut_budget, split_cut_budget )
 				is_cutting = false
 			else: # if somehow, no cut mode is selected
 				DEBUG.log("No cut mode selected!")
