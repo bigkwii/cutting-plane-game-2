@@ -100,3 +100,7 @@ func _on_arcade_x_btn_pressed():
 func _on_start_arcade_pressed():
 	start_arcade.emit()
 	
+# - crt toggle -
+
+func _on_toggle_crt_pressed():
+	CRT.toggle()

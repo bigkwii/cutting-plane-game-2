@@ -25,6 +25,20 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("4_xvnma")
 
+[node name="toggle_crt" type="Button" parent="CanvasLayer/UI"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -8.0
+offset_right = 8.0
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("5_ba3wp")
+theme_override_font_sizes/font_size = 30
+text = "Toggle
+CRT
+filter"
+
 [node name="RichTextLabel" type="Label" parent="CanvasLayer/UI"]
 layout_mode = 1
 anchors_preset = -1
@@ -108,6 +122,7 @@ theme_override_fonts/font = ExtResource("3_7mkkd")
 text = "Exit"
 
 [node name="free_play_level_select" type="Panel" parent="CanvasLayer/UI"]
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -220,6 +235,7 @@ grow_horizontal = 0
 text = " X "
 
 [node name="arcade_mode_popup" type="Panel" parent="CanvasLayer/UI"]
+visible = false
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
@@ -291,6 +307,7 @@ initial_vertices = Array[Vector2]([Vector2(-1.8, -1.5), Vector2(-1.5, -1.8), Vec
 [node name="vfxs" type="Node2D" parent="."]
 position = Vector2(960, 576)
 
+[connection signal="pressed" from="CanvasLayer/UI/toggle_crt" to="." method="_on_toggle_crt_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/VBoxContainer/arcade_btn" to="." method="_on_arcade_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/VBoxContainer/free_play_btn" to="." method="_on_free_play_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/VBoxContainer/exit_btn" to="." method="_on_exit_btn_pressed"]

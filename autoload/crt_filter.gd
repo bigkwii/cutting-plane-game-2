@@ -8,7 +8,10 @@ func _ready():
 	pass
 func _input(event):
 	if event.is_action_pressed("toggle_crt_filter"):
-		visible = !visible
+		toggle()
+
+func toggle():
+	visible = !visible
 
 ## buzz is 1.5s long
 func play_buzz(speed = 1.0):
