@@ -39,22 +39,22 @@ signal open_menu
 ## level name
 var level_name: String
 ## flag to determine if the user is currently dragging the camera with mouse1
-var is_m1_dragging = false
+var is_m1_dragging: bool = false
 ## need to save the clicked position to differenciate between click and drag
-var clicked_pos_at_drag_start = Vector2(0, 0)
+var clicked_pos_at_drag_start: Vector2 = Vector2(0, 0)
 ## determines if a cut is currently being made
-var is_cutting = false
+var is_cutting: bool = false
 # - cut mode stuff -
 enum CUT_MODES { DEBUG_CUT, CIRCLE_CUT, GOMORY_CUT, H_SPLIT_CUT, V_SPLIT_CUT, NONE }
 var cut_mode = CUT_MODES.CIRCLE_CUT
 # cut budgets (-1 means infinite)
-var circle_cut_budget = -1
-var gomory_cut_budget = -1
-var split_cut_budget = -1 # both h and v
+var circle_cut_budget: int = -1
+var gomory_cut_budget: int = -1
+var split_cut_budget: int = -1 # both h and v
 ## score for this level
-var score = 0
+var score: int = 0
 # - debug -
-var debug_cut_direction = Vector2(1, 0)
+var debug_cut_direction: Vector2 = Vector2(1, 0)
 
 # -- child nodes --
 @onready var LATTICE_GRID = $lattice_grid
@@ -129,11 +129,11 @@ func _ready(): # TODO: messy. separate these into functions
 	DEBUG_CONTAINER.visible = DEBUG_CONTAINER.visible and DEBUG.is_enabled()
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta):
+func _process(_delta) -> void:
 	_handle_gomory_cut_hover()
 
 # handle inputs here! not in _process!
-func _input(event):
+func _input(event) -> void:
 	if event.is_action_pressed("esc"):
 		_on_open_menu_pressed()
 	# handle clicking with mouse 1
@@ -374,7 +374,7 @@ func _input(event):
 
 # -- layout functions --
 ## called when calculating the lattice grid size. determines the layout constants based on window size and level data
-func _set_lattice_grid_parameters(max_y: int):
+func _set_lattice_grid_parameters(max_y: int) -> void:
 	if max_y == -1:
 		DEBUG.log("level.gd: max_y not given, defaulting.")
 		return
@@ -404,7 +404,7 @@ func _set_lattice_grid_parameters(max_y: int):
 	POLYGON.OFFSET = OFFSET
 
 ## unselects all cut buttons
-func _unselect_all_cut_buttons():
+func _unselect_all_cut_buttons() -> void:
 	CIRCLE_CUT_BUTTON.selected = false
 	GOMORY_CUT_BUTTON.selected = false
 	H_SPLIT_CUT_BUTTON.selected = false
@@ -413,14 +413,14 @@ func _unselect_all_cut_buttons():
 
 # -- button callbacks --
 # when the show hull button is HELD, show the convex hull
-func _on_show_hull_button_down():
+func _on_show_hull_button_down() -> void:
 	POLYGON.CONVEX_INTEGER_HULL.play_show_hull()
 
-func _on_show_hull_button_up():
+func _on_show_hull_button_up() -> void:
 	POLYGON.CONVEX_INTEGER_HULL.play_idle()
 
 # when the debug cut button is PRESSED, set the cut mode to DEBUG_CUT
-func _on_debug_cut_pressed():
+func _on_debug_cut_pressed() -> void:
 	cut_mode = CUT_MODES.DEBUG_CUT
 	_unselect_all_cut_buttons()
 	DEBUG_CUT_BUTTON.selected = true
@@ -428,12 +428,12 @@ func _on_debug_cut_pressed():
 	_handle_gomory_cut_selected(false)
 
 # updates the debug cut angle when the input text changes
-func _on_debug_cut_input_text_changed(new_text:String):
+func _on_debug_cut_input_text_changed(new_text:String) -> void:
 	var degrees = float(new_text) # if the angle is invalid, it will be 0
 	debug_cut_direction = Vector2(cos(deg_to_rad(degrees)), -sin(deg_to_rad(degrees)))
 
 # when the circle cut button is PRESSED, set the cut mode to CIRCLE_CUT
-func _on_circle_pressed():
+func _on_circle_pressed() -> void:
 	if circle_cut_budget == 0:
 		DEBUG.log("Circle cut budget is 0!")
 		return
@@ -444,7 +444,7 @@ func _on_circle_pressed():
 	_handle_gomory_cut_selected(false)
 
 # when the gomory cut button is PRESSED, set the cut mode to GOMORY_CUT
-func _on_gomory_pressed():
+func _on_gomory_pressed() -> void:
 	if gomory_cut_budget == 0:
 		DEBUG.log("Gomory cut budget is 0!")
 		return
@@ -456,7 +456,7 @@ func _on_gomory_pressed():
 	_handle_gomory_cut_selected(true)
 
 # when the h split cut button is PRESSED, set the cut mode to H_SPLIT_CUT
-func _on_h_split_pressed():
+func _on_h_split_pressed() -> void:
 	if split_cut_budget == 0:
 		DEBUG.log("H/V split cut budget is 0!")
 		return
@@ -467,7 +467,7 @@ func _on_h_split_pressed():
 	_handle_gomory_cut_selected(false)
 
 # when the v split cut button is PRESSED, set the cut mode to V_SPLIT_CUT
-func _on_v_split_pressed():
+func _on_v_split_pressed() -> void:
 	if split_cut_budget == 0:
 		DEBUG.log("H/V split cut budget is 0!")
 		return
@@ -481,11 +481,11 @@ func _on_v_split_pressed():
 # TODO: These function names SUCK
 
 ## call with true when selecting gomory cut, call with false when any other cut is selected
-func _handle_gomory_cut_selected(make_clickable: bool): # TODO: AFTER A CUT, THE EFFECT DISSAPEARS! (solved in a hacky way)
+func _handle_gomory_cut_selected(make_clickable: bool) -> void: # TODO: AFTER A CUT, THE EFFECT DISSAPEARS! (solved in a hacky way)
 	POLYGON.gomory_mode_selected(make_clickable)
 
 ## call in process. updates the mouse position for hover vfx
-func _handle_gomory_cut_hover():
+func _handle_gomory_cut_hover() -> void:
 	if cut_mode != CUT_MODES.GOMORY_CUT:
 		return
 	var mouse_lattice_pos = (get_global_mouse_position() - OFFSET) / SCALING
@@ -505,10 +505,10 @@ func _handle_gomory_cut_click() -> Array:
 # 	click_vfx.position = pos
 # 	click_vfx.play_click()
 
-func _on_open_menu_pressed():
+func _on_open_menu_pressed() -> void:
 	open_menu.emit()
 
-func _on_camera_zoom_level_changed(zoom_level:float):
+func _on_camera_zoom_level_changed(zoom_level:float) -> void:
 	GUIDE_GRID.update_alpha(zoom_level - 0.25) # -0.25 so the grid doesn't show up too early
 
 ## function called after a cut is made to check the current status of the rank.

@@ -763,7 +763,7 @@ func _play_split_failure_animation() -> void:
 	SPLIT_VFX.play_failure()
 
 # -- gomory cut mode vfx handling --
-func gomory_mode_selected(make_clickable: bool):
+func gomory_mode_selected(make_clickable: bool) -> void:
 	for vert in VERTS.get_children():
 		if vert.is_integral():
 			continue
@@ -771,7 +771,7 @@ func gomory_mode_selected(make_clickable: bool):
 			vert.hover = false # just in case
 		vert.clickable = make_clickable
 
-func update_verts_hover_vfx(mouse_lattice_pos):
+func update_verts_hover_vfx(mouse_lattice_pos) -> void:
 	var closest_distance = INF
 	var selected_vert = null
 	for vert in VERTS.get_children():
@@ -797,7 +797,7 @@ func _make_cut_piece(lattice_verts: PackedVector2Array, initial_velocity_dir: Ve
 	CUT_PIECES.add_child(new_cut_piece)
 
 ## calculates the rank for a level based on the ratio of the area of the convex hull to the area of the polygon
-func get_rank():
+func get_rank() -> String:
 	var hull_area: float = polygon_area(CONVEX_INTEGER_HULL.convex_integer_hull)
 	var poly_area: float = polygon_area(packed_vertices)
 	var ratio = hull_area / poly_area
