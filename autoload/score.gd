@@ -3,6 +3,13 @@ extends Node
 
 ## how much score to give by cut unit area
 var SCORE_BY_UNIT_AREA = 1
+## rank area ratio thresholds
+var RANK_THRESHOLDS = {
+	"A": 0.975,
+	"B": 0.95,
+	"C": 0.90,
+	"D": 0.80 
+}
 ## how much bonus score to award for no rank
 var NO_RANK = 0
 ## how much bonus score to award for a D rank
@@ -20,8 +27,8 @@ var RANK_MESSAGES = {
 	"-": "YOU CAN DO BETTER",
 	"D": "OKAY",
 	"C": "GOOD",
-	"B": "GREAT!",
-	"A": "AMAZING!!",
+	"B": "VERY GOOD!",
+	"A": "EXCELLENT!!",
 	"S": "PERFECT!!!"
 }
 ## bonus multiplier for a cutting plane that produced more than one cut

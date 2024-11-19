@@ -803,13 +803,13 @@ func get_rank():
 	var ratio = hull_area / poly_area
 	if is_integral():
 		return "S" # Perfect. RANK S
-	elif ratio >= 0.975:
+	elif ratio >= SCORE.RANK_THRESHOLDS["A"]:
 		return "A" # Excellent. RANK A
-	elif ratio >= 0.95:
+	elif ratio >= SCORE.RANK_THRESHOLDS["B"]:
 		return "B" # Very good. RANK B
-	elif ratio >= 0.90:
+	elif ratio >= SCORE.RANK_THRESHOLDS["C"]:
 		return "C" # Good. RANK C
-	elif ratio >= 0.80:
+	elif ratio >= SCORE.RANK_THRESHOLDS["D"]:
 		return "D" # Ok. RANK D
 	else:
 		return "-" # You can do better. NO RANK
