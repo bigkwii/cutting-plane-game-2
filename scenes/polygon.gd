@@ -340,6 +340,22 @@ func would_cut_polygon(line_point: Vector2, line_dir: Vector2, allow_hull_cuttin
 		return false
 	return true
 
+## checks if the polygon is concave, and if so, returns the indeces of the concave vertices
+## [br][br]
+## returns an array with the indeces of the concave vertices. empty is the polygon is convex.
+func find_concave_idxs(polygon: PackedVector2Array) -> Array[int]:
+	if polygon.size() < 4:
+		return []
+	var concave_vertices_idxs: Array[int] = []
+	for i in range(polygon.size()):
+		var current_point = polygon[i]
+		var prev_point = polygon[(i - 1) % polygon.size()]
+		var next_point = polygon[(i + 1) % polygon.size()]
+		var cross_product = (current_point.y - prev_point.y) * (next_point.x - current_point.x) - (current_point.x - prev_point.x) * (next_point.y - current_point.y)
+		if cross_product < 0: # CROSS_PRODUCT_EPSILON breaks this for some reason
+			concave_vertices_idxs.append(i)
+	return concave_vertices_idxs
+
 ## runs "forgiveness" checks on a given polygon, for cleaning up floating point imprecision and quality of life
 func _run_forgiveness_checks(polygon: PackedVector2Array):
 	# 1) snap to lattice points if close enough
@@ -347,7 +363,11 @@ func _run_forgiveness_checks(polygon: PackedVector2Array):
 		if abs(polygon[i].x - round(polygon[i].x)) < GLOBALS.FORGIVENESS_SNAP_EPSILON and abs(polygon[i].y - round(polygon[i].y)) < GLOBALS.FORGIVENESS_SNAP_EPSILON:
 			# avoid snapping to points that are not in the convex hull
 			if snapped( polygon[i], Vector2(GLOBALS.FORGIVENESS_SNAP_EPSILON, GLOBALS.FORGIVENESS_SNAP_EPSILON)) in CONVEX_INTEGER_HULL.convex_integer_hull:
+				var old_vert = polygon[i]
 				polygon[i] = snapped( polygon[i], Vector2(GLOBALS.FORGIVENESS_SNAP_EPSILON, GLOBALS.FORGIVENESS_SNAP_EPSILON) )
+				# if snapping caused the polygon to become concave, revert the change
+				if i in find_concave_idxs(polygon):
+					polygon[i] = old_vert
 	# 2) remove vertices that are very close to being colinear with their neighbors
 	for i in range(polygon.size()):
 		if i >= polygon.size(): # failsafe

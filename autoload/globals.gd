@@ -37,4 +37,4 @@ var FORGIVENESS_SNAP_EPSILON = GEOMETRY_EPSILON * 10000
 ## epsilon for correcting a point that "close enough" to being colinear with it's 2 neighbors
 var FORGIVENESS_COLINEAR_EPSILON = GEOMETRY_EPSILON * 1000
 ## epsilon for the radius under which a number of points are considered to be the same point
-var FORGIVENESS_MERGE_EPSILON = GEOMETRY_EPSILON * 100
+var FORGIVENESS_MERGE_EPSILON = GEOMETRY_EPSILON * 1000

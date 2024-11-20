@@ -104,3 +104,11 @@ func _on_start_arcade_pressed():
 
 func _on_toggle_crt_pressed():
 	CRT.toggle()
+
+# - fullscreen toggle -
+
+func _on_toggle_fullscreen_pressed():
+	if DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN:
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+	else:
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)

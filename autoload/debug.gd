@@ -24,13 +24,13 @@ func _ready() -> void:
 	fps_avg_label.set("theme_override_constants/outline_size", 2)
 	fps_avg_label.set("theme_override_colors/font_color", Color(0, 1, 0, 1))
 	fps_avg_label.set("theme_override_colors/font_outline_color", Color(0, 0, 0, 1))
-	fps_avg_label.set("theme_override_font_sizes/font_size", 12)
+	fps_avg_label.set("theme_override_font_sizes/font_size", 14)
 	fps_container.add_child(fps_avg_label)
 
 	fps_now_label.set("theme_override_constants/outline_size", 2)
 	fps_now_label.set("theme_override_colors/font_color", Color(0, 1, 0, 1))
 	fps_now_label.set("theme_override_colors/font_outline_color", Color(0, 0, 0, 1))
-	fps_now_label.set("theme_override_font_sizes/font_size", 12)
+	fps_now_label.set("theme_override_font_sizes/font_size", 14)
 	fps_container.add_child(fps_now_label)
 
 	fps_container.set("layout_direction", Control.LAYOUT_DIRECTION_RTL)
@@ -85,6 +85,7 @@ func log(message: Variant, seconds: float = 2) -> void:
 	label.set("theme_override_constants/outline_size", 2)
 	label.set("theme_override_colors/font_color", Color(1, 1, 1, 0.5))
 	label.set("theme_override_colors/font_outline_color", Color(0, 0, 0, 1))
+	label.set("theme_override_font_sizes/font_size", 18)
 	log_container.add_child(label)
 	log_container.move_child(label, 0)
 	# wait for the specified time, then erase the label
