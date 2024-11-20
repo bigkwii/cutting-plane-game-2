@@ -2,9 +2,9 @@
     "name": "Level 3 - Falling Pint",
 	"max_y": 8, 
 	"poly_color": "#d40000",
-	"circle_budget": 5,
-	"gomory_budget": 5,
-	"split_budget": 6,
+	"circle_budget": 6,
+	"gomory_budget": 12,
+	"split_budget": 8,
 	"poly_vertices": [
         [
             5.2,

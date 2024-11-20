@@ -3,7 +3,7 @@
 	"max_y": 10, 
 	"poly_color": "#800000",
 	"circle_budget": 14,
-	"gomory_budget": 12,
+	"gomory_budget": 14,
 	"split_budget": 10,
 	"poly_vertices": [
         [
