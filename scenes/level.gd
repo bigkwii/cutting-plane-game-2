@@ -195,14 +195,31 @@ func _input(event) -> void:
 		# ignore inputs if paused
 		if get_tree().paused:
 			return
-		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed: # click pressed
+		# ignore UI
+		if CIRCLE_CUT_BUTTON.get_global_rect().has_point(event.position):
+			return
+		if GOMORY_CUT_BUTTON.get_global_rect().has_point(event.position):
+			return
+		if H_SPLIT_CUT_BUTTON.get_global_rect().has_point(event.position):
+			return
+		if V_SPLIT_CUT_BUTTON.get_global_rect().has_point(event.position):
+			return
+		if OPEN_MENU.get_global_rect().has_point(event.position):
+			return
+		if DEBUG_CONTAINER.visible and DEBUG_CONTAINER.get_global_rect().has_point(event.position):
+			return
+		if SHOW_HULL_BUTTON.get_global_rect().has_point(event.position):
+			return
+		# click PRESSED
+		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 			is_m1_dragging = true
 			clicked_pos_at_drag_start = event.position
 			# start the invalidation timer
 			INVALIDATE_CLICK_TIMER.start()
 			invalidation_timer_timed_out = false
 			DEBUG.log("Clicked @ " + str(event.position))
-		elif event.button_index == MOUSE_BUTTON_LEFT and not event.pressed: # click released
+		# click RELEASED
+		elif event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
 			# stop dragging
 			is_m1_dragging = false
 			# if this happens, it was a drag and not a click (allow for some tolerance)
@@ -217,21 +234,6 @@ func _input(event) -> void:
 			# invalidate click if the player took too long to release the click (this is to prevent accidental clicks)
 			if invalidation_timer_timed_out:
 				invalidation_timer_timed_out = false
-				return
-			# ignore UI
-			if CIRCLE_CUT_BUTTON.get_global_rect().has_point(event.position):
-				return
-			if GOMORY_CUT_BUTTON.get_global_rect().has_point(event.position):
-				return
-			if H_SPLIT_CUT_BUTTON.get_global_rect().has_point(event.position):
-				return
-			if V_SPLIT_CUT_BUTTON.get_global_rect().has_point(event.position):
-				return
-			if OPEN_MENU.get_global_rect().has_point(event.position): # consider moving this one to a higher scene
-				return
-			if DEBUG_CONTAINER.visible and DEBUG_CONTAINER.get_global_rect().has_point(event.position):
-				return
-			if SHOW_HULL_BUTTON.get_global_rect().has_point(event.position):
 				return
 			var clicked_lattice_pos = snapped( (get_global_mouse_position() - OFFSET) / SCALING , Vector2(GLOBALS.CLICK_EPSILON, GLOBALS.CLICK_EPSILON) )
 			DEBUG.log( "Clicked @ lattice pos: " + str( clicked_lattice_pos ) )
