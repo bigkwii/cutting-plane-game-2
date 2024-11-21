@@ -98,6 +98,7 @@ _data = {
 }
 
 [node name="circle_vfx" type="Node2D"]
+process_mode = 1
 script = ExtResource("1_hp7dc")
 color = Color(1, 1, 1, 0)
 

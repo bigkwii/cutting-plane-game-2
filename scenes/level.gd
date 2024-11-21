@@ -26,6 +26,8 @@ signal cut_made(score: int)
 signal open_menu
 
 # -- vars --
+## determines whether to load level from file or from a dictionary
+@export var LOAD_FROM_FILE: bool = true
 ## infinite budget flag (for freeplay)
 @export var INFINITE_BUDGET: bool = false
 ## dimensions of the lattice grid
@@ -34,8 +36,50 @@ signal open_menu
 @export var SCALING: int = GLOBALS.DEFAULT_SCALING
 ## offset from the game origin to the grid origin
 @export var OFFSET: Vector2 = GLOBALS.DEFAULT_OFFSET
-## selected level
+## selected level, if loading from file
 @export_file("*.json") var level_json_path: String = "res://levels/default.json" # so it shows up on editor
+## selected level, if loading from a dictionary
+@export var level_data: Dictionary = {
+	"name": "ERROR!",
+	"max_y": 6, 
+	"poly_color": "ff0000",
+	"circle_budget": -1,
+	"gomory_budget": -1,
+	"split_budget": -1,
+	"poly_vertices": [
+		[
+			1.7,
+			1
+		],
+		[
+			2,
+			0.7
+		],
+		[
+			5,
+			0.7
+		],
+		[
+			5.3,
+			1
+		],
+		[
+			5.3,
+			4
+		],
+		[
+			5,
+			4.3
+		],
+		[
+			2,
+			4.3
+		],
+		[
+			1.7,
+			4
+		]
+	]}
 ## level name
 var level_name: String
 ## flag to determine if the user is currently dragging the camera with mouse1
@@ -83,17 +127,26 @@ var debug_cut_direction: Vector2 = Vector2(1, 0)
 # Called when the node enters the scene tree for the first time.
 func _ready(): # TODO: messy. separate these into functions
 	# load level
-	# if something goes wrong with the given path, load default
-	if not FileAccess.file_exists(level_json_path):
-		DEBUG.log("Level file not found: '%s', loading default..." % level_json_path)
-		level_json_path = DEFAULT_LEVEL_PATH
-	# load and parse level data
-	var file_data = FileAccess.open(level_json_path, FileAccess.READ)
-	if file_data.get_error():
-		DEBUG.log("level.gd: Error opening %s" % level_json_path)
-		return
-	DEBUG.log("level.gd: Opened %s" % level_json_path)
-	var parsed_data = JSON.parse_string(file_data.get_as_text())
+	var parsed_data
+	# if loading from a level file
+	if LOAD_FROM_FILE:
+		# if something goes wrong with the given path, load default
+		if not FileAccess.file_exists(level_json_path):
+			DEBUG.log("Level file not found: '%s', loading default..." % level_json_path)
+			level_json_path = DEFAULT_LEVEL_PATH
+		# load and parse level data
+		var file_data = FileAccess.open(level_json_path, FileAccess.READ)
+		if file_data.get_error():
+			DEBUG.log("level.gd: Error opening %s" % level_json_path)
+			return
+		DEBUG.log("level.gd: Opened %s" % level_json_path)
+		parsed_data = JSON.parse_string(file_data.get_as_text())
+		if parsed_data == null:
+			DEBUG.log("level.gd: Error parsing %s" % level_json_path)
+			return
+	# if loading from a dictionary
+	else:
+		parsed_data = level_data	
 	# - DATA ASSIGNMENT -
 	level_name = parsed_data["name"] if parsed_data.has("name") else "!!! NO NAME !!!"
 	NAME_LABEL.text = level_name
@@ -134,19 +187,27 @@ func _process(_delta) -> void:
 
 # handle inputs here! not in _process!
 func _input(event) -> void:
-	if event.is_action_pressed("esc"):
-		_on_open_menu_pressed()
 	# handle clicking with mouse 1
 	if event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		# ignore inputs if paused
+		if get_tree().paused:
+			return
+		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed: # click pressed
 			is_m1_dragging = true
 			clicked_pos_at_drag_start = event.position
-		elif event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
+			DEBUG.log("Clicked @ " + str(event.position))
+		elif event.button_index == MOUSE_BUTTON_LEFT and not event.pressed: # click released
+			# stop dragging
 			is_m1_dragging = false
 			# if this happens, it was a drag and not a click (allow for some tolerance)
 			if abs(event.position - clicked_pos_at_drag_start) > Vector2(GLOBALS.MOUSE_1_DRAG_EPSILON, GLOBALS.MOUSE_1_DRAG_EPSILON):
 				return
-		if event.button_index == MOUSE_BUTTON_LEFT and not event.pressed and not is_m1_dragging and not is_cutting: # not event.pressed = released
+			# invalidate click if waiting for a cut to finish
+			if is_cutting:
+				return
+			# invalidate click if using m1 to drag the camera
+			if is_m1_dragging:
+				return
 			# ignore UI
 			if CIRCLE_CUT_BUTTON.get_global_rect().has_point(event.position):
 				return
@@ -162,21 +223,13 @@ func _input(event) -> void:
 				return
 			if SHOW_HULL_BUTTON.get_global_rect().has_point(event.position):
 				return
-			# play click vfx
-			# _play_click_vfx(get_global_mouse_position()) # moved to game scene
-			# get the clicked lattice position
 			var clicked_lattice_pos = snapped( (get_global_mouse_position() - OFFSET) / SCALING , Vector2(GLOBALS.CLICK_EPSILON, GLOBALS.CLICK_EPSILON) )
 			DEBUG.log( "Clicked @ lattice pos: " + str( clicked_lattice_pos ) )
+			# - DEBUG CUT -
 			if cut_mode == CUT_MODES.DEBUG_CUT and DEBUG.is_enabled():
 				# split the polygon at the given position and at a hard-coded direction
 				POLYGON.cut_polygon(clicked_lattice_pos, debug_cut_direction, true)
-			# !!! TODO !!! in the demo, cut animations can be cancelled early, with the cut being made at that point
-			# should this be implemented as well? or should clicking be disabled during the animation?
-			# !!! THINK ABOUT IT !!!
-			# these awaits are temporary, until animation cancelling is implemented.
-			# once it is, it should await a signal instead of the function call. something like "cut_finished"
-			# NOTE: animation cancelling is pretty useless. i'll leave these comments here for now, but i think this feature is better off scrapped
-			# TODO: maybe wrap scoring logic in a function because it's (almost) the same for all cuts
+			# - CIRCLE CUT -
 			elif cut_mode == CUT_MODES.CIRCLE_CUT and circle_cut_budget != 0:
 				is_cutting = true
 				var circle_cut_result = await POLYGON.circle_cut(clicked_lattice_pos)
@@ -224,6 +277,7 @@ func _input(event) -> void:
 						score += rank_bonus + budget_bonus
 						level_completed.emit( rank, rank_bonus, budget_bonus , circle_cut_budget, gomory_cut_budget, split_cut_budget )
 				is_cutting = false
+			# - H SPLIT CUT -
 			elif cut_mode == CUT_MODES.H_SPLIT_CUT and split_cut_budget != 0:
 				is_cutting = true
 				var h_split_cut_result = await POLYGON.h_split_cut(clicked_lattice_pos)
@@ -274,6 +328,7 @@ func _input(event) -> void:
 						score += rank_bonus + budget_bonus
 						level_completed.emit( rank, rank_bonus, budget_bonus , circle_cut_budget, gomory_cut_budget, split_cut_budget )
 				is_cutting = false
+			# - V SPLIT CUT -
 			elif cut_mode == CUT_MODES.V_SPLIT_CUT and split_cut_budget != 0:
 				is_cutting = true
 				var v_split_cut_result = await POLYGON.v_split_cut(clicked_lattice_pos)
@@ -324,6 +379,7 @@ func _input(event) -> void:
 						score += rank_bonus + budget_bonus
 						level_completed.emit( rank, rank_bonus, budget_bonus , circle_cut_budget, gomory_cut_budget, split_cut_budget )
 				is_cutting = false
+			# - GOMORY CUT -
 			elif cut_mode == CUT_MODES.GOMORY_CUT and gomory_cut_budget != 0: # gomory cut is handled differently
 				is_cutting = true
 				var gomory_cut_result = await _handle_gomory_cut_click()
@@ -369,6 +425,7 @@ func _input(event) -> void:
 						score += rank_bonus + budget_bonus
 						level_completed.emit( rank, rank_bonus, budget_bonus , circle_cut_budget, gomory_cut_budget, split_cut_budget )
 				is_cutting = false
+			# - FAILSAFE -
 			else: # if somehow, no cut mode is selected
 				DEBUG.log("No cut mode selected!")
 

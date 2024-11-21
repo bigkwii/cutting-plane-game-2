@@ -98,6 +98,7 @@ _data = {
 }
 
 [node name="split_vfx" type="Node2D"]
+process_mode = 1
 script = ExtResource("1_s8den")
 color = Color(1, 1, 1, 0)
 

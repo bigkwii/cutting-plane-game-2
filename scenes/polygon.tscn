@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://dnibem6i2pwss"]
+[gd_scene load_steps=7 format=3 uid="uid://dnibem6i2pwss"]
 
 [ext_resource type="Script" path="res://scenes/polygon.gd" id="1_f3ty0"]
 [ext_resource type="PackedScene" uid="uid://cmslkpm8c6211" path="res://scenes/convex_integer_hull.tscn" id="2_7mll7"]
 [ext_resource type="PackedScene" uid="uid://73u01oqmgx6x" path="res://scenes/poly_point.tscn" id="3_f2xql"]
 [ext_resource type="PackedScene" uid="uid://crej6vcgv7wwt" path="res://scenes/split_vfx.tscn" id="5_27eb1"]
 [ext_resource type="PackedScene" uid="uid://bbva05244jgj8" path="res://scenes/circle_vfx.tscn" id="5_yiyq2"]
+[ext_resource type="PackedScene" uid="uid://l2wwbm3ypoe2" path="res://scenes/gomory_vfx.tscn" id="6_ywll3"]
 
 [node name="polygon" type="Node2D"]
 script = ExtResource("1_f3ty0")
@@ -17,10 +18,14 @@ script = ExtResource("1_f3ty0")
 
 [node name="vfx" type="Node2D" parent="."]
 
+[node name="intersection_vfxs" type="Node2D" parent="vfx"]
+
 [node name="cut_vfxs" type="Node2D" parent="vfx"]
 
 [node name="circle_vfx" parent="vfx" instance=ExtResource("5_yiyq2")]
 
 [node name="split_vfx" parent="vfx" instance=ExtResource("5_27eb1")]
+
+[node name="gomory_vfx" parent="vfx" instance=ExtResource("6_ywll3")]
 
 [node name="cut_pieces" type="Node2D" parent="."]

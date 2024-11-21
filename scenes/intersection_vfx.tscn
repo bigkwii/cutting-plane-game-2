@@ -1,0 +1,49 @@
+[gd_scene load_steps=5 format=3 uid="uid://k13doojmenwl"]
+
+[ext_resource type="Script" path="res://scenes/intersection_vfx.gd" id="1_xnwn2"]
+
+[sub_resource type="Animation" id="Animation_jbr62"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:alpha")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1.0]
+}
+
+[sub_resource type="Animation" id="Animation_d7m8l"]
+resource_name = "fade"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:alpha")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.333333, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [1.0, 1.0, 0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_3s1gc"]
+_data = {
+"RESET": SubResource("Animation_jbr62"),
+"fade": SubResource("Animation_d7m8l")
+}
+
+[node name="intersection_vfx" type="Node2D"]
+script = ExtResource("1_xnwn2")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_3s1gc")
+}
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

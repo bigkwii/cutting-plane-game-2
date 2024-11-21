@@ -80,7 +80,7 @@ alignment = 1
 
 [node name="circle" parent="CanvasLayer/HUD/cut_buttons" instance=ExtResource("7_1qqha")]
 layout_mode = 2
-text = "C"
+text = ""
 cut_type = "circle"
 
 [node name="gomory" parent="CanvasLayer/HUD/cut_buttons" instance=ExtResource("7_1qqha")]
@@ -90,13 +90,13 @@ cut_type = "gomory"
 
 [node name="h_split" parent="CanvasLayer/HUD/cut_buttons" instance=ExtResource("7_1qqha")]
 layout_mode = 2
-text = "H"
+text = ""
 cut_type = "h_split"
 visible_budget = false
 
 [node name="v_split" parent="CanvasLayer/HUD/cut_buttons" instance=ExtResource("7_1qqha")]
 layout_mode = 2
-text = "V"
+text = ""
 cut_type = "v_split"
 
 [node name="show_hull" parent="CanvasLayer/HUD" instance=ExtResource("7_1qqha")]

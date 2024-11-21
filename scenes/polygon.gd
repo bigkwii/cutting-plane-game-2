@@ -26,14 +26,17 @@ var packed_vertices: PackedVector2Array = []
 @onready var CENTROID = $centroid
 @onready var CONVEX_INTEGER_HULL = $convex_integer_hull
 # - vfx -
+@onready var INTERSECTION_VFXS = $vfx/intersection_vfxs
 @onready var CUT_VFXS = $vfx/cut_vfxs
 @onready var CIRCLE_VFX = $vfx/circle_vfx
 @onready var SPLIT_VFX = $vfx/split_vfx
+@onready var GOMORY_VFX = $vfx/gomory_vfx
 # - cut pieces vfx -
 @onready var CUT_PIECES = $cut_pieces
 
 # -- preloaded scenes --
 var POLY_POINT_SCENE = preload("res://scenes/poly_point.tscn")
+var INTERSECTION_VFX_SCENE = preload("res://scenes/intersection_vfx.tscn")
 var CUT_VFX_SCENE = preload("res://scenes/cut_vfx.tscn")
 var CUT_PIECE_SCENE = preload("res://scenes/cut_piece.tscn")
 
@@ -242,10 +245,10 @@ func polygon_area(polygon: PackedVector2Array) -> float:
 ## polygon: PackedVector2Array the polygon to be split
 ## line_point, line_dir: point and direction of the line
 ## [br][br]
-func split_polygon(polygon: PackedVector2Array, line_point: Vector2, line_dir: Vector2, logs=true) -> Array[PackedVector2Array]:
+func split_polygon(polygon: PackedVector2Array, line_point: Vector2, line_dir: Vector2, play_anims=true, logs=true) -> Array[PackedVector2Array]:
 	var new_poly_1 = PackedVector2Array()
 	var new_poly_2 = PackedVector2Array()
-	var intersection_points = []
+	var intersection_points: Array = []
 	for i in range(polygon.size()):
 		var current_point = polygon[i]
 		var next_point = polygon[(i + 1) % polygon.size()]
@@ -265,6 +268,8 @@ func split_polygon(polygon: PackedVector2Array, line_point: Vector2, line_dir: V
 			new_poly_1.append(intersection_candidate)
 			new_poly_2.append(intersection_candidate)
 			intersection_points.append(intersection_candidate)
+	if play_anims:
+		_play_intersection_animation(intersection_points)
 	if intersection_points.size() < 2:
 		if logs:
 			DEBUG.log("split_polygon: Invalid number of intersection points: %s (%s)" % [intersection_points.size(), intersection_points])
@@ -279,7 +284,7 @@ func split_polygon(polygon: PackedVector2Array, line_point: Vector2, line_dir: V
 ## returns if a given line would've cut the convex hull of the polygon
 func would_cut_hull(line_point: Vector2, line_dir: Vector2) -> bool:
 	var hull = CONVEX_INTEGER_HULL.convex_integer_hull
-	var new_polygons = split_polygon(hull, line_point, line_dir, false)
+	var new_polygons = split_polygon(hull, line_point, line_dir, false, false)
 	if new_polygons.size() == 0:
 		return false
 	else:
@@ -332,7 +337,7 @@ func cut_polygon(line_point: Vector2, line_dir: Vector2, allow_hull_cutting: boo
 ## line_point, line_dir: point and direction of the line
 func would_cut_polygon(line_point: Vector2, line_dir: Vector2, allow_hull_cutting: bool = false) -> bool:
 	var polygon_verts = packed_vertices
-	var new_polygons = split_polygon(polygon_verts, line_point, line_dir)
+	var new_polygons = split_polygon(polygon_verts, line_point, line_dir, false)
 	if new_polygons.size() == 0:
 		return false
 	if not allow_hull_cutting and would_cut_hull(line_point, line_dir):
@@ -447,7 +452,6 @@ func circle_cut(clicked_lattice_pos: Vector2) -> Array:
 	var grow_anim_speed = circle_radius / 100
 	_play_circle_animation(circle_center, circle_radius, grow_anim_speed)
 	await CIRCLE_VFX.grow_animation_finished
-
 	# make every valid cut possible
 	var already_made_cuts = []
 	var valid_cuts = 0
@@ -632,23 +636,29 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> Array:
 	var selected_vertex = packed_vertices[selected_index]
 	var neigh_before = packed_vertices[(selected_index - 1 + packed_vertices.size()) % packed_vertices.size()]
 	var neigh_after = packed_vertices[(selected_index + 1) % packed_vertices.size()]
-	var a1 = Vector2(-(selected_vertex - neigh_before).y, (selected_vertex - neigh_before).x)
-	var b1 = a1.dot(neigh_before)
+	# get Ax * x + Ay * y = B form of the line that passes through selected and neigh before
+	var a1: Vector2 = Vector2(-(selected_vertex - neigh_before).y, (selected_vertex - neigh_before).x)
+	var b1: float = a1.dot(neigh_before)
+	# we want to stay "inside" of the polygon, i.e: the line eq is a restriction of type Ax * x + Ay * y <= B
 	if a1.dot(neigh_after) > b1:
 		a1 = -a1
 		b1 = -b1
-	var a2 = Vector2(-(selected_vertex - neigh_after).y, (selected_vertex - neigh_after).x)
-	var b2 = a2.dot(neigh_after)
+	# get Ax * x + Ay * y = B form of the line that passes through selected and neigh after
+	var a2: Vector2 = Vector2(-(selected_vertex - neigh_after).y, (selected_vertex - neigh_after).x)
+	var b2: float = a2.dot(neigh_after)
+	# we want to stay "inside" of the polygon, i.e: the line eq is a restriction of type Ax * x + Ay * y <= B
 	if a2.dot(neigh_before) > b2:
 		a2 = -a2
 		b2 = -b2
+	# get the rows of the inverse basis matrix of a1 and a2. i.e: the matrix that when multiplied by [a1, a2] gives the identity matrix
 	var inverse_basis_rows = compute_inverse_basis_rows(a1.x, a1.y, a2.x, a2.y)
-	# 1st tableau row
-	var aLattice1 = Vector2(1, 0)
-	var aSlack1 = inverse_basis_rows[0]
-	var b = inverse_basis_rows[0].x * b1 + inverse_basis_rows[0].y * b2
+	# 1st simplex tableau row
+	var aLattice1: Vector2 = Vector2(1, 0)
+	var aSlack1: Vector2 = inverse_basis_rows[0]
+	var b: float = inverse_basis_rows[0].x * b1 + inverse_basis_rows[0].y * b2
+	# we plug these into the gomory mixed integer cut algorithm to get one potential cut
 	var gmi_result_1 = get_gmi(aLattice1, aSlack1, b, inverse_basis_rows)
-	var violation1: float = 0.0
+	var violation1: float = 0.0 # we'll use this later to determine which cut is better
 	var GMIaLattice1: Vector2 = gmi_result_1[0]
 	var GMIaSlack1: Vector2 = gmi_result_1[1]
 	var GMIb1: float = gmi_result_1[2]
@@ -658,12 +668,13 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> Array:
 		GMIb1 -= (GMIaSlack1.x * b1 + GMIaSlack1.y * b2)
 		GMIaLattice1 -= Vector2(GMIaSlack1.x * a1.x + GMIaSlack1.y * a2.x, GMIaSlack1.x * a1.y + GMIaSlack1.y * a2.y)
 		violation1 = (GMIaLattice1.dot(selected_vertex) - GMIb1) / GMIaLattice1.length()
-	# 2nd tableau row
-	var aLattice2 = Vector2(0, 1)
-	var aSlack2 = inverse_basis_rows[1]
+	# 2nd simplex tableau row
+	var aLattice2: Vector2 = Vector2(0, 1)
+	var aSlack2: Vector2 = inverse_basis_rows[1]
 	b = inverse_basis_rows[1].x * b1 + inverse_basis_rows[1].y * b2
+	# we plug these into the gomory mixed integer cut algorithm to get the other potential cut
 	var gmi_result_2 = get_gmi(aLattice2, aSlack2, b, inverse_basis_rows)
-	var violation2: float = 0.0
+	var violation2: float = 0.0 # we'll use this later to determine which cut is better
 	var GMIaLattice2: Vector2 = gmi_result_2[0]
 	var GMIaSlack2: Vector2 = gmi_result_2[1]
 	var GMIb2: float = gmi_result_2[2]
@@ -706,6 +717,35 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> Array:
 	# turn the points into a line
 	var line_point = point1
 	var line_dir = point2 - point1
+	# data for the gomory cut animation
+	var data: Dictionary = {
+		"scaling": SCALING,
+		"offset": OFFSET,
+		"selected_vertex": selected_vertex,
+		"neigh_before": neigh_before,
+		"neigh_after": neigh_after,
+		"A1x": a1.x,
+		"A1y": a1.y,
+		"B1": b1,
+		"A2x": a2.x,
+		"A2y": a2.y,
+		"B2": b2,
+		"GMIaLattice1": GMIaLattice1,
+		"GMIaSlack1": GMIaSlack1,
+		"GMIb1": GMIb1,
+		"GMIaLattice2": GMIaLattice2,
+		"GMIaSlack2": GMIaSlack2,
+		"GMIb2": GMIb2,
+		"GMIaLatticex": GMIaLattice.x,
+		"GMIaLatticey": GMIaLattice.y,
+		"GMIaSlack": _GMIaSlack,
+		"GMIb": GMIb,
+		"point1": point1,
+		"point2": point2
+	}
+	# play gomory cut animation
+	_play_gomory_cut_animation(data)
+	await GOMORY_VFX.animation_finished
 	# Perform the cut on the polygon
 	var cut_result = cut_polygon(line_point, line_dir)
 	var is_valid_cut = cut_result[0]
@@ -713,13 +753,15 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> Array:
 	# this is to update the hover vfx on the verts. i know, it's a bit hacky.
 	gomory_mode_selected(true)
 	if is_valid_cut:
-		# TODO: this is where the gomory cut animation should be played
 		return [1, shaved_off_area]
 	else:
-		# same here. could get away just playing it before this if else branch
 		return [0, 0.0]
 
 ## Function to compute inverse basis rows (ripped straight from the demo)
+## [br][br]
+## a, b, c, d: the coefficients of the matrix
+## [br][br]
+## returns an array containing: [Vector2, Vector2], the inverse basis rows
 func compute_inverse_basis_rows(a: float, b: float, c: float, d: float) -> Array[Vector2]:
 	var out_rows: Array[Vector2] = []
 	var determinant = a * d - b * c
@@ -730,15 +772,15 @@ func compute_inverse_basis_rows(a: float, b: float, c: float, d: float) -> Array
 	out_rows.append(Vector2(-c / determinant, a / determinant))
 	return out_rows
 
-## Function to compute GMI cut (ripped straight from the demo)
+## Function to compute a GMI cut (ripped straight from the demo)
 func get_gmi(a_lattice: Vector2, a_slack: Vector2, b: float, inverse_basis_rows: Array) -> Array:
 	var GMIaLattice: Vector2 = Vector2()
 	var GMIaSlack: Vector2 = Vector2()
 	var GMIb: float = 0.0
 	var aprime = Vector2(a_lattice.dot(Vector2(1, 0)), a_lattice.dot(Vector2(0,1)))
-	var f0 = b - floor(b)
-	var f1 = aprime.x - floor(aprime.x)
-	var f2 = aprime.y - floor(aprime.y)
+	var f0: float = b - floor(b) # fractional part of b
+	var f1: float = aprime.x - floor(aprime.x) # fractional part of aprime.x
+	var f2: float = aprime.y - floor(aprime.y) # fractional part of aprime.y
 	var gmiLattice = Vector2()
 	gmiLattice.x = f1 / f0 if f1 <= f0 else (1.0 - f1) / (1.0 - f0)
 	gmiLattice.y = f2 / f0 if f2 <= f0 else (1.0 - f2) / (1.0 - f0)
@@ -749,8 +791,15 @@ func get_gmi(a_lattice: Vector2, a_slack: Vector2, b: float, inverse_basis_rows:
 	GMIaLattice.y = gmiLattice.x * inverse_basis_rows[0].y + gmiLattice.y * inverse_basis_rows[1].y
 	return [GMIaLattice, GMIaSlack, GMIb]  # GMI cut successful
 
-# -- placeholder cut animations --
-# TODO: make circle and split animations interruplible (?) nope.
+# -- cut animations --
+func _play_intersection_animation(intersection_points: Array) -> void:
+	if intersection_points.size() == 0:
+		return
+	for intersection_point in intersection_points:
+		var new_intersection_vfx = INTERSECTION_VFX_SCENE.instantiate()
+		INTERSECTION_VFXS.add_child(new_intersection_vfx)
+		new_intersection_vfx.global_position = intersection_point * SCALING + OFFSET
+		new_intersection_vfx.play()
 
 func _play_cut_animation(line_point: Vector2, line_dir: Vector2) -> void:
 	var new_cut_vfx = CUT_VFX_SCENE.instantiate()
@@ -782,7 +831,11 @@ func _play_split_success_animation() -> void:
 func _play_split_failure_animation() -> void:
 	SPLIT_VFX.play_failure()
 
-# -- gomory cut mode vfx handling --
+func _play_gomory_cut_animation(data: Dictionary) -> void:
+	GOMORY_VFX.data = data
+	GOMORY_VFX.play_short()
+
+# -- gomory cut mode selection vfx handling --
 func gomory_mode_selected(make_clickable: bool) -> void:
 	for vert in VERTS.get_children():
 		if vert.is_integral():
