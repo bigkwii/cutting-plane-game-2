@@ -149,6 +149,10 @@ text = "0"
 
 [node name="click_vfxs" type="Node2D" parent="vfx"]
 
+[node name="invalidate_click_timer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
 [connection signal="zoom_level_changed" from="camera" to="." method="_on_camera_zoom_level_changed"]
 [connection signal="pressed" from="CanvasLayer/HUD/debug_buttons/debug_cut" to="." method="_on_debug_cut_pressed"]
 [connection signal="text_changed" from="CanvasLayer/HUD/debug_buttons/debug_cut_input" to="." method="_on_debug_cut_input_text_changed"]
@@ -159,3 +163,4 @@ text = "0"
 [connection signal="button_down" from="CanvasLayer/HUD/show_hull" to="." method="_on_show_hull_button_down"]
 [connection signal="button_up" from="CanvasLayer/HUD/show_hull" to="." method="_on_show_hull_button_up"]
 [connection signal="pressed" from="CanvasLayer/HUD/open_menu" to="." method="_on_open_menu_pressed"]
+[connection signal="timeout" from="invalidate_click_timer" to="." method="_on_invalidate_click_timer_timeout"]

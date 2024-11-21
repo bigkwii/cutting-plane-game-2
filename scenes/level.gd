@@ -97,6 +97,8 @@ var gomory_cut_budget: int = -1
 var split_cut_budget: int = -1 # both h and v
 ## score for this level
 var score: int = 0
+## flag to determine if the invalidation timer timed out
+var invalidation_timer_timed_out: bool = false
 # - debug -
 var debug_cut_direction: Vector2 = Vector2(1, 0)
 
@@ -117,6 +119,7 @@ var debug_cut_direction: Vector2 = Vector2(1, 0)
 @onready var H_SPLIT_CUT_BUTTON = $CanvasLayer/HUD/cut_buttons/h_split
 @onready var V_SPLIT_CUT_BUTTON = $CanvasLayer/HUD/cut_buttons/v_split
 @onready var SCORE_LABEL = $CanvasLayer/HUD/score_container/score_label
+@onready var INVALIDATE_CLICK_TIMER = $invalidate_click_timer
 # - proloaded scenes -
 # @onready var CLICK_VFX = preload("res://scenes/click_vfx.tscn") # moved to game scene
 # - debug cut button and input -
@@ -195,6 +198,9 @@ func _input(event) -> void:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed: # click pressed
 			is_m1_dragging = true
 			clicked_pos_at_drag_start = event.position
+			# start the invalidation timer
+			INVALIDATE_CLICK_TIMER.start()
+			invalidation_timer_timed_out = false
 			DEBUG.log("Clicked @ " + str(event.position))
 		elif event.button_index == MOUSE_BUTTON_LEFT and not event.pressed: # click released
 			# stop dragging
@@ -207,6 +213,10 @@ func _input(event) -> void:
 				return
 			# invalidate click if using m1 to drag the camera
 			if is_m1_dragging:
+				return
+			# invalidate click if the player took too long to release the click (this is to prevent accidental clicks)
+			if invalidation_timer_timed_out:
+				invalidation_timer_timed_out = false
 				return
 			# ignore UI
 			if CIRCLE_CUT_BUTTON.get_global_rect().has_point(event.position):
@@ -587,3 +597,8 @@ func _check_rank() -> Array:
 	elif rank == "S":
 		bonus_score = SCORE.S_RANK
 	return [rank, bonus_score]
+
+## when the timer times out, it means click was held for too long to count, and should be invalidated
+func _on_invalidate_click_timer_timeout():
+	invalidation_timer_timed_out = true
+	DEBUG.log("Invalidation timer timed out!")
