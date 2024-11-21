@@ -397,6 +397,9 @@ func _run_forgiveness_checks(polygon: PackedVector2Array):
 		if polygon.size() <= 3: # if removing a point would turn the poly into a line, break
 			break
 		var current_point = polygon[i]
+		# don't remove points from the convex hull
+		if current_point in CONVEX_INTEGER_HULL.convex_integer_hull:
+			continue
 		var next_point = polygon[(i + 1) % polygon.size()]
 		if current_point.distance_to(next_point) < GLOBALS.FORGIVENESS_MERGE_EPSILON:
 			polygon.remove_at(i)
