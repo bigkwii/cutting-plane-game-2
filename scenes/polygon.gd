@@ -85,7 +85,7 @@ func build_polygon() -> void:
 	for vert in packed_vertices:
 		_add_new_vertex(vert)
 	calculate_centroid()
-	calculate_convex_integer_hull(true) # TODO: for testing purposes, remove this `true` later, recalculating the hull is expensive and unnecessary
+	calculate_convex_integer_hull()
 
 ## Removes all vertex children from the polygon
 func _delete_verts() -> void:
@@ -138,7 +138,7 @@ func is_point_inside_polygon(lattice_pos: Vector2) -> bool:
 	return Geometry2D.is_point_in_polygon(lattice_pos, packed_vertices)
 
 ## Calculates the convex integer hull of the polygon and stores it in the CONVEX_INTEGER_HULL node for drawing.
-func calculate_convex_integer_hull(redraw: bool = false) -> void:
+func calculate_convex_integer_hull() -> void:
 	var hull: PackedVector2Array = []
 	# PackedVector2Array doesn't support reduce, sadly.
 	var min_x: float = packed_vertices[0].x
@@ -160,9 +160,6 @@ func calculate_convex_integer_hull(redraw: bool = false) -> void:
 	CONVEX_INTEGER_HULL.convex_integer_hull = PackedVector2Array(hull)
 	CONVEX_INTEGER_HULL.SCALING = SCALING
 	CONVEX_INTEGER_HULL.OFFSET = OFFSET
-	# if a redraw was requested, queue it
-	if redraw:
-		CONVEX_INTEGER_HULL.queue_redraw()
 
 ## Determines if a given point is "above" a given line. Above being the line's normal.
 ## [br][br]
@@ -285,7 +282,7 @@ func split_polygon(polygon: PackedVector2Array, line_point: Vector2, line_dir: V
 func would_cut_hull(line_point: Vector2, line_dir: Vector2) -> bool:
 	var hull = CONVEX_INTEGER_HULL.convex_integer_hull
 	var new_polygons = split_polygon(hull, line_point, line_dir, false, false)
-	if new_polygons.size() == 0:
+	if new_polygons.size() < 2:
 		return false
 	else:
 		if hull == new_polygons[0] or hull == new_polygons[1]:
@@ -747,7 +744,7 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> Array:
 	_play_gomory_cut_animation(data)
 	await GOMORY_VFX.animation_finished
 	# Perform the cut on the polygon
-	var cut_result = cut_polygon(line_point, line_dir)
+	var cut_result = cut_polygon(line_point, line_dir, true) # gomory cuts are mathematically guaranteed to not cut the hull (in theory)
 	var is_valid_cut = cut_result[0]
 	var shaved_off_area = cut_result[1]
 	# this is to update the hover vfx on the verts. i know, it's a bit hacky.

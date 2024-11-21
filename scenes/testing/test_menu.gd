@@ -5,6 +5,9 @@ extends Node2D
 @onready var FREE_PLAY_LEVEL_SELECT = $CanvasLayer/UI/free_play_level_select
 @onready var ARCADE_MODE_POPUP = $CanvasLayer/UI/arcade_mode_popup
 
+@onready var CRT_TOGGLE_BTN = $CanvasLayer/UI/HBoxContainer/toggle_crt
+@onready var FULLSCREEN_TOGGLE_BTN = $CanvasLayer/UI/HBoxContainer/toggle_fullscreen
+
 # - signals -
 signal start_free_play(level_path: String)
 signal start_arcade
@@ -15,6 +18,10 @@ var level_scene = preload("res://scenes/level.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	if OS.get_name() in ["Android", "iOS"]: # disable crt filter and fullscreen toggle on mobile
+		CRT_TOGGLE_BTN.visible = false
+		FULLSCREEN_TOGGLE_BTN.visible = false
+		CRT.visible = false
 	POLYGON.build_polygon()
 	FREE_PLAY_LEVEL_SELECT.visible = false
 	ARCADE_MODE_POPUP.visible = false

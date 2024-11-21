@@ -29,6 +29,7 @@ window/size/viewport_width=1920
 window/size/viewport_height=1080
 window/size/mode=3
 window/stretch/mode="viewport"
+window/handheld/orientation=4
 
 [input]
 
@@ -138,6 +139,5 @@ toggle_crt_filter={
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
-renderer/rendering_method="mobile"
 textures/vram_compression/import_etc2_astc=true
 environment/defaults/default_clear_color=Color(0.0392157, 0.0392157, 0.0392157, 1)
