@@ -688,15 +688,25 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> Array:
 	var GMIaLattice: Vector2
 	var _GMIaSlack: Vector2
 	var GMIb: float
+	# the data for the discarded gomory cut (for the animation, gomory cuts are still automatic)
+	var badGMIaLattice: Vector2
+	var _badGMIaSlack: Vector2
+	var badGMIb: float
 	if violation1 < violation2:
 		GMIaLattice = GMIaLattice1
 		_GMIaSlack = GMIaSlack1
 		GMIb = GMIb1
+		badGMIaLattice = GMIaLattice2
+		_badGMIaSlack = GMIaSlack2
+		badGMIb = GMIb2
 	else:
 		GMIaLattice = GMIaLattice2
 		_GMIaSlack = GMIaSlack2
 		GMIb = GMIb2
-	# get the points for the cut
+		badGMIaLattice = GMIaLattice1
+		_badGMIaSlack = GMIaSlack1
+		badGMIb = GMIb1
+	# get the points for the good cut
 	var point1: Vector2
 	var point2: Vector2
 	if ( abs(GMIaLattice.x) >= GLOBALS.GEOMETRY_EPSILON and abs(GMIaLattice.y) >= GLOBALS.GEOMETRY_EPSILON ):
@@ -714,6 +724,24 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> Array:
 		point1.y = 0.0
 		point2.x = GMIb / GMIaLattice.x
 		point2.y = 1.0
+	# get the points for the bad cut (animation only, gomory cuts are still automatic)
+	var bad_point1: Vector2
+	var bad_point2: Vector2
+	if ( abs(badGMIaLattice.x) >= GLOBALS.GEOMETRY_EPSILON and abs(badGMIaLattice.y) >= GLOBALS.GEOMETRY_EPSILON ):
+		bad_point1.x = badGMIb / badGMIaLattice.x
+		bad_point1.y = 0.0
+		bad_point2.x = 0.0
+		bad_point2.y = badGMIb / badGMIaLattice.y
+	elif ( abs(badGMIaLattice.x) < GLOBALS.GEOMETRY_EPSILON ):
+		bad_point1.x = 0.0
+		bad_point1.y = badGMIb / badGMIaLattice.y
+		bad_point2.x = 1.0
+		bad_point2.y = badGMIb / badGMIaLattice.y
+	else:
+		bad_point1.x = badGMIb / badGMIaLattice.x
+		bad_point1.y = 0.0
+		bad_point2.x = badGMIb / badGMIaLattice.x
+		bad_point2.y = 1.0
 	# turn the points into a line
 	var line_point = point1
 	var line_dir = point2 - point1
@@ -730,18 +758,18 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> Array:
 		"A2x": a2.x,
 		"A2y": a2.y,
 		"B2": b2,
-		"GMIaLattice1": GMIaLattice1,
-		"GMIaSlack1": GMIaSlack1,
-		"GMIb1": GMIb1,
-		"GMIaLattice2": GMIaLattice2,
-		"GMIaSlack2": GMIaSlack2,
-		"GMIb2": GMIb2,
 		"GMIaLatticex": GMIaLattice.x,
 		"GMIaLatticey": GMIaLattice.y,
 		"GMIaSlack": _GMIaSlack,
 		"GMIb": GMIb,
 		"point1": point1,
-		"point2": point2
+		"point2": point2,
+		"badGMIaLatticex": badGMIaLattice.x,
+		"badGMIaLatticey": badGMIaLattice.y,
+		"badGMIaSlack": _badGMIaSlack,
+		"badGMIb": badGMIb,
+		"bad_point1": bad_point1,
+		"bad_point2": bad_point2
 	}
 	# play gomory cut animation
 	_play_gomory_cut_animation(data)
