@@ -29,6 +29,7 @@ func _draw():
 		var points = []
 		for vert in convex_integer_hull:
 			points.append( vert * SCALING + OFFSET ) # this is why we need to go from packed -> array -> packed
+		points.append( convex_integer_hull[0] * SCALING + OFFSET ) # close the loop
 		draw_polyline(points, Color(0, 0, 1, alpha), 2) # solid border
 
 func play_show_hull():

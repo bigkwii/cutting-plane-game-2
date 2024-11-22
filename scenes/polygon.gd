@@ -171,6 +171,7 @@ func calculate_convex_integer_hull() -> void:
 				hull.append(Vector2(x, y))
 	# get the convex hull of the points
 	hull = Geometry2D.convex_hull(hull)
+	hull.remove_at(hull.size() - 1) # remove the last point, as it's the same as the first
 	CONVEX_INTEGER_HULL.convex_integer_hull = PackedVector2Array(hull)
 	CONVEX_INTEGER_HULL.SCALING = SCALING
 	CONVEX_INTEGER_HULL.OFFSET = OFFSET
@@ -376,12 +377,22 @@ func find_concave_idxs(polygon: PackedVector2Array) -> Array[int]:
 func _run_forgiveness_checks(polygon: PackedVector2Array) -> void:
 	# 1) snap to lattice points if close enough
 	for i in range(polygon.size()):
-		if abs(polygon[i].x - round(polygon[i].x)) < GLOBALS.FORGIVENESS_SNAP_EPSILON and abs(polygon[i].y - round(polygon[i].y)) < GLOBALS.FORGIVENESS_SNAP_EPSILON:
-			var old_vert = polygon[i]
-			polygon[i] = snapped( polygon[i], Vector2(GLOBALS.FORGIVENESS_SNAP_EPSILON, GLOBALS.FORGIVENESS_SNAP_EPSILON) )
-			# if snapping caused the polygon to become concave, revert the change
-			if i in find_concave_idxs(polygon):
-				polygon[i] = old_vert
+		var current_point = polygon[i]
+		# don't snap points already in the convex hull
+		if current_point.x == int(current_point.x) and current_point.y == int(current_point.y):
+			continue
+		if abs(current_point.x - round(current_point.x)) < GLOBALS.FORGIVENESS_SNAP_EPSILON and abs(current_point.y - round(current_point.y)) < GLOBALS.FORGIVENESS_SNAP_EPSILON:
+			var old_point = current_point
+			current_point = snapped( polygon[i], Vector2(GLOBALS.FORGIVENESS_SNAP_EPSILON, GLOBALS.FORGIVENESS_SNAP_EPSILON) )
+			var prev_point = polygon[(i - 1) % polygon.size()]
+			var next_point = polygon[(i + 1) % polygon.size()]
+			# check if the snap didn't make the polygon concave
+			var cross_product = (current_point.y - prev_point.y) * (next_point.x - current_point.x) - (current_point.x - prev_point.x) * (next_point.y - current_point.y)
+			if cross_product > 0:
+				current_point = old_point
+			polygon[i] = current_point
+	if find_concave_idxs(polygon).size() > 0:
+		DEBUG.log("Forgiveness checks failed. Concave vertices found.", 100)
 	# 2) remove vertices that are very close to being colinear with their neighbors
 	for i in range(polygon.size()):
 		if i >= polygon.size(): # failsafe
@@ -390,12 +401,11 @@ func _run_forgiveness_checks(polygon: PackedVector2Array) -> void:
 			break
 		var current_point = polygon[i]
 		# don't remove points from the convex hull
-		if current_point in CONVEX_INTEGER_HULL.convex_integer_hull:
+		if current_point.x == int(current_point.x) and current_point.y == int(current_point.y):
 			continue
 		var prev_point = polygon[(i - 1) % polygon.size()]
 		var next_point = polygon[(i + 1) % polygon.size()]
 		# in the very rare case where snapping causes the hull to be cut... skip for now TODO: how do we handle this?
-		# (this means gomory cuts can fail, that is, be selectable when clicking them results in an invalid (usually 0 area) cut)
 		if would_cut_hull(prev_point, next_point - prev_point):
 			continue
 		var dot = (current_point - prev_point).normalized().dot((next_point - current_point).normalized())
@@ -409,9 +419,6 @@ func _run_forgiveness_checks(polygon: PackedVector2Array) -> void:
 		if polygon.size() <= 3: # if removing a point would turn the poly into a line, break
 			break
 		var current_point = polygon[i]
-		# don't remove points from the convex hull
-		if current_point in CONVEX_INTEGER_HULL.convex_integer_hull:
-			continue
 		var next_point = polygon[(i + 1) % polygon.size()]
 		if current_point.distance_to(next_point) < GLOBALS.FORGIVENESS_MERGE_EPSILON:
 			polygon.remove_at(i)
