@@ -120,10 +120,24 @@ func is_integral() -> bool:
 ## Calculates the centroid of the polygon.
 ## TODO: is it necessary to return the centroid if we save it in the CENTROID node?
 func calculate_centroid() -> Vector2:
-	var sum: Vector2 = Vector2(0, 0)
-	for vert in VERTS.get_children():
-		sum += vert.lattice_position
-	var centroid_lattice_pos = sum / VERTS.get_child_count()
+	if packed_vertices.size() < 3:
+		DEBUG.log("polygon.calculate_centroid: Polygon must have at least 3 vertices! %s given." % packed_vertices.size())
+		return Vector2()
+	var centroid_lattice_pos: Vector2 = Vector2()
+	var area: float = 0.0
+	var centroid_x: float = 0.0
+	var centroid_y: float = 0.0
+	for i in range(packed_vertices.size()):
+		var current_point = packed_vertices[i]
+		var next_point = packed_vertices[(i + 1) % packed_vertices.size()]
+		var cross_product = (current_point.x * next_point.y - next_point.x * current_point.y)
+		area += cross_product
+		centroid_x += (current_point.x + next_point.x) * cross_product
+		centroid_y += (current_point.y + next_point.y) * cross_product
+	area /= 2.0
+	centroid_x /= 6.0 * area
+	centroid_y /= 6.0 * area
+	centroid_lattice_pos = Vector2(centroid_x, centroid_y)
 	# draw centroid
 	CENTROID.lattice_position = centroid_lattice_pos
 	CENTROID.position = centroid_lattice_pos * SCALING + OFFSET
@@ -354,22 +368,20 @@ func find_concave_idxs(polygon: PackedVector2Array) -> Array[int]:
 		var prev_point = polygon[(i - 1) % polygon.size()]
 		var next_point = polygon[(i + 1) % polygon.size()]
 		var cross_product = (current_point.y - prev_point.y) * (next_point.x - current_point.x) - (current_point.x - prev_point.x) * (next_point.y - current_point.y)
-		if cross_product < 0: # CROSS_PRODUCT_EPSILON breaks this for some reason
+		if cross_product > 0: # CROSS_PRODUCT_EPSILON breaks this for some reason
 			concave_vertices_idxs.append(i)
 	return concave_vertices_idxs
 
 ## runs "forgiveness" checks on a given polygon, for cleaning up floating point imprecision and quality of life
-func _run_forgiveness_checks(polygon: PackedVector2Array):
+func _run_forgiveness_checks(polygon: PackedVector2Array) -> void:
 	# 1) snap to lattice points if close enough
 	for i in range(polygon.size()):
 		if abs(polygon[i].x - round(polygon[i].x)) < GLOBALS.FORGIVENESS_SNAP_EPSILON and abs(polygon[i].y - round(polygon[i].y)) < GLOBALS.FORGIVENESS_SNAP_EPSILON:
-			# avoid snapping to points that are not in the convex hull
-			if snapped( polygon[i], Vector2(GLOBALS.FORGIVENESS_SNAP_EPSILON, GLOBALS.FORGIVENESS_SNAP_EPSILON)) in CONVEX_INTEGER_HULL.convex_integer_hull:
-				var old_vert = polygon[i]
-				polygon[i] = snapped( polygon[i], Vector2(GLOBALS.FORGIVENESS_SNAP_EPSILON, GLOBALS.FORGIVENESS_SNAP_EPSILON) )
-				# if snapping caused the polygon to become concave, revert the change
-				if i in find_concave_idxs(polygon):
-					polygon[i] = old_vert
+			var old_vert = polygon[i]
+			polygon[i] = snapped( polygon[i], Vector2(GLOBALS.FORGIVENESS_SNAP_EPSILON, GLOBALS.FORGIVENESS_SNAP_EPSILON) )
+			# if snapping caused the polygon to become concave, revert the change
+			if i in find_concave_idxs(polygon):
+				polygon[i] = old_vert
 	# 2) remove vertices that are very close to being colinear with their neighbors
 	for i in range(polygon.size()):
 		if i >= polygon.size(): # failsafe

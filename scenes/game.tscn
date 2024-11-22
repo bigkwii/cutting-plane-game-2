@@ -17,3 +17,4 @@ script = ExtResource("1_iislu")
 
 [connection signal="start_arcade" from="selected_gamemode/test_menu" to="." method="_on_test_menu_start_arcade"]
 [connection signal="start_free_play" from="selected_gamemode/test_menu" to="." method="_on_test_menu_start_free_play"]
+[connection signal="start_tutorial" from="selected_gamemode/test_menu" to="." method="_on_test_menu_start_tutorial"]

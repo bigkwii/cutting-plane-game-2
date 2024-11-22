@@ -1,6 +1,100 @@
-[gd_scene load_steps=2 format=3 uid="uid://ygxl8dhgym47"]
+[gd_scene load_steps=4 format=3 uid="uid://ygxl8dhgym47"]
 
 [ext_resource type="Script" path="res://scenes/tutorial.gd" id="1_mdb0r"]
+[ext_resource type="Theme" uid="uid://bqljbjsn8elrs" path="res://assets/themes/default.tres" id="2_mby48"]
+[ext_resource type="FontFile" uid="uid://bvvtosdeupbva" path="res://assets/fonts/extrathick.ttf" id="3_esj5r"]
 
 [node name="tutorial" type="Node2D"]
 script = ExtResource("1_mdb0r")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="HUD" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 64.0
+offset_top = 64.0
+offset_right = -64.0
+offset_bottom = -64.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_mby48")
+
+[node name="gamemode_label" type="Label" parent="CanvasLayer/HUD"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_fonts/font = ExtResource("3_esj5r")
+theme_override_font_sizes/font_size = 30
+text = "Tutorial Mode"
+
+[node name="MENU" type="Control" parent="CanvasLayer/HUD"]
+process_mode = 2
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("2_mby48")
+
+[node name="panel" type="Panel" parent="CanvasLayer/HUD/MENU"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -446.0
+offset_top = -286.0
+offset_right = 446.0
+offset_bottom = 286.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/HUD/MENU/panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -162.5
+offset_top = 64.0
+offset_right = 162.5
+offset_bottom = -64.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 128
+
+[node name="Label" type="Label" parent="CanvasLayer/HUD/MENU/panel/VBoxContainer"]
+layout_mode = 2
+text = "Tutorial"
+horizontal_alignment = 1
+
+[node name="exit" type="Button" parent="CanvasLayer/HUD/MENU/panel/VBoxContainer"]
+layout_mode = 2
+text = "Back To
+Main Menu"
+
+[node name="x" type="Button" parent="CanvasLayer/HUD/MENU/panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_top = 32.0
+offset_right = -32.0
+grow_horizontal = 0
+text = "X"
+
+[node name="Control" type="Control" parent="CanvasLayer/HUD"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[connection signal="pressed" from="CanvasLayer/HUD/MENU/panel/VBoxContainer/exit" to="." method="_on_exit_pressed"]
+[connection signal="pressed" from="CanvasLayer/HUD/MENU/panel/x" to="." method="_on_x_pressed"]

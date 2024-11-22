@@ -82,14 +82,11 @@ theme_override_constants/separation = 8
 
 [node name="tutorial_btn" type="Button" parent="CanvasLayer/UI/VBoxContainer"]
 layout_mode = 2
-tooltip_text = "W.I.P!!!"
 theme_override_fonts/font = ExtResource("3_7mkkd")
-disabled = true
 text = "How To Play"
 
 [node name="arcade_btn" type="Button" parent="CanvasLayer/UI/VBoxContainer"]
 layout_mode = 2
-tooltip_text = "W.I.P!!!"
 theme_override_fonts/font = ExtResource("3_7mkkd")
 text = "Arcade"
 
@@ -311,6 +308,72 @@ offset_bottom = 60.0
 grow_horizontal = 0
 text = " X "
 
+[node name="tutorial_mode_popup" type="Panel" parent="CanvasLayer/UI"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 128.0
+offset_top = 128.0
+offset_right = -128.0
+offset_bottom = -128.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/tutorial_mode_popup"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -649.5
+offset_top = 32.0
+offset_right = 649.5
+offset_bottom = 110.0
+grow_horizontal = 2
+
+[node name="tutorial_label" type="Label" parent="CanvasLayer/UI/tutorial_mode_popup/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("5_ba3wp")
+text = "How To Play"
+horizontal_alignment = 1
+
+[node name="tutorial_desc" type="Label" parent="CanvasLayer/UI/tutorial_mode_popup/VBoxContainer"]
+layout_mode = 2
+text = "Learn the basics of
+The Cutting Plane Game v2"
+horizontal_alignment = 1
+
+[node name="start_tutorial" type="Button" parent="CanvasLayer/UI/tutorial_mode_popup"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -124.0
+offset_top = -82.0
+offset_right = 124.0
+offset_bottom = 82.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("2_b4vfd")
+theme_override_font_sizes/font_size = 120
+text = "Start
+Tutorial"
+
+[node name="tutorial_x_btn" type="Button" parent="CanvasLayer/UI/tutorial_mode_popup"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -48.0
+offset_top = 32.0
+offset_right = -32.0
+offset_bottom = 60.0
+grow_horizontal = 0
+text = " X "
+
 [node name="polygon" parent="." instance=ExtResource("2_3o1bf")]
 position = Vector2(960, 576)
 initial_vertices = Array[Vector2]([Vector2(-1.8, -1.5), Vector2(-1.5, -1.8), Vector2(1.5, -1.8), Vector2(1.8, -1.5), Vector2(1.8, 1.5), Vector2(1.5, 1.8), Vector2(-1.5, 1.8), Vector2(-1.8, 1.5)])
@@ -320,6 +383,7 @@ position = Vector2(960, 576)
 
 [connection signal="pressed" from="CanvasLayer/UI/HBoxContainer/toggle_fullscreen" to="." method="_on_toggle_fullscreen_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/HBoxContainer/toggle_crt" to="." method="_on_toggle_crt_pressed"]
+[connection signal="pressed" from="CanvasLayer/UI/VBoxContainer/tutorial_btn" to="." method="_on_tutorial_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/VBoxContainer/arcade_btn" to="." method="_on_arcade_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/VBoxContainer/free_play_btn" to="." method="_on_free_play_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/VBoxContainer/exit_btn" to="." method="_on_exit_btn_pressed"]
@@ -335,3 +399,5 @@ position = Vector2(960, 576)
 [connection signal="pressed" from="CanvasLayer/UI/free_play_level_select/x_btn" to="." method="_on_x_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/arcade_mode_popup/start_arcade" to="." method="_on_start_arcade_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/arcade_mode_popup/arcade_x_btn" to="." method="_on_arcade_x_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/UI/tutorial_mode_popup/start_tutorial" to="." method="_on_start_tutorial_pressed"]
+[connection signal="pressed" from="CanvasLayer/UI/tutorial_mode_popup/tutorial_x_btn" to="." method="_on_tutorial_x_btn_pressed"]

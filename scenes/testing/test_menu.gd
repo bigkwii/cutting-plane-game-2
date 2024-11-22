@@ -4,6 +4,7 @@ extends Node2D
 @onready var VFXS = $vfxs
 @onready var FREE_PLAY_LEVEL_SELECT = $CanvasLayer/UI/free_play_level_select
 @onready var ARCADE_MODE_POPUP = $CanvasLayer/UI/arcade_mode_popup
+@onready var TUTORIAL_MODE_POPUP = $CanvasLayer/UI/tutorial_mode_popup
 
 @onready var CRT_TOGGLE_BTN = $CanvasLayer/UI/HBoxContainer/toggle_crt
 @onready var FULLSCREEN_TOGGLE_BTN = $CanvasLayer/UI/HBoxContainer/toggle_fullscreen
@@ -11,10 +12,10 @@ extends Node2D
 # - signals -
 signal start_free_play(level_path: String)
 signal start_arcade
+signal start_tutorial
 
 # - preloaded scenes -
 var cut_vfx = preload("res://scenes/cut_vfx.tscn")
-var level_scene = preload("res://scenes/level.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -72,7 +73,6 @@ func _on_lvl_1_btn_pressed():
 func _on_lvl_2_btn_pressed():
 	start_free_play.emit("res://levels/demo/2.json")
 
-
 func _on_lvl_3_btn_pressed():
 	start_free_play.emit("res://levels/demo/3.json")
 
@@ -106,6 +106,19 @@ func _on_arcade_x_btn_pressed():
 
 func _on_start_arcade_pressed():
 	start_arcade.emit()
+
+# - tutorial mode -
+
+func _on_tutorial_btn_pressed():
+	if not TUTORIAL_MODE_POPUP.visible:
+		TUTORIAL_MODE_POPUP.visible = true
+
+func _on_tutorial_x_btn_pressed():
+	if TUTORIAL_MODE_POPUP.visible:
+		TUTORIAL_MODE_POPUP.visible = false
+
+func _on_start_tutorial_pressed():
+	start_tutorial.emit()
 	
 # - crt toggle -
 
