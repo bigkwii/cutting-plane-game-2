@@ -2,9 +2,9 @@
     "name": "Level 5 - Lapiz Cola",
 	"max_y": 10, 
 	"poly_color": "#800000",
-	"circle_budget": 14,
-	"gomory_budget": 14,
-	"split_budget": 10,
+	"circle_budget": 10,
+	"gomory_budget": 10,
+	"split_budget": 6,
 	"poly_vertices": [
         [
             2.5,
