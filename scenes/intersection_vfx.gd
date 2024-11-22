@@ -2,7 +2,7 @@
 extends Node2D
 
 var radius: float = 2
-var color: Color = Color(1, 1, 1)
+var color: Color = Color(0.5, 0.5, 0.5)
 @export var alpha: float = 1.0
 
 @onready var ANIM_PLAYER = $AnimationPlayer

@@ -82,6 +82,8 @@ signal open_menu
 	]}
 ## level name
 var level_name: String
+## flag to determine if the user is allowed to click
+var can_click: bool = true
 ## flag to determine if the user is currently dragging the camera with mouse1
 var is_m1_dragging: bool = false
 ## need to save the clicked position to differenciate between click and drag
@@ -194,6 +196,9 @@ func _input(event) -> void:
 	if event is InputEventMouseButton:
 		# ignore inputs if paused
 		if get_tree().paused:
+			return
+		# ignore inputs if can_click is false
+		if not can_click:
 			return
 		# ignore UI
 		if CIRCLE_CUT_BUTTON.get_global_rect().has_point(event.position):
@@ -578,7 +583,7 @@ func _on_open_menu_pressed() -> void:
 	open_menu.emit()
 
 func _on_camera_zoom_level_changed(zoom_level:float) -> void:
-	GUIDE_GRID.update_alpha(zoom_level - 0.25) # -0.25 so the grid doesn't show up too early
+	GUIDE_GRID.update_alpha(zoom_level - 0.05) # -0.5 so the grid doesn't show up too early
 
 ## function called after a cut is made to check the current status of the rank.
 ## [br][br]
