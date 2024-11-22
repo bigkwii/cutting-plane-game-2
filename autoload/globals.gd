@@ -35,6 +35,6 @@ var GOMORY_CUT_CLICK_RANGE = 0.15
 ## epsilon for correcting a new point that got "close enough" to being integral
 var FORGIVENESS_SNAP_EPSILON = GEOMETRY_EPSILON * 10000
 ## epsilon for correcting a point that "close enough" to being colinear with it's 2 neighbors
-var FORGIVENESS_COLINEAR_EPSILON = GEOMETRY_EPSILON * 1000
+var FORGIVENESS_COLINEAR_EPSILON = GEOMETRY_EPSILON * 20000
 ## epsilon for the radius under which a number of points are considered to be the same point
-var FORGIVENESS_MERGE_EPSILON = GEOMETRY_EPSILON * 1000
+var FORGIVENESS_MERGE_EPSILON = GEOMETRY_EPSILON * 500

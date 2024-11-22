@@ -248,6 +248,19 @@ func polygon_area(polygon: PackedVector2Array) -> float:
 	area /= 2
 	return abs(area)
 
+## Calculates the SIGNED area of a polygon represented by a PackedVector2Array. Makes a distinction between CW and CCW winding orders.
+## [br][br]
+## polygon: PackedVector2Array the polygon to calculate the area of
+func polygon_signed_area(polygon: PackedVector2Array) -> float:
+	var area = 0.0
+	for i in range(polygon.size()):
+		var current_point = polygon[i]
+		var next_point = polygon[(i + 1) % polygon.size()]
+		area += (current_point.x * next_point.y - next_point.x * current_point.y)
+	area /= 2
+	return area
+
+
 ## Splits a polygon in two halves given a line, and returns BOTH halves' vertices in a Array[PackedVector2Array] (and the intersection points)
 ## [br][br]
 ## If something goes wrong, returns an empty array.
@@ -357,72 +370,72 @@ func would_cut_polygon(line_point: Vector2, line_dir: Vector2, allow_hull_cuttin
 		return false
 	return true
 
-## checks if the polygon is concave, and if so, returns the indeces of the concave vertices
-## [br][br]
-## returns an array with the indeces of the concave vertices. empty is the polygon is convex.
-func find_concave_idxs(polygon: PackedVector2Array) -> Array[int]:
-	if polygon.size() < 4:
-		return []
-	var concave_vertices_idxs: Array[int] = []
-	for i in range(polygon.size()):
-		var current_point = polygon[i]
-		var prev_point = polygon[(i - 1) % polygon.size()]
-		var next_point = polygon[(i + 1) % polygon.size()]
-		var cross_product = (current_point.y - prev_point.y) * (next_point.x - current_point.x) - (current_point.x - prev_point.x) * (next_point.y - current_point.y)
-		if cross_product > 0: # CROSS_PRODUCT_EPSILON breaks this for some reason
-			concave_vertices_idxs.append(i)
-	return concave_vertices_idxs
-
 ## runs "forgiveness" checks on a given polygon, for cleaning up floating point imprecision and quality of life
 func _run_forgiveness_checks(polygon: PackedVector2Array) -> void:
 	# 1) snap to lattice points if close enough
 	for i in range(polygon.size()):
 		var current_point = polygon[i]
-		# don't snap points already in the convex hull
-		if current_point.x == int(current_point.x) and current_point.y == int(current_point.y):
-			continue
 		if abs(current_point.x - round(current_point.x)) < GLOBALS.FORGIVENESS_SNAP_EPSILON and abs(current_point.y - round(current_point.y)) < GLOBALS.FORGIVENESS_SNAP_EPSILON:
-			var old_point = current_point
-			current_point = snapped( polygon[i], Vector2(GLOBALS.FORGIVENESS_SNAP_EPSILON, GLOBALS.FORGIVENESS_SNAP_EPSILON) )
-			var prev_point = polygon[(i - 1) % polygon.size()]
-			var next_point = polygon[(i + 1) % polygon.size()]
-			# check if the snap didn't make the polygon concave
-			var cross_product = (current_point.y - prev_point.y) * (next_point.x - current_point.x) - (current_point.x - prev_point.x) * (next_point.y - current_point.y)
-			if cross_product > 0:
-				current_point = old_point
-			polygon[i] = current_point
-	if find_concave_idxs(polygon).size() > 0:
-		DEBUG.log("Forgiveness checks failed. Concave vertices found.", 100)
+			# avoid snapping to points that aren't in the convex hull
+			if snapped( polygon[i], Vector2(GLOBALS.FORGIVENESS_SNAP_EPSILON, GLOBALS.FORGIVENESS_SNAP_EPSILON)) in CONVEX_INTEGER_HULL.convex_integer_hull:
+				var old_point = current_point
+				current_point = snapped( polygon[i], Vector2(GLOBALS.FORGIVENESS_SNAP_EPSILON, GLOBALS.FORGIVENESS_SNAP_EPSILON) )
+				var prev_point = polygon[(i - 1) % polygon.size()]
+				var next_point = polygon[(i + 1) % polygon.size()]
+				# check if the snap didn't make the polygon concave
+				var cross_product = (current_point.x - prev_point.x) * (next_point.y - prev_point.y) - (current_point.y - prev_point.y) * (next_point.x - prev_point.x)
+				if polygon_signed_area(polygon) > 0: # poly is CCW
+					if cross_product < 0:
+						current_point = old_point
+						continue
+				else: 								 # poly is CW
+					if cross_product > 0:
+						current_point = old_point
+						continue
+				polygon[i] = current_point
 	# 2) remove vertices that are very close to being colinear with their neighbors
-	for i in range(polygon.size()):
-		if i >= polygon.size(): # failsafe
-			break
+	var i = 0
+	while i < polygon.size():
 		if polygon.size() <= 3: # if removing a point would turn the poly into a line, break
 			break
 		var current_point = polygon[i]
 		# don't remove points from the convex hull
-		if current_point.x == int(current_point.x) and current_point.y == int(current_point.y):
+		if current_point in CONVEX_INTEGER_HULL.convex_integer_hull:
+			i += 1
 			continue
 		var prev_point = polygon[(i - 1) % polygon.size()]
 		var next_point = polygon[(i + 1) % polygon.size()]
 		# in the very rare case where snapping causes the hull to be cut... skip for now TODO: how do we handle this?
 		if would_cut_hull(prev_point, next_point - prev_point):
+			i += 1
 			continue
-		var dot = (current_point - prev_point).normalized().dot((next_point - current_point).normalized())
-		if abs(dot - 1) < GLOBALS.FORGIVENESS_COLINEAR_EPSILON:
+		# check if the point is colinear with its neighbors
+		var dir1 = (current_point - prev_point).normalized()
+		var dir2 = (next_point - current_point).normalized()
+		var angle_diff = abs(acos(dir1.dot(dir2)))
+		if angle_diff < GLOBALS.FORGIVENESS_COLINEAR_EPSILON:
+			# if we're about to reduce to 3 or fewer vertices, stop
+			if polygon.size() <= 4:
+				break
 			polygon.remove_at(i)
-			i -= 1
+		else:
+			i += 1
 	# 3) merge vertices that are very close to each other
-	for i in range(polygon.size()):
-		if i >= polygon.size(): # failsafe
-			break
-		if polygon.size() <= 3: # if removing a point would turn the poly into a line, break
-			break
+	i = 0
+	while i < polygon.size():
 		var current_point = polygon[i]
+		# don't remove points from the convex hull
+		if current_point in CONVEX_INTEGER_HULL.convex_integer_hull:
+			i += 1
+			continue
 		var next_point = polygon[(i + 1) % polygon.size()]
 		if current_point.distance_to(next_point) < GLOBALS.FORGIVENESS_MERGE_EPSILON:
+			# If we're about to reduce to 3 or fewer vertices, stop
+			if polygon.size() <= 4:
+				break
 			polygon.remove_at(i)
-			i -= 1
+		else:
+			i += 1
 
 ## returns all the intersection points of a circle with a polygon
 ## [br][br]

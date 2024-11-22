@@ -508,6 +508,8 @@ func _on_debug_cut_input_text_changed(new_text:String) -> void:
 
 # when the circle cut button is PRESSED, set the cut mode to CIRCLE_CUT
 func _on_circle_pressed() -> void:
+	if is_cutting:
+		return
 	if circle_cut_budget == 0:
 		DEBUG.log("Circle cut budget is 0!")
 		return
@@ -519,6 +521,8 @@ func _on_circle_pressed() -> void:
 
 # when the gomory cut button is PRESSED, set the cut mode to GOMORY_CUT
 func _on_gomory_pressed() -> void:
+	if is_cutting:
+		return
 	if gomory_cut_budget == 0:
 		DEBUG.log("Gomory cut budget is 0!")
 		return
@@ -531,6 +535,8 @@ func _on_gomory_pressed() -> void:
 
 # when the h split cut button is PRESSED, set the cut mode to H_SPLIT_CUT
 func _on_h_split_pressed() -> void:
+	if is_cutting:
+		return
 	if split_cut_budget == 0:
 		DEBUG.log("H/V split cut budget is 0!")
 		return
@@ -542,6 +548,8 @@ func _on_h_split_pressed() -> void:
 
 # when the v split cut button is PRESSED, set the cut mode to V_SPLIT_CUT
 func _on_v_split_pressed() -> void:
+	if is_cutting:
+		return
 	if split_cut_budget == 0:
 		DEBUG.log("H/V split cut budget is 0!")
 		return
