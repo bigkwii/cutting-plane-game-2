@@ -424,10 +424,6 @@ func _run_forgiveness_checks(polygon: PackedVector2Array) -> void:
 	i = 0
 	while i < polygon.size():
 		var current_point = polygon[i]
-		# don't remove points from the convex hull
-		if current_point in CONVEX_INTEGER_HULL.convex_integer_hull:
-			i += 1
-			continue
 		var next_point = polygon[(i + 1) % polygon.size()]
 		if current_point.distance_to(next_point) < GLOBALS.FORGIVENESS_MERGE_EPSILON:
 			# If we're about to reduce to 3 or fewer vertices, stop
