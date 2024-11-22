@@ -157,10 +157,6 @@ func _on_next_level_btn_pressed():
 func play_level_finish_anim():
 	ANIM_PLAYER.play("level_finish")
 
-## this animation open the menu at the end and pauses the game
-func play_next_level_anim():
-	ANIM_PLAYER.play("next_level")
-
 ## toggles pause
 func toggle_pause():
 	get_tree().paused = !get_tree().paused

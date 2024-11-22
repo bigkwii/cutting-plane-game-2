@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://dx4csne7vpmre" path="res://scenes/cut_button.tscn" id="7_1qqha"]
 
 [node name="level" type="Node2D"]
+process_mode = 1
 script = ExtResource("1_7muqx")
 
 [node name="lattice_grid" parent="." instance=ExtResource("2_4qubn")]
