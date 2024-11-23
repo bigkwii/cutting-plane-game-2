@@ -31,6 +31,10 @@ func play_short():
 	# set origin on clicked vertex
 	global_position = data["selected_vertex"] * data["scaling"] + data["offset"]
 	# fill in the equation labels
+	# the bad equation parameters sometimes come as NaN. replace with 0 if so
+	data["badGMIaLatticex"] = 0 if is_nan(data["badGMIaLatticex"]) else data["badGMIaLatticex"]
+	data["badGMIaLatticey"] = 0 if is_nan(data["badGMIaLatticey"]) else data["badGMIaLatticey"]
+	data["badGMIb"] = 0 if is_nan(data["badGMIb"]) else data["badGMIb"]
 	var eq1_y_sign = " + " if data["A1y"] >= 0 else " - "
 	var eq2_y_sign = " + " if data["A2y"] >= 0 else " - "
 	var eq3_y_sign = " + " if data["GMIaLatticey"] >= 0 else " - "
