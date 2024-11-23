@@ -1,13 +1,15 @@
-[gd_scene load_steps=4 format=3 uid="uid://ygxl8dhgym47"]
+[gd_scene load_steps=5 format=3 uid="uid://ygxl8dhgym47"]
 
 [ext_resource type="Script" path="res://scenes/tutorial.gd" id="1_mdb0r"]
 [ext_resource type="Theme" uid="uid://bqljbjsn8elrs" path="res://assets/themes/default.tres" id="2_mby48"]
 [ext_resource type="FontFile" uid="uid://bvvtosdeupbva" path="res://assets/fonts/extrathick.ttf" id="3_esj5r"]
+[ext_resource type="FontFile" uid="uid://3jdkpqo41bvf" path="res://assets/fonts/thick.ttf" id="4_kffpb"]
 
 [node name="tutorial" type="Node2D"]
 script = ExtResource("1_mdb0r")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 2
 
 [node name="HUD" type="Control" parent="CanvasLayer"]
 layout_mode = 3
@@ -19,6 +21,7 @@ offset_right = -64.0
 offset_bottom = -64.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 theme = ExtResource("2_mby48")
 
 [node name="gamemode_label" type="Label" parent="CanvasLayer/HUD"]
@@ -28,6 +31,54 @@ offset_bottom = 23.0
 theme_override_fonts/font = ExtResource("3_esj5r")
 theme_override_font_sizes/font_size = 30
 text = "Tutorial Mode"
+
+[node name="TUTORIAL" type="Control" parent="CanvasLayer/HUD"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="tutorial_popup" type="Panel" parent="CanvasLayer/HUD/TUTORIAL"]
+custom_minimum_size = Vector2(256, 256)
+layout_mode = 0
+offset_left = 640.0
+offset_top = 448.0
+offset_right = 1224.0
+offset_bottom = 704.0
+metadata/_edit_group_ = true
+
+[node name="tutorial_text" type="RichTextLabel" parent="CanvasLayer/HUD/TUTORIAL/tutorial_popup"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 32.0
+offset_top = 32.0
+offset_right = -32.0
+offset_bottom = -64.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/normal_font = ExtResource("4_kffpb")
+theme_override_fonts/bold_italics_font = ExtResource("3_esj5r")
+theme_override_font_sizes/normal_font_size = 40
+theme_override_font_sizes/bold_font_size = 40
+bbcode_enabled = true
+text = "Nice job! Circle cuts are simple, but not very efficient..."
+
+[node name="tutorial_next" type="Button" parent="CanvasLayer/HUD/TUTORIAL/tutorial_popup"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -96.0
+offset_top = -94.0
+offset_right = -32.0
+offset_bottom = -32.0
+grow_horizontal = 0
+grow_vertical = 0
+text = ">"
 
 [node name="MENU" type="Control" parent="CanvasLayer/HUD"]
 process_mode = 2
@@ -88,49 +139,6 @@ offset_top = 32.0
 offset_right = -32.0
 grow_horizontal = 0
 text = "X"
-
-[node name="TUTORIAL" type="Control" parent="CanvasLayer/HUD"]
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="tutorial_popup" type="Panel" parent="CanvasLayer/HUD/TUTORIAL"]
-custom_minimum_size = Vector2(256, 256)
-layout_mode = 0
-offset_left = 296.0
-offset_top = 216.0
-offset_right = 992.0
-offset_bottom = 624.0
-metadata/_edit_group_ = true
-
-[node name="tutorial_text" type="RichTextLabel" parent="CanvasLayer/HUD/TUTORIAL/tutorial_popup"]
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 32.0
-offset_top = 32.0
-offset_right = -32.0
-offset_bottom = -64.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "TEST TEST TEST"
-
-[node name="tutorial_next" type="Button" parent="CanvasLayer/HUD/TUTORIAL/tutorial_popup"]
-custom_minimum_size = Vector2(64, 64)
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -96.0
-offset_top = -94.0
-offset_right = -32.0
-offset_bottom = -32.0
-grow_horizontal = 0
-grow_vertical = 0
-text = ">"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 
