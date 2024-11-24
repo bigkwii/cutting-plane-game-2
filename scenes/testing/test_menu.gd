@@ -2,6 +2,7 @@ extends Node2D
 
 @onready var POLYGON = $polygon
 @onready var VFXS = $vfxs
+@onready var EXIT_BUTTON = $CanvasLayer/UI/VBoxContainer/exit_btn
 @onready var FREE_PLAY_LEVEL_SELECT = $CanvasLayer/UI/free_play_level_select
 @onready var ARCADE_MODE_POPUP = $CanvasLayer/UI/arcade_mode_popup
 @onready var TUTORIAL_MODE_POPUP = $CanvasLayer/UI/tutorial_mode_popup
@@ -32,8 +33,9 @@ func _ready():
 		CRT_TOGGLE_BTN.visible = false
 		FULLSCREEN_TOGGLE_BTN.visible = false
 		CRT.visible = false
-	elif OS.get_name() == "Web": # disabled by default, option available
+	elif OS.get_name() == "Web": # disabled by default, option available, hide exit button
 		CRT.visible = false
+		EXIT_BUTTON.visible = false
 	POLYGON.build_polygon()
 	FREE_PLAY_LEVEL_SELECT.visible = false
 	ARCADE_MODE_POPUP.visible = false
