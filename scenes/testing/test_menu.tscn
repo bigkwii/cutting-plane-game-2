@@ -274,7 +274,7 @@ horizontal_alignment = 1
 
 [node name="arcade_desc" type="Label" parent="CanvasLayer/UI/arcade_mode_popup/VBoxContainer"]
 layout_mode = 2
-text = "Play all levels and go for a high score!"
+text = "Play all 9 levels and go for a high score!"
 horizontal_alignment = 1
 
 [node name="start_arcade" type="Button" parent="CanvasLayer/UI/arcade_mode_popup"]
