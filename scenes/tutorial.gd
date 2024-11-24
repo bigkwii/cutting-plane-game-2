@@ -130,21 +130,21 @@ var tutorial_popups: Dictionary = {
 	"0_0" : { # ONLY SHOW ORIGIN
 		"size": Vector2(328, 272),
 		"position": Vector2(384, 64),
-		"text": "<-This dot is the [b]origin[/b], the point (0,0)."
+		"text": "<-This little dot is [color=red][b]the origin[/b][/color], the point at coordinates (0,0)."
 	},
 	"0_1" : { # SHOW X AND Y AXIS
 		"size": Vector2(672, 344),
 		"position": Vector2(448, 200),
-		"text": """These are the [color=red]X AXIS[/color] and the [color=blue]Y AXIS[/color].
+		"text": """These are the [color=red][b]X AXIS[/b][/color] and the [color=blue][b]Y AXIS[/b][/color].
 
-(yes, usually the y axis is "up", but that doesn't matter too much)"""
+(yes, usually the y axis is "up", not "down", but that doesn't matter too much)"""
 	},
 	"0_2" : { # SHOW THE ENTIRE LATTICE GRID
 		"size": Vector2(600, 310),
 		"position": Vector2(0, 646),
 		"text": """And these are [b]LATTICE POINTS[/b].
 
-They are the points where the x and y coordinates are [b]both whole numebrs[/b]."""
+They are the points where the x and y coordinates are [color=red][b]both whole numebrs[/b][/color]."""
 	},
 	"0_3" : { # SHOW LINE 1
 		"size": Vector2(528, 304),
@@ -227,7 +227,7 @@ Depending on where you click, the cut [color=red][b]won't always be maximal[/b][
 	"2_1" : { # on level complete
 		"size": Vector2(984, 456), # UPDATE THIS!
 		"position": Vector2(0, 504),
-		"text": """Yup! ]split cuts can do that!
+		"text": """Yup! split cuts can do that!
 
 Also, if you get [color=red][b]more than one cut[/b][/color] with one cutting plane, you'll get [color=red][b]bonus points[/b][/color]!"""
 	},
@@ -236,7 +236,7 @@ Also, if you get [color=red][b]more than one cut[/b][/color] with one cutting pl
 		"position": Vector2(0, 504),
 		"text": """Like circle cuts, split cuts [color=red][b]stop as soon as they hit the lattice grid[/b][/color].
 
-A good strategy is to use a [color=red][b]circle cuts[/b][/color] first to [color=red][b]trim a corner[/b][/color] split cuts can't get to, and then use a [color=red][b]split cut[/b][/color] to [color=red][b]finish the job[/b][/color]."""
+A good strategy is to use a [color=red][b]circle cut[/b][/color] first to [color=red][b]trim a corner[/b][/color] split cuts can't get to, and then use a [color=red][b]split cut[/b][/color] to [color=red][b]finish the job[/b][/color]."""
 	},
 	"3_1" : { # on level complete
 		"size": Vector2(984, 456), # UPDATE THIS!
@@ -280,11 +280,13 @@ But whoops! [b]x'[/b] and [b]y'[/b] are [b]decimals[/b]! And you want [b]whole n
 		"position": Vector2(0, 504),
 		"text" : """The [color=red][b]Gomory cut method[/b][/color] says:
 
-First, write out [b]x'[/b] algebraically in a special way, as per the Gomory cut method. Since it's a decimal value, the end it will end up looking like:
+First, write out [b]x'[/b] algebraically in a special way, as per the Gomory cut method.
+
+Since it's a decimal value, it will end up looking something like:
 
 [color=red][b]x' = (some whole number) + (some decimal)[/b][/color]
 
-That decimal part can be used to generate a [color=red][b]new line[/b][/color] that, when used to cut the polygon, will [color=red][b]nudge you closer to a whole number![/b][/color]"""
+That decimal part can be used to generate a [color=red][b]new line[/b][/color] that, when used to cut the polygon, will [color=red][b]nudge you closer to whole number values[/b][/color]!"""
 	},
 	"4_5" : { # gomory cut pt 1
 		"size": Vector2(984, 456), # UPDATE THIS!
@@ -342,6 +344,11 @@ They're [color=red][b]guaranteed to get closer and closer[/b][/color] to a solut
 		"text" : """Don't worry, in this game, [color=red][b]close enough is good enough[/b][/color]!
 
 If you get [color=red][b]close enough[/b][/color] to a solution, the polygon will [color=red][b]correct itself[/b][/color]."""
+	},
+	"6_4" : {
+		"size": Vector2(984, 456), # UPDATE THIS!
+		"position": Vector2(0, 504),
+		"text" : """There you go!"""
 	}
 }
 
@@ -516,11 +523,6 @@ func _on_cut_made(_score: int):
 		open_tutorial_popup(current_level_idx, current_tutorial_popup_idx)
 	
 func _on_level_completed(_rank: String, _rank_bonus: int, _budget_bonus: int, _remaining_circle: int, _remaining_gomory: int, _remaining_split: int):
-	if current_level_idx == 6:
-		# end of tutorial
-		TUTORIAL_MODE_FINISH.visible = true
-		get_tree().paused = true
-		return
 	disable_level_input()
 	open_tutorial_popup(current_level_idx, current_tutorial_popup_idx)
 
@@ -695,6 +697,10 @@ func _on_tutorial_next_pressed():
 					enable_level_input()
 		6:
 			match current_tutorial_popup_idx:
+				4: # end of tutorial
+					close_tutorial_popup()
+					TUTORIAL_MODE_FINISH.visible = true
+					get_tree().paused = true
 				3: # gameplay starts here
 					current_tutorial_popup_idx += 1
 					close_tutorial_popup()
