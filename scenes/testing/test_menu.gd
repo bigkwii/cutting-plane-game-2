@@ -5,6 +5,10 @@ extends Node2D
 @onready var FREE_PLAY_LEVEL_SELECT = $CanvasLayer/UI/free_play_level_select
 @onready var ARCADE_MODE_POPUP = $CanvasLayer/UI/arcade_mode_popup
 @onready var TUTORIAL_MODE_POPUP = $CanvasLayer/UI/tutorial_mode_popup
+@onready var EDITOR_MODE_POPUP = $CanvasLayer/UI/editor_mode_popup
+@onready var SPEEDRUN_MODE_POPUP = $CanvasLayer/UI/speedrun_mode_popup
+@onready var LEADERBOARDS_POPUP = $CanvasLayer/UI/leaderboards_popup
+@onready var ABOUT_POPUP = $CanvasLayer/UI/about_popup
 
 @onready var CRT_TOGGLE_BTN = $CanvasLayer/UI/HBoxContainer/toggle_crt
 @onready var FULLSCREEN_TOGGLE_BTN = $CanvasLayer/UI/HBoxContainer/toggle_fullscreen
@@ -13,6 +17,10 @@ extends Node2D
 signal start_free_play(level_path: String)
 signal start_arcade
 signal start_tutorial
+signal start_editor
+signal start_speedrun
+signal start_arcade_leaderboard
+signal start_speedrun_leaderboard
 
 # - preloaded scenes -
 var cut_vfx = preload("res://scenes/cut_vfx.tscn")
@@ -120,6 +128,40 @@ func _on_tutorial_x_btn_pressed():
 func _on_start_tutorial_pressed():
 	start_tutorial.emit()
 	
+# - editor mode -
+
+func _on_editor_btn_pressed():
+	if not EDITOR_MODE_POPUP.visible:
+		EDITOR_MODE_POPUP.visible = true
+
+func _on_editor_x_btn_pressed():
+	if EDITOR_MODE_POPUP.visible:
+		EDITOR_MODE_POPUP.visible = false
+
+func _on_start_editor_pressed():
+	start_editor.emit()
+
+# - speedrun mode -
+
+func _on_speedrun_btn_pressed():
+	if not SPEEDRUN_MODE_POPUP.visible:
+		SPEEDRUN_MODE_POPUP.visible = true
+
+func _on_speedrun_x_btn_pressed():
+	if SPEEDRUN_MODE_POPUP.visible:
+		SPEEDRUN_MODE_POPUP.visible = false
+
+func _on_start_speedrun_pressed():
+	start_speedrun.emit()
+
+# - leaderboards -
+
+# - about -
+
+# opens link in default browser
+func _on_about_desc_meta_clicked(meta):
+	OS.shell_open(str(meta))
+
 # - crt toggle -
 
 func _on_toggle_crt_pressed():

@@ -97,30 +97,22 @@ text = "Free Play"
 
 [node name="editor_btn" type="Button" parent="CanvasLayer/UI/VBoxContainer"]
 layout_mode = 2
-tooltip_text = "W.I.P!!!"
 theme_override_fonts/font = ExtResource("3_7mkkd")
-disabled = true
 text = "Level Editor"
 
 [node name="speedrun_btn" type="Button" parent="CanvasLayer/UI/VBoxContainer"]
 layout_mode = 2
-tooltip_text = "W.I.P!!!"
 theme_override_fonts/font = ExtResource("3_7mkkd")
-disabled = true
 text = "Speedrun"
 
 [node name="leaderboards_btn" type="Button" parent="CanvasLayer/UI/VBoxContainer"]
 layout_mode = 2
-tooltip_text = "W.I.P!!!"
 theme_override_fonts/font = ExtResource("3_7mkkd")
-disabled = true
 text = "Leaderboards"
 
 [node name="about_btn" type="Button" parent="CanvasLayer/UI/VBoxContainer"]
 layout_mode = 2
-tooltip_text = "W.I.P!!!"
 theme_override_fonts/font = ExtResource("3_7mkkd")
-disabled = true
 text = "About"
 
 [node name="exit_btn" type="Button" parent="CanvasLayer/UI/VBoxContainer"]
@@ -137,10 +129,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -832.0
-offset_top = -424.0
-offset_right = 832.0
-offset_bottom = 424.0
+offset_left = -768.0
+offset_top = -412.0
+offset_right = 768.0
+offset_bottom = 420.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("4_xvnma")
@@ -249,9 +241,9 @@ anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 128.0
-offset_top = 128.0
+offset_top = 64.0
 offset_right = -128.0
-offset_bottom = -128.0
+offset_bottom = -56.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -315,9 +307,9 @@ anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 128.0
-offset_top = 128.0
+offset_top = 64.0
 offset_right = -128.0
-offset_bottom = -128.0
+offset_bottom = -56.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -374,6 +366,272 @@ offset_bottom = 60.0
 grow_horizontal = 0
 text = " X "
 
+[node name="editor_mode_popup" type="Panel" parent="CanvasLayer/UI"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 128.0
+offset_top = 64.0
+offset_right = -128.0
+offset_bottom = -56.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/editor_mode_popup"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -649.5
+offset_top = 32.0
+offset_right = 649.5
+offset_bottom = 110.0
+grow_horizontal = 2
+
+[node name="editor_label" type="Label" parent="CanvasLayer/UI/editor_mode_popup/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("5_ba3wp")
+text = "Level Editor"
+horizontal_alignment = 1
+
+[node name="editor_desc" type="Label" parent="CanvasLayer/UI/editor_mode_popup/VBoxContainer"]
+layout_mode = 2
+text = "Make and play your own level"
+horizontal_alignment = 1
+
+[node name="start_editor" type="Button" parent="CanvasLayer/UI/editor_mode_popup"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -124.0
+offset_top = -82.0
+offset_right = 124.0
+offset_bottom = 82.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("2_b4vfd")
+theme_override_font_sizes/font_size = 120
+text = "Start
+Editor"
+
+[node name="editor_x_btn" type="Button" parent="CanvasLayer/UI/editor_mode_popup"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -48.0
+offset_top = 32.0
+offset_right = -32.0
+offset_bottom = 60.0
+grow_horizontal = 0
+text = " X "
+
+[node name="speedrun_mode_popup" type="Panel" parent="CanvasLayer/UI"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 128.0
+offset_top = 64.0
+offset_right = -128.0
+offset_bottom = -56.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/speedrun_mode_popup"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -649.5
+offset_top = 32.0
+offset_right = 649.5
+offset_bottom = 110.0
+grow_horizontal = 2
+
+[node name="speedrun_label" type="Label" parent="CanvasLayer/UI/speedrun_mode_popup/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("5_ba3wp")
+text = "Speedrun Mode"
+horizontal_alignment = 1
+
+[node name="speedrun_desc" type="Label" parent="CanvasLayer/UI/speedrun_mode_popup/VBoxContainer"]
+layout_mode = 2
+text = "Play all 9 levels as fast as possible.
+S rank is REQUIRED!"
+horizontal_alignment = 1
+
+[node name="start_speedrun" type="Button" parent="CanvasLayer/UI/speedrun_mode_popup"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -124.0
+offset_top = -82.0
+offset_right = 124.0
+offset_bottom = 82.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("2_b4vfd")
+theme_override_font_sizes/font_size = 120
+text = "Start
+Speedrun"
+
+[node name="speedrun_x_btn" type="Button" parent="CanvasLayer/UI/speedrun_mode_popup"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -48.0
+offset_top = 32.0
+offset_right = -32.0
+offset_bottom = 60.0
+grow_horizontal = 0
+text = " X "
+
+[node name="leaderboards_popup" type="Panel" parent="CanvasLayer/UI"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 128.0
+offset_top = 64.0
+offset_right = -128.0
+offset_bottom = -60.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/leaderboards_popup"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -649.5
+offset_top = 32.0
+offset_right = 649.5
+offset_bottom = 110.0
+grow_horizontal = 2
+
+[node name="leaderboards_label" type="Label" parent="CanvasLayer/UI/leaderboards_popup/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("5_ba3wp")
+text = "Leaderboards"
+horizontal_alignment = 1
+
+[node name="leaderboards_desc" type="Label" parent="CanvasLayer/UI/leaderboards_popup/VBoxContainer"]
+layout_mode = 2
+text = "See the Arcade Mode and
+Speedrun Mode Leaderboards"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/leaderboards_popup"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -548.0
+offset_top = -7.0
+offset_right = 548.0
+offset_bottom = 117.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 64
+
+[node name="start_arcade_leaderboard" type="Button" parent="CanvasLayer/UI/leaderboards_popup/HBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_b4vfd")
+theme_override_font_sizes/font_size = 120
+text = "Arcade"
+
+[node name="start_speedrun_leaderboard" type="Button" parent="CanvasLayer/UI/leaderboards_popup/HBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_b4vfd")
+theme_override_font_sizes/font_size = 120
+text = "Speedrun"
+
+[node name="leaderboards_x_btn" type="Button" parent="CanvasLayer/UI/leaderboards_popup"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -48.0
+offset_top = 32.0
+offset_right = -32.0
+offset_bottom = 60.0
+grow_horizontal = 0
+text = " X "
+
+[node name="about_popup" type="Panel" parent="CanvasLayer/UI"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 128.0
+offset_top = 64.0
+offset_right = -128.0
+offset_bottom = -56.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/about_popup"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -649.5
+offset_top = 32.0
+offset_right = 649.5
+offset_bottom = 110.0
+grow_horizontal = 2
+theme_override_constants/separation = 64
+
+[node name="about_label" type="Label" parent="CanvasLayer/UI/about_popup/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("5_ba3wp")
+text = "About The Cutting Plane Game v2"
+horizontal_alignment = 1
+
+[node name="about_desc" type="RichTextLabel" parent="CanvasLayer/UI/about_popup/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("3_7mkkd")
+theme_override_font_sizes/normal_font_size = 40
+bbcode_enabled = true
+text = "A game made with the intent of illustrating an important concept in applied optimization: The Cutting Planes.
+
+Made by Alvaro \"big_kwii\" Morales T.
+
+Source Code:
+[url]https://github.com/bigkwii/cutting-plane-game-2[/url]
+
+Based on the original The Cutting Plane Game by Gonzalo Muñoz:
+
+[url]https://gonzalomunoz.org/the-cutting-plane-game/[/url]"
+fit_content = true
+
+[node name="editor_x_btn" type="Button" parent="CanvasLayer/UI/about_popup"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -48.0
+offset_top = 32.0
+offset_right = -32.0
+offset_bottom = 60.0
+grow_horizontal = 0
+text = " X "
+
 [node name="polygon" parent="." instance=ExtResource("2_3o1bf")]
 position = Vector2(960, 576)
 initial_vertices = Array[Vector2]([Vector2(-1.8, -1.5), Vector2(-1.5, -1.8), Vector2(1.5, -1.8), Vector2(1.8, -1.5), Vector2(1.8, 1.5), Vector2(1.5, 1.8), Vector2(-1.5, 1.8), Vector2(-1.8, 1.5)])
@@ -401,3 +659,4 @@ position = Vector2(960, 576)
 [connection signal="pressed" from="CanvasLayer/UI/arcade_mode_popup/arcade_x_btn" to="." method="_on_arcade_x_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/tutorial_mode_popup/start_tutorial" to="." method="_on_start_tutorial_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/tutorial_mode_popup/tutorial_x_btn" to="." method="_on_tutorial_x_btn_pressed"]
+[connection signal="meta_clicked" from="CanvasLayer/UI/about_popup/VBoxContainer/about_desc" to="." method="_on_about_desc_meta_clicked"]

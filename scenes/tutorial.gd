@@ -144,7 +144,7 @@ var tutorial_popups: Dictionary = {
 		"position": Vector2(408, 152),
 		"text": """And these are [b]LATTICE POINTS[/b].
 
-They are the points where the x and y coordinates are [color=red][b]both whole numebrs[/b][/color]."""
+They are the points where the x and y coordinates are [color=red][b]both whole numbers[/b][/color]."""
 	},
 	"0_3" : { # SHOW LINE 1
 		"size": Vector2(704, 344),
