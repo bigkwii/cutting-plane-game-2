@@ -621,7 +621,7 @@ Based on the original The Cutting Plane Game by Gonzalo Muñoz:
 [url]https://gonzalomunoz.org/the-cutting-plane-game/[/url]"
 fit_content = true
 
-[node name="editor_x_btn" type="Button" parent="CanvasLayer/UI/about_popup"]
+[node name="about_x_btn" type="Button" parent="CanvasLayer/UI/about_popup"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 1.0
@@ -645,6 +645,10 @@ position = Vector2(960, 576)
 [connection signal="pressed" from="CanvasLayer/UI/VBoxContainer/tutorial_btn" to="." method="_on_tutorial_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/VBoxContainer/arcade_btn" to="." method="_on_arcade_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/VBoxContainer/free_play_btn" to="." method="_on_free_play_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/UI/VBoxContainer/editor_btn" to="." method="_on_editor_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/UI/VBoxContainer/speedrun_btn" to="." method="_on_speedrun_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/UI/VBoxContainer/leaderboards_btn" to="." method="_on_leaderboards_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/UI/VBoxContainer/about_btn" to="." method="_on_about_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/VBoxContainer/exit_btn" to="." method="_on_exit_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/free_play_level_select/GridContainer/lvl1_btn" to="." method="_on_lvl_1_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/free_play_level_select/GridContainer/lvl2_btn" to="." method="_on_lvl_2_btn_pressed"]
@@ -660,4 +664,10 @@ position = Vector2(960, 576)
 [connection signal="pressed" from="CanvasLayer/UI/arcade_mode_popup/arcade_x_btn" to="." method="_on_arcade_x_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/tutorial_mode_popup/start_tutorial" to="." method="_on_start_tutorial_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/tutorial_mode_popup/tutorial_x_btn" to="." method="_on_tutorial_x_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/UI/editor_mode_popup/start_editor" to="." method="_on_start_editor_pressed"]
+[connection signal="pressed" from="CanvasLayer/UI/editor_mode_popup/editor_x_btn" to="." method="_on_editor_x_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/UI/speedrun_mode_popup/start_speedrun" to="." method="_on_start_speedrun_pressed"]
+[connection signal="pressed" from="CanvasLayer/UI/speedrun_mode_popup/speedrun_x_btn" to="." method="_on_speedrun_x_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/UI/leaderboards_popup/leaderboards_x_btn" to="." method="_on_leaderboards_x_btn_pressed"]
 [connection signal="meta_clicked" from="CanvasLayer/UI/about_popup/VBoxContainer/about_desc" to="." method="_on_about_desc_meta_clicked"]
+[connection signal="pressed" from="CanvasLayer/UI/about_popup/about_x_btn" to="." method="_on_about_x_btn_pressed"]

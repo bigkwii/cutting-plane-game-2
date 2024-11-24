@@ -161,7 +161,23 @@ func _on_start_speedrun_pressed():
 
 # - leaderboards -
 
+func _on_leaderboards_btn_pressed():
+	if not LEADERBOARDS_POPUP.visible:
+		LEADERBOARDS_POPUP.visible = true
+
+func _on_leaderboards_x_btn_pressed():
+	if LEADERBOARDS_POPUP.visible:
+		LEADERBOARDS_POPUP.visible = false
+
 # - about -
+
+func _on_about_btn_pressed():
+	if not ABOUT_POPUP.visible:
+		ABOUT_POPUP.visible = true
+
+func _on_about_x_btn_pressed():
+	if ABOUT_POPUP.visible:
+		ABOUT_POPUP.visible = false
 
 # opens link in default browser
 func _on_about_desc_meta_clicked(meta):

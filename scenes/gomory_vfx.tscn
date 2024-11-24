@@ -367,24 +367,24 @@ theme = ExtResource("2_4iqqr")
 [node name="line1" type="Line2D" parent="."]
 visible = false
 points = PackedVector2Array(-10000, 0, 10000, 0)
-width = 1.0
+width = 2.0
 default_color = Color(1, 0, 0, 1)
 
 [node name="line2" type="Line2D" parent="."]
 visible = false
 points = PackedVector2Array(-10000, 0, 10000, 0)
-width = 1.0
+width = 2.0
 default_color = Color(0, 0, 1, 1)
 
 [node name="line3" type="Line2D" parent="."]
 visible = false
 points = PackedVector2Array(-10000, 0, 10000, 0)
-width = 1.0
+width = 2.0
 
 [node name="line4" type="Line2D" parent="."]
 visible = false
 points = PackedVector2Array(-10000, 0, 10000, 0)
-width = 1.0
+width = 2.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 process_mode = 1
