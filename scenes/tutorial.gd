@@ -128,80 +128,80 @@ var current_tutorial_popup_idx: int = 0
 ## the content and sizes of the tutorial popups
 var tutorial_popups: Dictionary = {
 	"0_0" : { # ONLY SHOW ORIGIN
-		"size": Vector2(328, 272),
-		"position": Vector2(384, 64),
+		"size": Vector2(360, 312),
+		"position": Vector2(424, 64),
 		"text": "<-This little dot is [color=red][b]the origin[/b][/color], the point at coordinates (0,0)."
 	},
 	"0_1" : { # SHOW X AND Y AXIS
-		"size": Vector2(672, 344),
-		"position": Vector2(448, 200),
+		"size": Vector2(651, 352),
+		"position": Vector2(408, 152),
 		"text": """These are the [color=red][b]X AXIS[/b][/color] and the [color=blue][b]Y AXIS[/b][/color].
 
 (yes, usually the y axis is "up", not "down", but that doesn't matter too much)"""
 	},
 	"0_2" : { # SHOW THE ENTIRE LATTICE GRID
-		"size": Vector2(600, 310),
-		"position": Vector2(0, 646),
+		"size": Vector2(792, 272),
+		"position": Vector2(408, 152),
 		"text": """And these are [b]LATTICE POINTS[/b].
 
 They are the points where the x and y coordinates are [color=red][b]both whole numebrs[/b][/color]."""
 	},
 	"0_3" : { # SHOW LINE 1
-		"size": Vector2(528, 304),
-		"position": Vector2(0, 656),
+		"size": Vector2(704, 344),
+		"position": Vector2(64, 488),
 		"text": """This is a [color=red][b]LINE[/b][/color].
 
 It can be defined as all the points that satisfy an equation of this type:
 
 [color=red][b]Ax + By = C[/b][/color]."""
 	},
-	"0_4" : { # SHOW ALL LINES
-		"size": Vector2(728, 304),
-		"position": Vector2(0, 656),
+	"0_4" : { # SHOW ALL LINES AND DUMMY POLYGON
+		"size": Vector2(704, 424),
+		"position": Vector2(0, 536),
 		"text": """If we add more lines...
 
 ...we will eventually get a [color=red][b]POLYGON[/b][/color].
 
 The vertices of the polygon are the points where the lines cross each other."""
 	},
-	"0_5" : { # CONV HULL BUTTON BECOMES VISIBLE AND HULL IS FORCED TO SHOW
-		"size": Vector2(384, 584),
-		"position": Vector2(1192, 360),
+	"0_5" : { # SHOW HULL BUTTON BECOMES VISIBLE AND HULL IS FORCED TO SHOW
+		"size": Vector2(447, 512),
+		"position": Vector2(1144, 448),
 		"text": """Take a look at [color=blue][b]this[/b][/color]: this polygon encloses some [b]lattice points[/b].
 
 These points also form a polygon. It's called the [color=blue][b]INTEGER CONVEX HULL[/b][/color]."""
 	},
-	"0_6" : {
-		"size": Vector2(384, 384),
-		"position": Vector2(1192, 560),
+	"0_6" : { # FORCE HIDE HULL
+		"size": Vector2(447, 384),
+		"position": Vector2(1144, 576),
 		"text": """In this game, your goal is to get to that [color=blue][b]convex hull[/b][/color].
 
 How? With [b]the cutting planes[/b]."""
 	},
-	"0_7" : { # hull hidden, circle cut button visible
-		"size": Vector2(600, 280),
-		"position": Vector2(1024, 312),
-		"text": """Introducting the first cutting plane: [color=red][b]the circle cut[/b][/color]
-
-Select it and then click on the screen."""
+	"0_7" : { # SHOW CIRCLE CUT BUTTON
+		"size": Vector2(391, 272),
+		"position": Vector2(1248, 280),
+		"text": """Introducting the first cutting plane: [color=red][b]the circle cut[/b][/color]"""
 	},
-	"0_8" : { # after the first successful circle cut
-		"size": Vector2(744, 408),
-		"position": Vector2(880, 240),
-		"text": """It grows a circle until it hits the [b]lattice grid[/b].
+	"0_8" : {
+		"size": Vector2(631, 552),
+		"position": Vector2(1008, 200),
+		"text": """It will grow a circle until it hits the [b]lattice grid[/b].
 
 Then, if the [b]circle[/b] intersects the [color="red"][b]polygon[/b][/color], it will try to cut it along that line.
 
-Try using it to get to the [color="blue"][b]convex hull[/b][/color]!"""
+Try using it to get to the [color="blue"][b]convex hull[/b][/color]!
+
+[color=red][b]Select it[/b][/color] and then [color=red][b]click on the screen[/b][/color]."""
 	},
 	"0_9" : { # on level complete
-		"size": Vector2(584, 256),
-		"position": Vector2(640, 448),
+		"size": Vector2(448, 256),
+		"position": Vector2(64, 576),
 		"text": """Nice job! Circle cuts are simple, but not very efficient..."""
 	},
 	"1_0" : { # split cut introduction. show only h and v cuts
-		"size": Vector2(984, 456), # UPDATE THIS!
-		"position": Vector2(0, 504),
+		"size": Vector2(448, 448), 
+		"position": Vector2(1192, 240),
 		"text": """Let's try something more powerful.
 
 Introducing: [color=red][b]horizontal and vertical split cuts[/b][/color].
@@ -209,8 +209,8 @@ Introducing: [color=red][b]horizontal and vertical split cuts[/b][/color].
 Try them out!"""
 	},
 	"1_1" : { # on level complete
-		"size": Vector2(900, 550), # UPDATE THIS!
-		"position": Vector2(0, 554),
+		"size": Vector2(976, 448),
+		"position": Vector2(65, 384),
 		"text": """That was a lot more efficient, wasn't it?
 
 Note that [color=red][b]splits[/b][/color] also stop as soon as they hit the [b]lattice grid[/b].
@@ -220,49 +220,49 @@ Depending on where you click, the cut [color=red][b]won't always be maximal[/b][
 (By the way, you can zoom in with [color=red][b]scroll wheel[/b][/color] or by [color=red][b]pinching the screen[/b][/color].)"""
 	},
 	"2_0" : { # split cut pt 2
-		"size": Vector2(984, 456), # UPDATE THIS!
-		"position": Vector2(0, 504),
+		"size": Vector2(352, 256),
+		"position": Vector2(480, 400),
 		"text": """Let's see if you can figure this one out."""
 	},
 	"2_1" : { # on level complete
-		"size": Vector2(984, 456), # UPDATE THIS!
-		"position": Vector2(0, 504),
+		"size": Vector2(767, 280),
+		"position": Vector2(65, 552),
 		"text": """Yup! split cuts can do that!
 
 Also, if you get [color=red][b]more than one cut[/b][/color] with one cutting plane, you'll get [color=red][b]bonus points[/b][/color]!"""
 	},
 	"3_0" : { # split and circle
-		"size": Vector2(984, 456), # UPDATE THIS!
-		"position": Vector2(0, 504),
+		"size": Vector2(767, 424),
+		"position": Vector2(64, 408),
 		"text": """Like circle cuts, split cuts [color=red][b]stop as soon as they hit the lattice grid[/b][/color].
 
 A good strategy is to use a [color=red][b]circle cut[/b][/color] first to [color=red][b]trim a corner[/b][/color] split cuts can't get to, and then use a [color=red][b]split cut[/b][/color] to [color=red][b]finish the job[/b][/color]."""
 	},
 	"3_1" : { # on level complete
-		"size": Vector2(984, 456), # UPDATE THIS!
-		"position": Vector2(0, 504),
-		"text": """Flawless!"""
+		"size": Vector2(320, 265),
+		"position": Vector2(64, 576),
+		"text": """Excellent!"""
 	},
 	"4_0" : { # gomory cut pt 1
-		"size": Vector2(984, 456), # UPDATE THIS!
-		"position": Vector2(0, 504),
+		"size": Vector2(448, 536),
+		"position": Vector2(1192, 202),
 		"text" : """Introducing [color=red][b]Gomory cuts[/b][/color].
 
 Cutting polygons isn't hard, the [color=red][b]tricky part[/b][/color] is doing it in such a way that [color=red][b]won't get rid of the lattice points inside[/b][/color]."""
 	},
 	"4_1" : { # gomory cut pt 1
-		"size": Vector2(984, 456), # UPDATE THIS!
-		"position": Vector2(0, 504),
+		"size": Vector2(376, 286),
+		"position": Vector2(1262, 304),
 		"text" : """[color=red][b]Gomory cuts[/b][/color] are an efficient way of doing that."""
 	},
 	"4_2" : { # gomory cut pt 1
-		"size": Vector2(984, 456), # UPDATE THIS!
-		"position": Vector2(0, 504),
+		"size": Vector2(512, 288),
+		"position": Vector2(64, 544),
 		"text" : """How do they work? The full story is a bit too lengthy to put here, but here's the [b]gist[/b]:"""
 	},
 	"4_3" : { # gomory cut pt 1
-		"size": Vector2(984, 456), # UPDATE THIS!
-		"position": Vector2(0, 504),
+		"size": Vector2(896, 600),
+		"position": Vector2(64, 232),
 		"text" : """Remember how lines can be written as
 [color=red][b]Ax + By = C[/b][/color]?
 
@@ -276,8 +276,8 @@ And let's say that you did some math, and found the point where they cross. Let'
 But whoops! [b]x'[/b] and [b]y'[/b] are [b]decimals[/b]! And you want [b]whole numbers[/b]!"""
 	},
 	"4_4" : { # gomory cut pt 1
-		"size": Vector2(984, 456), # UPDATE THIS!
-		"position": Vector2(0, 504),
+		"size": Vector2(1016, 624),
+		"position": Vector2(64, 208),
 		"text" : """The [color=red][b]Gomory cut method[/b][/color] says:
 
 First, write out [b]x'[/b] algebraically in a special way, as per the Gomory cut method.
@@ -289,8 +289,8 @@ Since it's a decimal value, it will end up looking something like:
 That decimal part can be used to generate a [color=red][b]new line[/b][/color] that, when used to cut the polygon, will [color=red][b]nudge you closer to whole number values[/b][/color]!"""
 	},
 	"4_5" : { # gomory cut pt 1
-		"size": Vector2(984, 456), # UPDATE THIS!
-		"position": Vector2(0, 504),
+		"size": Vector2(896, 520),
+		"position": Vector2(64, 312),
 		"text" : """You can repeat this process with [b]y'[/b] to get a second line.
 
 Both of these lines are [color=red][b]Gomory cuts[/b][/color]! And they're mathematically guaranteed to converge to the [color=blue][b]convex hull[/b][/color] (eventually)!
@@ -298,56 +298,58 @@ Both of these lines are [color=red][b]Gomory cuts[/b][/color]! And they're mathe
 As to which one of these 2 cuts will get chosen here: [color=red][b]the game will automatically pick the most "optimal" one[/b][/color]."""
 	},
 	"4_6" : { # gomory cut pt 1
-		"size": Vector2(984, 456), # UPDATE THIS!
-		"position": Vector2(0, 504),
+		"size": Vector2(576, 288),
+		"position": Vector2(64, 544),
 		"text" : """Give it a shot!
 
 [color=red][b]Select a vertex[/b][/color], and watch the [color=red][b]Gomory cut[/b][/color] work it's magic!"""
 	},
 	"4_7" : { # on level complete
-		"size": Vector2(984, 456), # UPDATE THIS!
-		"position": Vector2(0, 504),
+		"size": Vector2(320, 256),
+		"position": Vector2(64, 576),
 		"text" : """Nice job!"""
 	},
 	"5_0" : { # gomory cut pt 2
-		"size": Vector2(984, 456), # UPDATE THIS!
-		"position": Vector2(0, 504),
+		"size": Vector2(576, 320),
+		"position": Vector2(64, 512),
 		"text" : """[color=red][b]Gomory cuts[/b][/color] can be hard to predict visually.
 
 Take some time to get a feel for them."""
 	},
 	"5_1" : { # on level complete
-		"size": Vector2(984, 456), # UPDATE THIS!
-		"position": Vector2(0, 504),
+		"size": Vector2(256, 256),
+		"position": Vector2(64, 576),
 		"text" : """Good!"""
 	},
 	"6_0" : { # gomory cut pt 3
-		"size": Vector2(984, 456), # UPDATE THIS!
-		"position": Vector2(0, 504),
+		"size": Vector2(384, 256),
+		"position": Vector2(64, 576),
 		"text" : """Here's an interesting case..."""
 	},
 	"6_1" : { # after 4 cuts
-		"size": Vector2(984, 456), # UPDATE THIS!
-		"position": Vector2(0, 504),
-		"text" : """Seems like this will go on forever... doesn't it?"""
+		"size": Vector2(384, 288),
+		"position": Vector2(64, 544),
+		"text" : """Seems like this will go on forever...
+
+doesn't it?"""
 	},
 	"6_2" : { # after 4 cuts
-		"size": Vector2(984, 456), # UPDATE THIS!
-		"position": Vector2(0, 504),
+		"size": Vector2(768, 390),
+		"position": Vector2(64, 442),
 		"text" : """[color=red][b]Gomory cuts[/b][/color] Are efficient, but they're not perfect.
 
 They're [color=red][b]guaranteed to get closer and closer[/b][/color] to a solution, but [color=red][b]won't always converge quickly[/b][/color]. They can get stuck like this."""
 	},
 	"6_3" : { # after 4 cuts
-		"size": Vector2(984, 456), # UPDATE THIS!
-		"position": Vector2(0, 504),
+		"size": Vector2(760, 312),
+		"position": Vector2(64, 520),
 		"text" : """Don't worry, in this game, [color=red][b]close enough is good enough[/b][/color]!
 
 If you get [color=red][b]close enough[/b][/color] to a solution, the polygon will [color=red][b]correct itself[/b][/color]."""
 	},
 	"6_4" : {
-		"size": Vector2(984, 456), # UPDATE THIS!
-		"position": Vector2(0, 504),
+		"size": Vector2(256, 256),
+		"position": Vector2(64, 576),
 		"text" : """There you go!"""
 	}
 }
@@ -435,9 +437,6 @@ func _ready():
 	LINE4.visible = false
 	EQ4.visible = false
 	EQ4.position = LINE4.position
-
-
-
 
 func load_level(level_data: Dictionary):
 	if LEVEL != null:

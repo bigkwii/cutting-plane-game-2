@@ -44,9 +44,10 @@ offset_bottom = 40.0
 [node name="tutorial_popup" type="Panel" parent="CanvasLayer/HUD/TUTORIAL"]
 custom_minimum_size = Vector2(256, 256)
 layout_mode = 0
-offset_top = 504.0
-offset_right = 984.0
-offset_bottom = 960.0
+offset_left = 64.0
+offset_top = 576.0
+offset_right = 384.0
+offset_bottom = 832.0
 metadata/_edit_group_ = true
 
 [node name="tutorial_text" type="RichTextLabel" parent="CanvasLayer/HUD/TUTORIAL/tutorial_popup"]
@@ -65,12 +66,7 @@ theme_override_fonts/bold_italics_font = ExtResource("3_esj5r")
 theme_override_font_sizes/normal_font_size = 40
 theme_override_font_sizes/bold_font_size = 40
 bbcode_enabled = true
-text = "Remember how linescan be written as [color=red]Ax + By = C[/color]?
-Say that you have 2 lines:
-[color=red]A1x + B1y = C1[/color] and
-[color=red]A2x + B2y = C2[/color]
-And let's say that you did some math, and found the point where they cross. let's call it [b](xi,yi)[/b]
-But whoops! [b]xi[/b] and [b]yi[/b] are [b]decimals[/b]! And you want [b]whole numbers[/b]!"
+text = "Excellent!"
 
 [node name="tutorial_next" type="Button" parent="CanvasLayer/HUD/TUTORIAL/tutorial_popup"]
 custom_minimum_size = Vector2(64, 64)
