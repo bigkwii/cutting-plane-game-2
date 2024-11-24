@@ -1,10 +1,12 @@
-[gd_scene load_steps=6 format=3 uid="uid://ygxl8dhgym47"]
+[gd_scene load_steps=8 format=3 uid="uid://ygxl8dhgym47"]
 
 [ext_resource type="Script" path="res://scenes/tutorial.gd" id="1_mdb0r"]
 [ext_resource type="Theme" uid="uid://bqljbjsn8elrs" path="res://assets/themes/default.tres" id="2_mby48"]
 [ext_resource type="FontFile" uid="uid://bvvtosdeupbva" path="res://assets/fonts/extrathick.ttf" id="3_esj5r"]
 [ext_resource type="FontFile" uid="uid://3jdkpqo41bvf" path="res://assets/fonts/thick.ttf" id="4_kffpb"]
 [ext_resource type="FontFile" uid="uid://htfjdomf6luk" path="res://assets/fonts/thin.ttf" id="5_313qa"]
+[ext_resource type="PackedScene" uid="uid://8ywaxmjoagu" path="res://scenes/lattice_point.tscn" id="6_fi6ei"]
+[ext_resource type="PackedScene" uid="uid://dgb3ubanl7ucn" path="res://scenes/lattice_grid.tscn" id="7_cx6md"]
 
 [node name="tutorial" type="Node2D"]
 script = ExtResource("1_mdb0r")
@@ -14,6 +16,7 @@ layer = 2
 
 [node name="HUD" type="Control" parent="CanvasLayer"]
 layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 64.0
@@ -209,7 +212,78 @@ layout_mode = 2
 text = "Back To
 Main Menu"
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+[node name="vfx" type="Node2D" parent="."]
+
+[node name="lines" type="Node2D" parent="vfx"]
+
+[node name="line1" type="Line2D" parent="vfx/lines"]
+points = PackedVector2Array(-10000, 0, 10000, 0)
+width = 2.0
+default_color = Color(0.533333, 0, 0, 1)
+
+[node name="line2" type="Line2D" parent="vfx/lines"]
+points = PackedVector2Array(-10000, 0, 10000, 0)
+width = 2.0
+default_color = Color(0.533333, 0, 0, 1)
+
+[node name="line3" type="Line2D" parent="vfx/lines"]
+points = PackedVector2Array(-10000, 0, 10000, 0)
+width = 2.0
+default_color = Color(0.533333, 0, 0, 1)
+
+[node name="line4" type="Line2D" parent="vfx/lines"]
+points = PackedVector2Array(-10000, 0, 10000, 0)
+width = 2.0
+default_color = Color(0.533333, 0, 0, 1)
+
+[node name="eq1" type="Label" parent="vfx/lines"]
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_esj5r")
+theme_override_font_sizes/font_size = 25
+text = "0.3x - 1.2y = -0.3"
+horizontal_alignment = 2
+
+[node name="eq2" type="Label" parent="vfx/lines"]
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_esj5r")
+theme_override_font_sizes/font_size = 25
+text = "1.2x - 0.3y = 2.4"
+horizontal_alignment = 2
+
+[node name="eq3" type="Label" parent="vfx/lines"]
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_esj5r")
+theme_override_font_sizes/font_size = 25
+text = "0x + 1y  = 1"
+horizontal_alignment = 2
+
+[node name="eq4" type="Label" parent="vfx/lines"]
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_esj5r")
+theme_override_font_sizes/font_size = 25
+text = "1x + 0y = 1"
+horizontal_alignment = 2
+
+[node name="dummy_polygon" type="Polygon2D" parent="vfx"]
+color = Color(0.533333, 0, 0, 0.2)
+
+[node name="axes" type="Node2D" parent="vfx"]
+position = Vector2(420, 180)
+
+[node name="x_axis" type="Line2D" parent="vfx/axes"]
+points = PackedVector2Array(0, 0, 100, 0, 90, -10, 100, 0, 90, 10)
+width = 2.0
+default_color = Color(1, 0, 0, 1)
+
+[node name="y_axis" type="Line2D" parent="vfx/axes"]
+points = PackedVector2Array(0, 0, 0, 100, 10, 90, 0, 100, -10, 90)
+width = 2.0
+default_color = Color(0, 0, 1, 1)
+
+[node name="dummy_origin" parent="vfx" instance=ExtResource("6_fi6ei")]
+position = Vector2(420, 180)
+
+[node name="dummy_lattice_grid" parent="vfx" instance=ExtResource("7_cx6md")]
 
 [connection signal="pressed" from="CanvasLayer/HUD/TUTORIAL/tutorial_popup/tutorial_next" to="." method="_on_tutorial_next_pressed"]
 [connection signal="pressed" from="CanvasLayer/HUD/MENU/panel/VBoxContainer/exit" to="." method="_on_exit_pressed"]
