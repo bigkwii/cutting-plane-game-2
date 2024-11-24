@@ -27,9 +27,12 @@ var cut_vfx = preload("res://scenes/cut_vfx.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	# crt filter can lag devices with no gpu
 	if OS.get_name() in ["Android", "iOS"]: # disable crt filter and fullscreen toggle on mobile
 		CRT_TOGGLE_BTN.visible = false
 		FULLSCREEN_TOGGLE_BTN.visible = false
+		CRT.visible = false
+	elif OS.get_name() == "Web": # disabled by default, option available
 		CRT.visible = false
 	POLYGON.build_polygon()
 	FREE_PLAY_LEVEL_SELECT.visible = false
