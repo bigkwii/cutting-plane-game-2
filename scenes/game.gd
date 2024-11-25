@@ -7,7 +7,8 @@ var TUTORIAL_SCENE = preload("res://scenes/tutorial.tscn")
 var ARCADE_SCENE = preload("res://scenes/arcade.tscn")
 var FREE_PLAY_SCENE = preload("res://scenes/free_play.tscn")
 var EDITOR_SCENE = preload("res://scenes/editor.tscn")
-# var SPEEDRUN_SCENE = preload("res://scenes/speedrun.tscn")
+var SPEEDRUN_SCENE = preload("res://scenes/speedrun.tscn")
+# TODO: leaderboard
 
 var CLICK_VFX = preload("res://scenes/click_vfx.tscn")
 
@@ -35,6 +36,8 @@ func _play_click_vfx(pos: Vector2, backwards: bool = false):
 
 # - signal callbacks -
 
+# - free play -
+
 func _on_test_menu_start_free_play(level_path: String):
 	SELECTED_GAMEMODE.get_child(0).queue_free()
 	var FREE_PLAY = FREE_PLAY_SCENE.instantiate()
@@ -49,6 +52,10 @@ func _on_free_play_quit_gamemode():
 	TEST_MENU.start_free_play.connect(_on_test_menu_start_free_play)
 	TEST_MENU.start_arcade.connect(_on_test_menu_start_arcade)
 	TEST_MENU.start_tutorial.connect(_on_test_menu_start_tutorial)
+	TEST_MENU.start_editor.connect(_on_test_menu_start_editor)
+	TEST_MENU.start_speedrun.connect(_on_test_menu_start_speedrun)
+
+# - arcade -
 
 func _on_test_menu_start_arcade():
 	SELECTED_GAMEMODE.get_child(0).queue_free()
@@ -63,6 +70,10 @@ func _on_arcade_quit_gamemode():
 	TEST_MENU.start_free_play.connect(_on_test_menu_start_free_play)
 	TEST_MENU.start_arcade.connect(_on_test_menu_start_arcade)
 	TEST_MENU.start_tutorial.connect(_on_test_menu_start_tutorial)
+	TEST_MENU.start_editor.connect(_on_test_menu_start_editor)
+	TEST_MENU.start_speedrun.connect(_on_test_menu_start_speedrun)
+
+# - tutorial -
 
 func _on_test_menu_start_tutorial():
 	SELECTED_GAMEMODE.get_child(0).queue_free()
@@ -77,3 +88,42 @@ func _on_tutorial_quit_gamemode():
 	TEST_MENU.start_free_play.connect(_on_test_menu_start_free_play)
 	TEST_MENU.start_arcade.connect(_on_test_menu_start_arcade)
 	TEST_MENU.start_tutorial.connect(_on_test_menu_start_tutorial)
+	TEST_MENU.start_editor.connect(_on_test_menu_start_editor)
+	TEST_MENU.start_speedrun.connect(_on_test_menu_start_speedrun)
+
+# - editor -
+
+func _on_test_menu_start_editor():
+	SELECTED_GAMEMODE.get_child(0).queue_free()
+	var EDITOR = EDITOR_SCENE.instantiate()
+	SELECTED_GAMEMODE.add_child(EDITOR)
+	EDITOR.quit_gamemode.connect(_on_editor_quit_gamemode)
+
+func _on_editor_quit_gamemode():
+	SELECTED_GAMEMODE.get_child(0).queue_free()
+	var TEST_MENU = TEST_MENU_SCENE.instantiate()
+	SELECTED_GAMEMODE.add_child(TEST_MENU)
+	TEST_MENU.start_free_play.connect(_on_test_menu_start_free_play)
+	TEST_MENU.start_arcade.connect(_on_test_menu_start_arcade)
+	TEST_MENU.start_tutorial.connect(_on_test_menu_start_tutorial)
+	TEST_MENU.start_editor.connect(_on_test_menu_start_editor)
+	TEST_MENU.start_speedrun.connect(_on_test_menu_start_speedrun)
+
+# - speedrun -
+
+func _on_test_menu_start_speedrun():
+	SELECTED_GAMEMODE.get_child(0).queue_free()
+	var SPEEDRUN = SPEEDRUN_SCENE.instantiate()
+	SELECTED_GAMEMODE.add_child(SPEEDRUN)
+	SPEEDRUN.quit_gamemode.connect(_on_speedrun_quit_gamemode)
+
+func _on_speedrun_quit_gamemode():
+	SELECTED_GAMEMODE.get_child(0).queue_free()
+	var TEST_MENU = TEST_MENU_SCENE.instantiate()
+	SELECTED_GAMEMODE.add_child(TEST_MENU)
+	TEST_MENU.start_free_play.connect(_on_test_menu_start_free_play)
+	TEST_MENU.start_arcade.connect(_on_test_menu_start_arcade)
+	TEST_MENU.start_tutorial.connect(_on_test_menu_start_tutorial)
+	TEST_MENU.start_editor.connect(_on_test_menu_start_editor)
+	TEST_MENU.start_speedrun.connect(_on_test_menu_start_speedrun)
+	
