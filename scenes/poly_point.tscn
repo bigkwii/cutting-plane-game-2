@@ -13,5 +13,5 @@ offset_bottom = 23.0
 scale = Vector2(0.1, 0.1)
 theme_override_colors/font_color = Color(1, 1, 1, 0.392157)
 theme_override_fonts/font = ExtResource("2_p5x5h")
-theme_override_font_sizes/font_size = 200
+theme_override_font_sizes/font_size = 100
 text = "(0, 0)"
