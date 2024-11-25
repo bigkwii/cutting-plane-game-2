@@ -16,5 +16,7 @@ script = ExtResource("1_iislu")
 [node name="click_vfxs" parent="vfx" instance=ExtResource("3_lxm4e")]
 
 [connection signal="start_arcade" from="selected_gamemode/test_menu" to="." method="_on_test_menu_start_arcade"]
+[connection signal="start_editor" from="selected_gamemode/test_menu" to="." method="_on_test_menu_start_editor"]
 [connection signal="start_free_play" from="selected_gamemode/test_menu" to="." method="_on_test_menu_start_free_play"]
+[connection signal="start_speedrun" from="selected_gamemode/test_menu" to="." method="_on_test_menu_start_speedrun"]
 [connection signal="start_tutorial" from="selected_gamemode/test_menu" to="." method="_on_test_menu_start_tutorial"]
