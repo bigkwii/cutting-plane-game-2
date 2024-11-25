@@ -84,7 +84,8 @@ func build_polygon(calculate_hull: bool = false) -> void:
 	packed_vertices = PackedVector2Array(initial_vertices)
 	for vert in packed_vertices:
 		_add_new_vertex(vert)
-	calculate_centroid()
+	calculate_polygon_centroid()
+	calculate_hull_centroid()
 	if calculate_hull:
 		calculate_convex_integer_hull()
 
@@ -120,9 +121,9 @@ func is_integral() -> bool:
 
 ## Calculates the centroid of the polygon.
 ## TODO: is it necessary to return the centroid if we save it in the CENTROID node?
-func calculate_centroid() -> Vector2:
+func calculate_polygon_centroid() -> Vector2:
 	if packed_vertices.size() < 3:
-		DEBUG.log("polygon.calculate_centroid: Polygon must have at least 3 vertices! %s given." % packed_vertices.size())
+		DEBUG.log("polygon.calculate_polygon_centroid: Polygon must have at least 3 vertices! %s given." % packed_vertices.size())
 		return Vector2()
 	var centroid_lattice_pos: Vector2 = Vector2()
 	var area: float = 0.0
@@ -147,6 +148,28 @@ func calculate_centroid() -> Vector2:
 	if DEBUG.is_enabled():
 		CENTROID.DEBUG_LABEL.text = str(centroid_lattice_pos)
 	return centroid_lattice_pos
+
+## Calculates the centroid of the convex integer hull of the polygon.
+func calculate_hull_centroid() -> Vector2:
+	if CONVEX_INTEGER_HULL.convex_integer_hull.size() < 3:
+		DEBUG.log("polygon.calculate_hull_centroid: Hull must have at least 3 vertices! %s given." % CONVEX_INTEGER_HULL.convex_integer_hull.size())
+		return Vector2()
+	var hull_centroid_lattice_pos: Vector2 = Vector2()
+	var area: float = 0.0
+	var centroid_x: float = 0.0
+	var centroid_y: float = 0.0
+	for i in range(CONVEX_INTEGER_HULL.convex_integer_hull.size()):
+		var current_point = CONVEX_INTEGER_HULL.convex_integer_hull[i]
+		var next_point = CONVEX_INTEGER_HULL.convex_integer_hull[(i + 1) % CONVEX_INTEGER_HULL.convex_integer_hull.size()]
+		var cross_product = (current_point.x * next_point.y - next_point.x * current_point.y)
+		area += cross_product
+		centroid_x += (current_point.x + next_point.x) * cross_product
+		centroid_y += (current_point.y + next_point.y) * cross_product
+	area /= 2.0
+	centroid_x /= 6.0 * area
+	centroid_y /= 6.0 * area
+	hull_centroid_lattice_pos = Vector2(centroid_x, centroid_y)
+	return hull_centroid_lattice_pos
 
 ## Determines if a given points is inside the polygon, given its lattice position.
 func is_point_inside_polygon(lattice_pos: Vector2) -> bool:
@@ -346,7 +369,8 @@ func cut_polygon(line_point: Vector2, line_dir: Vector2, allow_hull_cutting: boo
 		return [false, 0.0]
 	# play the cut animation
 	_play_cut_animation(line_point, line_dir)
-	var polygon_to_be_kept_index: int = 0 if Geometry2D.is_point_in_polygon(centroid, new_polygons[0]) else 1
+	# determine which polygon to keep. it should be the one that contains the convex integer hull's centroid
+	var polygon_to_be_kept_index: int = 0 if Geometry2D.is_point_in_polygon(calculate_hull_centroid(), new_polygons[0]) else 1
 	# run forgiveness checks on both new polygons
 	_run_forgiveness_checks(new_polygons[polygon_to_be_kept_index])
 	_run_forgiveness_checks(new_polygons[1 - polygon_to_be_kept_index])
