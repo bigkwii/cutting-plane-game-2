@@ -165,7 +165,7 @@ func _ready(): # TODO: messy. separate these into functions
 	# SET POLY DATA
 	POLYGON.color = level_color
 	POLYGON.initial_vertices = level_vertices
-	POLYGON.build_polygon()
+	POLYGON.build_polygon(true)
 	# SET CUT BUDGETS (except for free play, where they're infinite)
 	if not INFINITE_BUDGET:
 		circle_cut_budget = parsed_data["circle_budget"] if parsed_data.has("circle_budget") else -1

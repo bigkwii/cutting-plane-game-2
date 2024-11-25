@@ -76,7 +76,7 @@ func _add_new_vertex(lattice_pos: Vector2):
 ## Builds the Polygon given vertices on initial_vertices. Does not clear the previous vertices.
 ## [br][br]
 ## To be called when first loading a level.
-func build_polygon() -> void:
+func build_polygon(calculate_hull: bool = false) -> void:
 	if initial_vertices.size() < 3:
 		DEBUG.log("polygon._ready: Polygon must have at least 3 vertices! %s given." % initial_vertices.size())
 		return
@@ -85,7 +85,8 @@ func build_polygon() -> void:
 	for vert in packed_vertices:
 		_add_new_vertex(vert)
 	calculate_centroid()
-	calculate_convex_integer_hull()
+	if calculate_hull:
+		calculate_convex_integer_hull()
 
 ## Removes all vertex children from the polygon
 func _delete_verts() -> void:
@@ -99,15 +100,15 @@ func delete_polygon() -> void:
 
 ## Rebuilds the polygon given new vertices in a PackedVector2Array, clearing all previously drawn vertices.
 ## [br][br]
-## To be called when cutting or reloading a level.
-func rebuild_polygon(new_vertices: PackedVector2Array) -> void:
+## To be called after cutting
+func rebuild_polygon(new_vertices: PackedVector2Array, calculate_hull: bool = false) -> void:
 	_delete_verts()
 	# convert the new vertices to a vector2 array
 	initial_vertices = []
 	for vert in new_vertices:
 		initial_vertices.append(vert)
 	# make the new polygon
-	build_polygon()
+	build_polygon(calculate_hull)
 	queue_redraw()
 	
 ## Checks if the polygon is integral. (if all vertices are integers)
@@ -312,9 +313,16 @@ func would_cut_hull(line_point: Vector2, line_dir: Vector2) -> bool:
 	var new_polygons = split_polygon(hull, line_point, line_dir, false, false)
 	if new_polygons.size() < 2:
 		return false
-	else:
-		if hull == new_polygons[0] or hull == new_polygons[1]:
-			return false
+	# if every vertex of the hull is in the same half, the hull wasn't cut
+	var hull_half_1 = 0
+	var hull_half_2 = 0
+	for vert in hull:
+		if vert in new_polygons[0]:
+			hull_half_1 += 1
+		if vert in new_polygons[1]:
+			hull_half_2 += 1
+	if hull_half_1 == 0 or hull_half_2 == 0:
+		return false
 	return true
 	
 ## Cuts the polygon, given a line, and keeps the half that contains the centroid of the original.
@@ -425,13 +433,22 @@ func _run_forgiveness_checks(polygon: PackedVector2Array) -> void:
 	while i < polygon.size():
 		var current_point = polygon[i]
 		var next_point = polygon[(i + 1) % polygon.size()]
-		if current_point.distance_to(next_point) < GLOBALS.FORGIVENESS_MERGE_EPSILON:
-			# If we're about to reduce to 3 or fewer vertices, stop
+		# if points are far enough apart
+		if current_point.distance_to(next_point) >= GLOBALS.FORGIVENESS_MERGE_EPSILON:
+			i += 1
+			continue
+		# special case: i not in hull, i+1 in hull -> remove i
+		if not current_point in CONVEX_INTEGER_HULL.convex_integer_hull:
+			# if we're about to reduce to 3 or fewer vertices, stop
 			if polygon.size() <= 4:
 				break
 			polygon.remove_at(i)
+			continue
+		# all other cases, i and i+1 both not in hull, i in but i+1 not, and neither in
 		else:
-			i += 1
+			if polygon.size() <= 4:
+				break
+			polygon.remove_at((i + 1) % polygon.size())
 
 ## returns all the intersection points of a circle with a polygon
 ## [br][br]
