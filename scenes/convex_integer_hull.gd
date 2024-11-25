@@ -19,6 +19,8 @@ var OFFSET: Vector2 = GLOBALS.DEFAULT_OFFSET
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	# only draw centroid if debug is enabled
+	CENTROID.visible = CENTROID.visible and DEBUG.is_enabled()
 	play_idle()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
