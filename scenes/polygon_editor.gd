@@ -25,7 +25,7 @@ func _process(_delta):
 	pass
 
 func _draw():
-	var alpha = 0.5 if being_edited else 1.0
+	var alpha = 0.6 if being_edited else 1.0 # might deprecate this
 	var points = PackedVector2Array()
 	var colors = PackedColorArray()
 	for vert in convex_hull:
@@ -110,3 +110,21 @@ func build_polygon(packed_vertices: PackedVector2Array) -> PackedVector2Array:
 	calculate_convex_integer_hull(convex_hull)
 	calculate_hull_centroid()
 	return convex_hull
+
+## returns the area of a polygon given its vertices
+func get_polygon_area(packed_vertices: PackedVector2Array) -> float:
+	if packed_vertices.size() < 3:
+		return 0.0
+	var area: float = 0.0
+	for i in range(packed_vertices.size()):
+		var current_point = packed_vertices[i]
+		var next_point = packed_vertices[(i + 1) % packed_vertices.size()]
+		area += (current_point.x * next_point.y - next_point.x * current_point.y)
+	return area / 2.0
+
+## validates that the convex hull could be made into a level
+func validate_level() -> bool:
+	return convex_hull.size() > 2 \
+		and CONVEX_INTEGER_HULL.convex_integer_hull.size() > 2 \
+		and get_polygon_area(convex_hull) > GLOBALS.GEOMETRY_EPSILON_AREA \
+		and get_polygon_area(CONVEX_INTEGER_HULL.convex_integer_hull) > GLOBALS.GEOMETRY_EPSILON_AREA

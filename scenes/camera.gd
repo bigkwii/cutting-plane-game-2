@@ -25,20 +25,16 @@ func _ready():
 func _input(event):
 	if not can_drag:
 		return
-		
 	# Mouse wheel zoom
 	if event is InputEventMouseButton:
 		handle_mouse_wheel_zoom(event)
 		handle_mouse_pan_start(event)
-
 	# Mouse motion pan
 	elif event is InputEventMouseMotion and is_panning:
 		pan_camera(event.position)
-	
 	# Touch input handling
 	if event is InputEventScreenTouch:
 		handle_touch_start(event)
-	
 	if event is InputEventScreenDrag:
 		handle_touch_drag(event)
 
@@ -58,7 +54,6 @@ func handle_mouse_pan_start(event):
 			last_input_pos = get_viewport().get_mouse_position()
 		else:
 			is_panning = false
-
 	# Panning with left mouse button (delayed start)
 	if event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
@@ -104,6 +99,8 @@ func handle_touch_drag(event):
 		touch_positions[event.index] = event.position
 
 func _on_m1_drag_timer_timeout():
+	if not can_drag:
+		return
 	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 		is_panning = true
 		last_input_pos = get_viewport().get_mouse_position()

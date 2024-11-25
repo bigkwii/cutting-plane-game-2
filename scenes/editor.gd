@@ -1,6 +1,9 @@
 extends Node2D
 ## editor game mode scene.
 
+# - signals -
+signal quit_gamemode
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.

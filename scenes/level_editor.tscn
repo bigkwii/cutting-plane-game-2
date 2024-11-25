@@ -77,6 +77,7 @@ Menu"
 wait_time = 0.5
 one_shot = true
 
+[connection signal="zoom_level_changed" from="camera" to="." method="_on_camera_zoom_level_changed"]
 [connection signal="button_down" from="CanvasLayer/HUD/show_hull" to="." method="_on_show_hull_button_down"]
 [connection signal="button_up" from="CanvasLayer/HUD/show_hull" to="." method="_on_show_hull_button_up"]
 [connection signal="timeout" from="invalidate_click_timer" to="." method="_on_invalidate_click_timer_timeout"]
