@@ -38,3 +38,5 @@ var FORGIVENESS_SNAP_EPSILON = GEOMETRY_EPSILON * 10000
 var FORGIVENESS_COLINEAR_EPSILON = GEOMETRY_EPSILON * 20000
 ## epsilon for the radius under which a number of points are considered to be the same point
 var FORGIVENESS_MERGE_EPSILON = GEOMETRY_EPSILON * 500
+## click range for draging a vertex in edit mode
+var EDIT_CLICK_RANGE = 0.10

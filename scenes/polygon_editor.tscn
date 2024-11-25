@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://b3naiojbtndg"]
+
+[ext_resource type="PackedScene" uid="uid://cmslkpm8c6211" path="res://scenes/convex_integer_hull.tscn" id="1_cin0r"]
+[ext_resource type="Script" path="res://scenes/polygon_editor.gd" id="1_dxisb"]
+
+[node name="polygon_editor" type="Node2D"]
+script = ExtResource("1_dxisb")
+
+[node name="verts" type="Node2D" parent="."]
+
+[node name="convex_integer_hull" parent="." instance=ExtResource("1_cin0r")]

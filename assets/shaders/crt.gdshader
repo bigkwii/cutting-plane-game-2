@@ -30,15 +30,15 @@ uniform float vignette_amount: hint_range(0.0, 2.0) = 0.6;
 /** intensity of the vignette. good way to sell the ilussion of curvature */
 uniform float vignette_intensity: hint_range(0.0, 1.0) = 1.0;
 /** chromatic aberration */
-uniform float aberation_amount: hint_range(0.0, 1.0) = 1.0;
+uniform float aberation_amount: hint_range(0.0, 1.0) = 0.5;
 /** rolling lines intensity */ 
-uniform float roll_line_amount: hint_range(0.0, 1.0) = 0.1;
+uniform float roll_line_amount: hint_range(0.0, 1.0) = 0.3;
 /** rolling lines speed */ 
 uniform float roll_speed: hint_range(-8.0, 8.0) = 1.0;
 /** good way of adjusting brightness. higher = brighter */ 
-uniform float scan_line_strength: hint_range(-12.0, -1.0) = -8.0;
+uniform float scan_line_strength: hint_range(-12.0, -1.0) = -5.0;
 /** pixel sharpness. lower = more sharp */
-uniform float pixel_strength: hint_range(-4.0, 0.0) = -2.0;
+uniform float pixel_strength: hint_range(-4.0, 0.0) = -4.0;
 
 float random(vec2 uv){
     return fract(cos(uv.x * 83.4827 + uv.y * 92.2842) * 43758.5453123);

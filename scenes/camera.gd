@@ -2,6 +2,7 @@ extends Camera2D
 ## Camera scene that handles zooming and panning for both mouse and touch devices.
 
 # Variables to control the zoom and panning
+@export var can_drag = true
 var zoom_min = 1.0
 var zoom_max = 7.0
 var zoom_step = 0.1
@@ -22,6 +23,9 @@ func _ready():
 	zoom = Vector2(1, 1)
 
 func _input(event):
+	if not can_drag:
+		return
+		
 	# Mouse wheel zoom
 	if event is InputEventMouseButton:
 		handle_mouse_wheel_zoom(event)

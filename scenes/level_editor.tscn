@@ -1,0 +1,82 @@
+[gd_scene load_steps=8 format=3 uid="uid://c5ay5dvhptf23"]
+
+[ext_resource type="PackedScene" uid="uid://dgb3ubanl7ucn" path="res://scenes/lattice_grid.tscn" id="1_ivbwy"]
+[ext_resource type="Script" path="res://scenes/level_editor.gd" id="1_ywrdm"]
+[ext_resource type="PackedScene" uid="uid://c1bv5rh3yb6ac" path="res://scenes/guide_grid.tscn" id="2_7nuqw"]
+[ext_resource type="PackedScene" uid="uid://b3naiojbtndg" path="res://scenes/polygon_editor.tscn" id="3_ch5bh"]
+[ext_resource type="PackedScene" uid="uid://lotaw6d6q6u5" path="res://scenes/camera.tscn" id="4_k37p4"]
+[ext_resource type="Theme" uid="uid://bqljbjsn8elrs" path="res://assets/themes/default.tres" id="5_al5fl"]
+[ext_resource type="PackedScene" uid="uid://dx4csne7vpmre" path="res://scenes/cut_button.tscn" id="6_uasds"]
+
+[node name="level_editor" type="Node2D"]
+script = ExtResource("1_ywrdm")
+
+[node name="verts" type="Node2D" parent="."]
+
+[node name="lattice_grid" parent="." instance=ExtResource("1_ivbwy")]
+
+[node name="guide_grid" parent="." instance=ExtResource("2_7nuqw")]
+
+[node name="polygon_editor" parent="." instance=ExtResource("3_ch5bh")]
+
+[node name="camera" parent="." instance=ExtResource("4_k37p4")]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="HUD" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 64.0
+offset_top = 64.0
+offset_right = -64.0
+offset_bottom = -64.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("5_al5fl")
+
+[node name="name_label" type="Label" parent="CanvasLayer/HUD"]
+layout_mode = 1
+anchors_preset = -1
+offset_top = 40.0
+
+[node name="show_hull" parent="CanvasLayer/HUD" instance=ExtResource("6_uasds")]
+process_mode = 1
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -192.0
+offset_top = -128.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
+text = "CONV.
+HULL"
+visible_budget = false
+
+[node name="open_menu" type="Button" parent="CanvasLayer/HUD"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -192.0
+offset_bottom = 128.0
+grow_horizontal = 0
+text = "Open
+Menu"
+
+[node name="invalidate_click_timer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[connection signal="button_down" from="CanvasLayer/HUD/show_hull" to="." method="_on_show_hull_button_down"]
+[connection signal="button_up" from="CanvasLayer/HUD/show_hull" to="." method="_on_show_hull_button_up"]
+[connection signal="timeout" from="invalidate_click_timer" to="." method="_on_invalidate_click_timer_timeout"]

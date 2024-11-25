@@ -34,8 +34,8 @@ var RANK_MESSAGES = {
 ## bonus multiplier for a cutting plane that produced more than one cut
 var MULTIPLE_CUT_BONUS_MULTIPLIER = 1.5
 ## how much bonus core to award for each leftover circle cut
-var CIRCLE_CUT_BONUS = 100
+var CIRCLE_CUT_BONUS = 500
 ## how much bonus score to award for each leftover gomory cut
-var GOMORY_CUT_BONUS = 500
+var GOMORY_CUT_BONUS = 1500
 ## how much bonus score to award for each leftover split cut
-var SPLIT_CUT_BONUS = 500
+var SPLIT_CUT_BONUS = 1000

@@ -11,8 +11,9 @@ extends Node2D
 ## The color of the polygon. Borders are solid, fill is semi-transparent.
 @export var color: Color = Color(1, 0, 0)
 
-## The starting vertices that make up the polygon[br][br]
-## Make sure to use Lattice coordinates and to follow a CCW winding order.
+## The starting vertices that make up the polygon
+## [br][br]
+## Make sure to use Lattice coordinates.
 @export var initial_vertices: Array[Vector2] = []
 
 ## flag to show debug labels
@@ -85,7 +86,6 @@ func build_polygon(calculate_hull: bool = false) -> void:
 	for vert in packed_vertices:
 		_add_new_vertex(vert)
 	calculate_polygon_centroid()
-	calculate_hull_centroid()
 	if calculate_hull:
 		calculate_convex_integer_hull()
 		calculate_hull_centroid()
@@ -176,12 +176,13 @@ func calculate_hull_centroid() -> Vector2:
 	CONVEX_INTEGER_HULL.CENTROID.color = Color(0, 0, 1)
 	# debug label
 	if DEBUG.is_enabled():
-		CENTROID.DEBUG_LABEL.text = str(hull_centroid_lattice_pos)
+		CONVEX_INTEGER_HULL.CENTROID.DEBUG_LABEL.text = str(hull_centroid_lattice_pos)
 	return hull_centroid_lattice_pos
 
 ## Determines if a given points is inside the polygon, given its lattice position.
 func is_point_inside_polygon(lattice_pos: Vector2) -> bool:
-	return Geometry2D.is_point_in_polygon(lattice_pos, packed_vertices)
+	# Geometry2D.is_point_in_polygon is BUGGED! LOL!
+	return (lattice_pos in packed_vertices) or Geometry2D.is_point_in_polygon(lattice_pos, packed_vertices)
 
 ## Calculates the convex integer hull of the polygon and stores it in the CONVEX_INTEGER_HULL node for drawing.
 func calculate_convex_integer_hull() -> void:
@@ -957,7 +958,7 @@ func update_verts_hover_vfx(mouse_lattice_pos) -> void:
 			continue
 		vert.hover = false
 		var distance = vert.lattice_position.distance_to(mouse_lattice_pos)
-		if distance < GLOBALS.GOMORY_CUT_CLICK_RANGE and distance < closest_distance: # TODO: same!
+		if distance < GLOBALS.GOMORY_CUT_CLICK_RANGE and distance < closest_distance:
 			closest_distance = distance
 			if closest_distance < INF:
 				selected_vert = vert

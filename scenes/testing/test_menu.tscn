@@ -46,9 +46,9 @@ Screen"
 layout_mode = 2
 theme_override_fonts/font = ExtResource("5_ba3wp")
 theme_override_font_sizes/font_size = 30
-text = "Toggle
-CRT
-filter"
+text = "Toggle CRT Filter
+(can cause lag if
+H.W. accel. is OFF)"
 
 [node name="title" type="Label" parent="CanvasLayer/UI"]
 layout_mode = 1
