@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://cmslkpm8c6211"]
+[gd_scene load_steps=8 format=3 uid="uid://cmslkpm8c6211"]
 
 [ext_resource type="Script" path="res://scenes/convex_integer_hull.gd" id="1_qoipr"]
+[ext_resource type="PackedScene" uid="uid://73u01oqmgx6x" path="res://scenes/poly_point.tscn" id="2_3wbl3"]
 
 [sub_resource type="Animation" id="Animation_ocj5x"]
 length = 0.001
@@ -78,6 +79,9 @@ _data = {
 
 [node name="convex_integer_hull" type="Node2D"]
 script = ExtResource("1_qoipr")
+
+[node name="centroid" parent="." instance=ExtResource("2_3wbl3")]
+color = Color(0, 0, 1, 1)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {

@@ -88,6 +88,7 @@ func build_polygon(calculate_hull: bool = false) -> void:
 	calculate_hull_centroid()
 	if calculate_hull:
 		calculate_convex_integer_hull()
+		calculate_hull_centroid()
 
 ## Removes all vertex children from the polygon
 func _delete_verts() -> void:
@@ -169,6 +170,13 @@ func calculate_hull_centroid() -> Vector2:
 	centroid_x /= 6.0 * area
 	centroid_y /= 6.0 * area
 	hull_centroid_lattice_pos = Vector2(centroid_x, centroid_y)
+	# draw centroid
+	CONVEX_INTEGER_HULL.CENTROID.lattice_position = hull_centroid_lattice_pos
+	CONVEX_INTEGER_HULL.CENTROID.position = hull_centroid_lattice_pos * SCALING + OFFSET
+	CONVEX_INTEGER_HULL.CENTROID.color = Color(0, 0, 1)
+	# debug label
+	if DEBUG.is_enabled():
+		CENTROID.DEBUG_LABEL.text = str(hull_centroid_lattice_pos)
 	return hull_centroid_lattice_pos
 
 ## Determines if a given points is inside the polygon, given its lattice position.
@@ -370,7 +378,7 @@ func cut_polygon(line_point: Vector2, line_dir: Vector2, allow_hull_cutting: boo
 	# play the cut animation
 	_play_cut_animation(line_point, line_dir)
 	# determine which polygon to keep. it should be the one that contains the convex integer hull's centroid
-	var polygon_to_be_kept_index: int = 0 if Geometry2D.is_point_in_polygon(calculate_hull_centroid(), new_polygons[0]) else 1
+	var polygon_to_be_kept_index: int = 0 if Geometry2D.is_point_in_polygon(CONVEX_INTEGER_HULL.CENTROID.lattice_position, new_polygons[0]) else 1
 	# run forgiveness checks on both new polygons
 	_run_forgiveness_checks(new_polygons[polygon_to_be_kept_index])
 	_run_forgiveness_checks(new_polygons[1 - polygon_to_be_kept_index])

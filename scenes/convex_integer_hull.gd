@@ -14,6 +14,7 @@ var SCALING: int = GLOBALS.DEFAULT_SCALING
 var OFFSET: Vector2 = GLOBALS.DEFAULT_OFFSET
 
 # - child nodes -
+@onready var CENTROID = $centroid
 @onready var ANIM_PLAYER = $AnimationPlayer
 
 # Called when the node enters the scene tree for the first time.
