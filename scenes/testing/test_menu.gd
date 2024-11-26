@@ -33,8 +33,7 @@ func _ready():
 		CRT_TOGGLE_BTN.visible = false
 		FULLSCREEN_TOGGLE_BTN.visible = false
 		CRT.visible = false
-	elif OS.get_name() == "Web": # disabled by default, option available, hide exit button
-		CRT.visible = false
+	elif OS.get_name() == "Web": # hide exit button
 		EXIT_BUTTON.visible = false
 	POLYGON.build_polygon()
 	FREE_PLAY_LEVEL_SELECT.visible = false

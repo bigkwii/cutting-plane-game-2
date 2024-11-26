@@ -21,7 +21,7 @@ var level_paths: Array[String] = [
 var current_level_idx: int = 0
 
 ## total score
-var total_score = 0
+var total_time = 0
 
 ## array of dictionaries to store the scores and ranks of each level
 var results: Array[Dictionary] = []
@@ -30,7 +30,6 @@ var results: Array[Dictionary] = []
 @onready var TOTAL_SCORE_LABEL = $CanvasLayer/HUD/score_container/total_score_label
 @onready var MENU = $CanvasLayer/MENU
 @onready var LEVEL = null # assigned dynamically
-@onready var ANIM_PLAYER = $AnimationPlayer
 @onready var RANK_LABEL = $CanvasLayer/LEVEL_FINISH_POPUP/panel/VBoxContainer/VBoxContainer/RankHBoxContainer/rank_label
 @onready var RANK_MESSAGE = $CanvasLayer/LEVEL_FINISH_POPUP/panel/VBoxContainer/VBoxContainer/rank_message
 @onready var RANK_BONUS_LABEL = $CanvasLayer/LEVEL_FINISH_POPUP/panel/VBoxContainer/VBoxContainer/RankBonuxHBoxContainer/bonus_label
@@ -79,6 +78,10 @@ func _ready():
 	# create and add the level scene
 	load_level(level_paths[current_level_idx])
 
+func _process(delta):
+	total_time += delta
+	TOTAL_SCORE_LABEL.text = str(total_time)
+
 func load_level(level_json_path: String):
 	if LEVEL != null:
 		LEVEL.queue_free()
@@ -88,7 +91,6 @@ func load_level(level_json_path: String):
 	add_child(LEVEL)
 	LEVEL.open_menu.connect(_on_level_open_menu)
 	LEVEL.level_completed.connect(_on_level_completed)
-	LEVEL.cut_made.connect(_on_cut_made)
 	get_tree().paused = false
 
 func _on_level_open_menu():
@@ -104,11 +106,6 @@ func _on_exit_pressed():
 	quit_gamemode.emit()
 	queue_free()
 
-func _on_cut_made(score: int):
-	# update the total score
-	total_score += score
-	TOTAL_SCORE_LABEL.text = str(total_score)
-
 func _on_level_completed(rank: String, rank_bonus: int, budget_bonus: int, remaining_circle: int, remaining_gomory: int, remaining_split: int):
 	RANK_LABEL.text = rank
 	RANK_MESSAGE.text = SCORE.RANK_MESSAGES[rank]
@@ -117,12 +114,13 @@ func _on_level_completed(rank: String, rank_bonus: int, budget_bonus: int, remai
 	BUDGET_BONUS_DETAIL.text = "(%d X %d + %d X %d + %d X %d)" % \
 		[remaining_circle, SCORE.CIRCLE_CUT_BONUS, remaining_gomory, SCORE.GOMORY_CUT_BONUS, remaining_split, SCORE.SPLIT_CUT_BONUS]
 	# update total
-	total_score += rank_bonus + budget_bonus
+	#total_score += rank_bonus + budget_bonus
 	# update the results array
 	results[current_level_idx]["score"] = LEVEL.score
 	results[current_level_idx]["rank"] = rank
-	CRT.play_zoom()
-	play_level_finish_anim()
+	# pause and show the level finish popup
+	get_tree().paused = true
+	LEVEL_FINISH_POPUP.visible = true
 
 func _on_next_level_btn_pressed():
 	if current_level_idx < level_paths.size() - 1:
@@ -133,7 +131,7 @@ func _on_next_level_btn_pressed():
 	else: # after final level
 		LEVEL_FINISH_POPUP.visible = false
 		GAME_FINISH_POPUP.visible = true
-		GAME_FINISH_TOTAL_SCORE.text = str(total_score)
+		#GAME_FINISH_TOTAL_SCORE.text = str(total_score)
 		# assign all the results
 		GAME_FINISH_LVL1_RANK.text = results[0]["rank"]
 		GAME_FINISH_LVL1_SCORE.text = str(results[0]["score"])
@@ -153,11 +151,6 @@ func _on_next_level_btn_pressed():
 		GAME_FINISH_LVL8_SCORE.text = str(results[7]["score"])
 		GAME_FINISH_LVL9_RANK.text = results[8]["rank"]
 		GAME_FINISH_LVL9_SCORE.text = str(results[8]["score"])
-
-# - animations for coordinating popus with crt filter -
-## this animation open the menu at the end and pauses the game
-func play_level_finish_anim():
-	ANIM_PLAYER.play("level_finish")
 
 ## toggles pause
 func toggle_pause():

@@ -18,7 +18,8 @@ var CLICK_VFX = preload("res://scenes/click_vfx.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	if OS.get_name() in ["Android", "iOS", "Web"]: # hidden by default on mobile and web
+		CRT.visible = false
 
 func _input(event):
 	if event is InputEventMouseButton:
@@ -126,4 +127,4 @@ func _on_speedrun_quit_gamemode():
 	TEST_MENU.start_tutorial.connect(_on_test_menu_start_tutorial)
 	TEST_MENU.start_editor.connect(_on_test_menu_start_editor)
 	TEST_MENU.start_speedrun.connect(_on_test_menu_start_speedrun)
-	
+

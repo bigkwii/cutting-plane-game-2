@@ -153,7 +153,7 @@ func _on_next_level_btn_pressed():
 		GAME_FINISH_LVL9_SCORE.text = str(results[8]["score"])
 
 # - animations for coordinating popus with crt filter -
-## this animation open the menu at the end and pauses the game
+## this animation opens the menu at the end and pauses the game
 func play_level_finish_anim():
 	ANIM_PLAYER.play("level_finish")
 
