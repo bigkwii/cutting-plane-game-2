@@ -102,6 +102,9 @@ func _input(event):
 				return
 			if SHOW_HULL_BUTTON.get_global_rect().has_point(event.position):
 				return
+			# commenting this out for now. by all accounts this should work, but the color picker being rotated is messing with the rect
+			# if COLOR_PICKER.get_global_rect().has_point(event.position):
+			# 	return
 		# click PRESSED
 		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 			# - camera stuff -
@@ -169,6 +172,7 @@ func try_to_add_vert(clicked_lattice_pos: Vector2) -> void:
 	poly_point.SCALING = SCALING
 	poly_point.position = clicked_lattice_pos * SCALING + OFFSET
 	poly_point.editable = true
+	poly_point.color = color
 	VERTS.add_child(poly_point)
 
 ## attempts to drop a vert at the clicked lattice position.
