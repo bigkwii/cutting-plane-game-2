@@ -58,6 +58,7 @@ Level"
 
 [node name="MENU" type="Control" parent="CanvasLayer"]
 process_mode = 2
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -103,10 +104,17 @@ horizontal_alignment = 1
 [node name="restart_container" type="HBoxContainer" parent="CanvasLayer/MENU/panel/VBoxContainer"]
 layout_mode = 2
 
-[node name="y_max_btn" type="LineEdit" parent="CanvasLayer/MENU/panel/VBoxContainer/restart_container"]
+[node name="y_max_line" type="LineEdit" parent="CanvasLayer/MENU/panel/VBoxContainer/restart_container"]
 layout_mode = 2
-placeholder_text = "6"
+placeholder_text = "4..16"
 max_length = 2
+context_menu_enabled = false
+virtual_keyboard_type = 2
+shortcut_keys_enabled = false
+middle_mouse_paste_enabled = false
+selecting_enabled = false
+deselect_on_focus_loss_enabled = false
+drag_and_drop_selection_enabled = false
 
 [node name="restart_btn" type="Button" parent="CanvasLayer/MENU/panel/VBoxContainer/restart_container"]
 layout_mode = 2
@@ -130,5 +138,7 @@ text = "X"
 
 [connection signal="pressed" from="CanvasLayer/play_level_options/edit_level_button" to="." method="_on_edit_level_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/play_level_options/reset_level_button" to="." method="_on_reset_level_button_pressed"]
+[connection signal="text_changed" from="CanvasLayer/MENU/panel/VBoxContainer/restart_container/y_max_line" to="." method="_on_y_max_line_text_changed"]
+[connection signal="pressed" from="CanvasLayer/MENU/panel/VBoxContainer/restart_container/restart_btn" to="." method="_on_restart_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/MENU/panel/VBoxContainer/exit" to="." method="_on_exit_pressed"]
 [connection signal="pressed" from="CanvasLayer/MENU/panel/x" to="." method="_on_x_pressed"]
