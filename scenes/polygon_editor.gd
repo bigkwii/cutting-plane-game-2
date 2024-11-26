@@ -77,7 +77,6 @@ func calculate_hull_centroid() -> Vector2:
 	if CONVEX_INTEGER_HULL.convex_integer_hull.size() < 1:
 		CONVEX_INTEGER_HULL.CENTROID.visible = false
 		return Vector2()
-	CONVEX_INTEGER_HULL.CENTROID.visible = true
 	var hull_centroid_lattice_pos: Vector2 = Vector2()
 	var area: float = 0.0
 	var centroid_x: float = 0.0
