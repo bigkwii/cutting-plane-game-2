@@ -40,6 +40,8 @@ var clicked_pos_at_drag_start: Vector2 = Vector2(0, 0)
 var invalidation_timer_timed_out: bool = false
 
 # - child nodes -
+@onready var OPEN_MENU = $CanvasLayer/HUD/open_menu
+@onready var PLAY_LEVEL_BUTTON = $CanvasLayer/HUD/play_level_button
 @onready var VERTS = $verts
 @onready var LATTICE_GRID = $lattice_grid
 @onready var GUIDE_GRID = $guide_grid
@@ -47,6 +49,9 @@ var invalidation_timer_timed_out: bool = false
 @onready var CAMERA = $camera
 @onready var INVALIDATE_CLICK_TIMER = $invalidate_click_timer
 @onready var SHOW_HULL_BUTTON = $CanvasLayer/HUD/show_hull
+@onready var COLOR_PICKER = $CanvasLayer/HUD/color_picker
+@onready var VERT_COUNT_CONTAINER = $CanvasLayer/HUD/vert_count_container
+@onready var VERT_COUNT_LABEL = $CanvasLayer/HUD/vert_count_container/vert_count_label
 
 # - preloaded scenes -
 @onready var POLY_POINT_SCENE = preload("res://scenes/poly_point.tscn")
@@ -74,6 +79,8 @@ func _process(_delta):
 	_handle_hover()
 	# update the polygon editor
 	update_polygon_editor()
+	# update the vert count. it sucks that i have to place this here, but queue_free() isn't fast enough for me to put it inside try_to_drop_vert()
+	update_vert_count()
 
 func _input(event):
 	# handle clicking with mouse 1
@@ -81,10 +88,16 @@ func _input(event):
 		# ignore inputs if paused
 		if get_tree().paused:
 			return
-		# ignore UI
-		if SHOW_HULL_BUTTON.get_global_rect().has_point(event.position):
-			return
-		# !!! add more !!!
+		# ignore UI (unless dragging a vert, then it's harmless)
+		if not dragging_vert:
+			if OPEN_MENU.get_global_rect().has_point(event.position):
+				return
+			if PLAY_LEVEL_BUTTON.get_global_rect().has_point(event.position):
+				return
+			if SHOW_HULL_BUTTON.get_global_rect().has_point(event.position):
+				return
+			if COLOR_PICKER.get_global_rect().has_point(event.position): # not working...? TODO: fix
+				return
 		# click PRESSED
 		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 			# - camera stuff -
@@ -169,6 +182,10 @@ func try_to_drop_vert(clicked_lattice_pos: Vector2) -> void:
 			break
 	return
 
+## updates the vert count
+func update_vert_count():
+	VERT_COUNT_LABEL.text = str(VERTS.get_child_count()) + "/" + str(MAX_VERTS)
+
 ## updates the verts such that the one being hovered is highlighted
 func _handle_hover():
 	var mouse_lattice_pos = (get_global_mouse_position() - OFFSET) / SCALING
@@ -230,3 +247,12 @@ func _on_show_hull_button_up() -> void:
 
 func _on_camera_zoom_level_changed(zoom_level:float):
 	GUIDE_GRID.update_alpha(zoom_level - 0.05) # -0.5 so the grid doesn't show up too early
+
+func _on_open_menu_pressed():
+	open_menu.emut()
+
+func _on_color_picker_color_changed(new_color: Color):
+	color = new_color
+	for vert in VERTS.get_children():
+		vert.color = color
+	POLYGON_EDITOR.color = color

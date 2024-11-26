@@ -41,6 +41,7 @@ theme = ExtResource("5_al5fl")
 layout_mode = 1
 anchors_preset = -1
 offset_top = 40.0
+text = "Making Level"
 
 [node name="show_hull" parent="CanvasLayer/HUD" instance=ExtResource("6_uasds")]
 process_mode = 1
@@ -73,6 +74,58 @@ grow_horizontal = 0
 text = "Open
 Menu"
 
+[node name="play_level_button" type="Button" parent="CanvasLayer/HUD"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -195.0
+offset_top = -56.0
+offset_bottom = 56.0
+grow_horizontal = 0
+grow_vertical = 2
+text = "Play
+Level"
+
+[node name="color_picker" type="ColorPicker" parent="CanvasLayer/HUD"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = 348.0
+offset_right = 696.0
+offset_bottom = 544.0
+grow_vertical = 2
+rotation = -1.5708
+color = Color(1, 0, 0, 1)
+edit_alpha = false
+picker_shape = 4
+can_add_swatches = false
+sampler_visible = false
+color_modes_visible = false
+hex_visible = false
+presets_visible = false
+
+[node name="vert_count_container" type="VBoxContainer" parent="CanvasLayer/HUD"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -108.0
+offset_right = 220.0
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="vert_count_title" type="Label" parent="CanvasLayer/HUD/vert_count_container"]
+layout_mode = 2
+text = "POINTS:"
+
+[node name="vert_count_label" type="Label" parent="CanvasLayer/HUD/vert_count_container"]
+layout_mode = 2
+text = "0/50"
+
 [node name="invalidate_click_timer" type="Timer" parent="."]
 wait_time = 0.5
 one_shot = true
@@ -80,4 +133,6 @@ one_shot = true
 [connection signal="zoom_level_changed" from="camera" to="." method="_on_camera_zoom_level_changed"]
 [connection signal="button_down" from="CanvasLayer/HUD/show_hull" to="." method="_on_show_hull_button_down"]
 [connection signal="button_up" from="CanvasLayer/HUD/show_hull" to="." method="_on_show_hull_button_up"]
+[connection signal="pressed" from="CanvasLayer/HUD/open_menu" to="." method="_on_open_menu_pressed"]
+[connection signal="color_changed" from="CanvasLayer/HUD/color_picker" to="." method="_on_color_picker_color_changed"]
 [connection signal="timeout" from="invalidate_click_timer" to="." method="_on_invalidate_click_timer_timeout"]
