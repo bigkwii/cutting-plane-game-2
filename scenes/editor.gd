@@ -16,6 +16,7 @@ var saved_verts: Array[Vector2] = []
 @onready var MENU = $CanvasLayer/MENU
 @onready var LEVEL_EDITOR = null # assigned dynamically
 @onready var LEVEL = null # assigned dynamically
+@onready var PLAY_LEVEL_OPTIONS = $CanvasLayer/play_level_options
 
 # - preloaded scenes -
 var LEVEL_EDITOR_SCENE = preload("res://scenes/level_editor.tscn")
@@ -31,14 +32,16 @@ func load_level_editor(initial_verts: Array[Vector2] = []) -> void:
 	if LEVEL_EDITOR != null:
 		LEVEL_EDITOR.queue_free()
 	LEVEL_EDITOR = LEVEL_EDITOR_SCENE.instantiate()
-	LEVEL_EDITOR.max_y = max_y
-	if initial_verts != []:
-		LEVEL_EDITOR.initial_verts = initial_verts
+	LEVEL_EDITOR.initial_verts = initial_verts
 	add_child(LEVEL_EDITOR)
+	LEVEL_EDITOR.level_max_y = max_y
 	LEVEL_EDITOR.open_menu.connect(_on_level_editor_open_menu)
 	LEVEL_EDITOR.play_level.connect(_on_level_editor_play_level)
+	PLAY_LEVEL_OPTIONS.visible = false
 
 func load_level(level_data: Dictionary) -> void:
+	if LEVEL_EDITOR != null:
+		LEVEL_EDITOR.queue_free()
 	if LEVEL != null:
 		LEVEL.queue_free()
 	LEVEL = LEVEL_SCENE.instantiate()
@@ -47,7 +50,7 @@ func load_level(level_data: Dictionary) -> void:
 	LEVEL.INFINITE_BUDGET = true
 	add_child(LEVEL)
 	LEVEL.open_menu.connect(_on_level_open_menu)
-	get_tree().paused = false
+	PLAY_LEVEL_OPTIONS.visible = true
 
 # - signal callbacks -
 
@@ -65,3 +68,18 @@ func _on_level_editor_open_menu():
 func _on_level_open_menu():
 	get_tree().paused = true
 	MENU.visible = true
+
+func _on_reset_level_button_pressed():
+	pass
+
+func _on_edit_level_button_pressed():
+	load_level_editor(saved_verts)
+
+func _on_x_pressed():
+	get_tree().paused = false
+	MENU.visible = false
+
+func _on_exit_pressed():
+	get_tree().paused = false
+	quit_gamemode.emit()
+	queue_free()

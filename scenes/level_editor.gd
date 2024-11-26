@@ -62,7 +62,9 @@ func _ready():
 	if initial_verts != []:
 		for vert in initial_verts:
 			var poly_point = POLY_POINT_SCENE.instantiate()
+			poly_point.lattice_position = vert
 			poly_point.position = vert * SCALING + OFFSET
+			poly_point.editable = true
 			VERTS.add_child(poly_point)
 	_set_lattice_grid_parameters(level_max_y)
 

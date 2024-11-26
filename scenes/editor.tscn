@@ -1,8 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://c5xxlw3n3vn14"]
+[gd_scene load_steps=4 format=3 uid="uid://c5xxlw3n3vn14"]
 
 [ext_resource type="Script" path="res://scenes/editor.gd" id="1_fawy0"]
 [ext_resource type="Theme" uid="uid://bqljbjsn8elrs" path="res://assets/themes/default.tres" id="2_nexu2"]
-[ext_resource type="PackedScene" uid="uid://c5ay5dvhptf23" path="res://scenes/level_editor.tscn" id="2_nm4vb"]
 [ext_resource type="FontFile" uid="uid://bvvtosdeupbva" path="res://assets/fonts/extrathick.ttf" id="3_co0u5"]
 
 [node name="editor" type="Node2D"]
@@ -59,6 +58,7 @@ Level"
 
 [node name="MENU" type="Control" parent="CanvasLayer"]
 process_mode = 2
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -116,4 +116,7 @@ offset_right = -32.0
 grow_horizontal = 0
 text = "X"
 
-[node name="level_editor" parent="." instance=ExtResource("2_nm4vb")]
+[connection signal="pressed" from="CanvasLayer/play_level_options/edit_level_button" to="." method="_on_edit_level_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/play_level_options/reset_level_button" to="." method="_on_reset_level_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/MENU/panel/VBoxContainer/exit" to="." method="_on_exit_pressed"]
+[connection signal="pressed" from="CanvasLayer/MENU/panel/x" to="." method="_on_x_pressed"]
