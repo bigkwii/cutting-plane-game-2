@@ -27,7 +27,7 @@ func _ready():
 func _process(_delta):
 	pass
 
-func play_short():
+func _setup_data():
 	# set origin on clicked vertex
 	global_position = data["selected_vertex"] * data["scaling"] + data["offset"]
 	# fill in the equation labels
@@ -55,9 +55,13 @@ func play_short():
 	# line 4 goes from data["point1"] to data["point2"]
 	LINE4.global_position = data["point1"] * data["scaling"] + data["offset"]
 	LINE4.rotation = (data["point2"] - data["point1"]).angle()
+
+func play_short():
+	_setup_data()
 	ANIM_PLAYER.play("short")
 
 func play_long():
+	_setup_data()
 	ANIM_PLAYER.play("long")
 
 func _on_animation_player_animation_finished(anim_name:StringName):

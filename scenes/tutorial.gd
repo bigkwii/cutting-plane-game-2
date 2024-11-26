@@ -654,6 +654,8 @@ func _on_tutorial_next_pressed():
 					cuts_made_on_current_level = 0
 					current_tutorial_popup_idx = 0
 					load_level(level_dicts[current_level_idx])
+					# this level and only this level has the long gomory cut animation
+					LEVEL.long_gomory_animation = true
 					disable_level_input()
 					open_tutorial_popup(current_level_idx, current_tutorial_popup_idx)
 				0: # gameplay starts here

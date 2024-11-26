@@ -16,6 +16,9 @@ extends Node2D
 ## Make sure to use Lattice coordinates.
 @export var initial_vertices: Array[Vector2] = []
 
+## flag to play the long version of the gomory cut animation (literally only used in level 5 of tutorial)
+@export var long_gomory_animation: bool = false
+
 ## flag to show debug labels
 @export var debug_labels_visible: bool = false
 
@@ -939,7 +942,10 @@ func _play_split_failure_animation() -> void:
 
 func _play_gomory_cut_animation(data: Dictionary) -> void:
 	GOMORY_VFX.data = data
-	GOMORY_VFX.play_short()
+	if long_gomory_animation:
+		GOMORY_VFX.play_long()
+	else:
+		GOMORY_VFX.play_short()
 
 # -- gomory cut mode selection vfx handling --
 func gomory_mode_selected(make_clickable: bool) -> void:

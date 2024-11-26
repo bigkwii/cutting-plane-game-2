@@ -101,6 +101,12 @@ var split_cut_budget: int = -1 # both h and v
 var score: int = 0
 ## flag to determine if the invalidation timer timed out
 var invalidation_timer_timed_out: bool = false
+## flag to play the long version of the gomory cut animation (literally only used in level 5 of tutorial)
+@export var long_gomory_animation: bool = false:
+	set(value):
+		long_gomory_animation = value
+		if POLYGON != null:
+			POLYGON.long_gomory_animation = value
 # - debug -
 var debug_cut_direction: Vector2 = Vector2(1, 0)
 
@@ -165,6 +171,7 @@ func _ready(): # TODO: messy. separate these into functions
 	# SET POLY DATA
 	POLYGON.color = level_color
 	POLYGON.initial_vertices = level_vertices
+	POLYGON.long_gomory_animation = long_gomory_animation
 	POLYGON.build_polygon(true)
 	# SET CUT BUDGETS (except for free play, where they're infinite)
 	if not INFINITE_BUDGET:
