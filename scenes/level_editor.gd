@@ -17,7 +17,7 @@ var MAX_VERTS: int = 50
 ## max_y for the lattice grid. from 4 to 10.
 @export var level_max_y: int = 6:
 	set(value):
-		level_max_y = level_max_y
+		level_max_y = value
 		_set_lattice_grid_parameters(level_max_y)
 ## max_x for the lattice grid. gets set by _set_lattice_grid_parameters.
 var level_max_x: int = -1
@@ -59,14 +59,13 @@ var invalidation_timer_timed_out: bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	# add the initial verts, if there are any
 	if initial_verts != []:
 		for vert in initial_verts:
 			var poly_point = POLY_POINT_SCENE.instantiate()
 			poly_point.lattice_position = vert
-			poly_point.position = vert * SCALING + OFFSET
 			poly_point.editable = true
 			VERTS.add_child(poly_point)
-	_set_lattice_grid_parameters(level_max_y)
 	COLOR_PICKER.color = color
 	for vert in VERTS.get_children():
 		vert.color = color
@@ -169,6 +168,7 @@ func try_to_add_vert(clicked_lattice_pos: Vector2) -> void:
 		return
 	var poly_point = POLY_POINT_SCENE.instantiate()
 	poly_point.lattice_position = clicked_lattice_pos
+	poly_point.SCALING = SCALING
 	poly_point.position = clicked_lattice_pos * SCALING + OFFSET
 	poly_point.editable = true
 	VERTS.add_child(poly_point)
@@ -235,6 +235,10 @@ func _set_lattice_grid_parameters(max_y: int):
 	# set the polygon grid size
 	POLYGON_EDITOR.SCALING = SCALING
 	POLYGON_EDITOR.OFFSET = OFFSET
+	# if there are verts, update them accordingly
+	for vert in VERTS.get_children():
+		vert.SCALING = SCALING
+		vert.position = vert.lattice_position * SCALING + OFFSET
 
 func update_polygon_editor():
 	var packed_vertices = PackedVector2Array()

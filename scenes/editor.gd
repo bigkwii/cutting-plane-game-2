@@ -6,9 +6,9 @@ signal quit_gamemode
 
 # - vars -
 ## selected_max_y
-@export var max_y: int = 6:
+@export var max_y: int = 10:
 	set(value):
-		max_y = clamp(value, 4, 10)
+		max_y = clamp(value, 4, 16)
 ## save verts of level editor in case the player wants to come back
 var saved_verts: Array[Vector2] = []
 ## likewise with the color

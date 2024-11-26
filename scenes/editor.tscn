@@ -58,7 +58,6 @@ Level"
 
 [node name="MENU" type="Control" parent="CanvasLayer"]
 process_mode = 2
-visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -100,6 +99,19 @@ theme_override_constants/separation = 64
 layout_mode = 2
 text = "Level Editor"
 horizontal_alignment = 1
+
+[node name="restart_container" type="HBoxContainer" parent="CanvasLayer/MENU/panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="y_max_btn" type="LineEdit" parent="CanvasLayer/MENU/panel/VBoxContainer/restart_container"]
+layout_mode = 2
+placeholder_text = "6"
+max_length = 2
+
+[node name="restart_btn" type="Button" parent="CanvasLayer/MENU/panel/VBoxContainer/restart_container"]
+layout_mode = 2
+text = "Restart Editor
+<- set lvl size"
 
 [node name="exit" type="Button" parent="CanvasLayer/MENU/panel/VBoxContainer"]
 layout_mode = 2
