@@ -164,7 +164,7 @@ func try_to_add_vert(clicked_lattice_pos: Vector2) -> void:
 		if vert.lattice_position.distance_to(clicked_lattice_pos) < GLOBALS.EDIT_CLICK_RANGE:
 			return
 	# don't place verts out of bounds
-	if clicked_lattice_pos.x < 0 or clicked_lattice_pos.x >= level_max_x or clicked_lattice_pos.y < 0 or clicked_lattice_pos.y >= level_max_y:
+	if clicked_lattice_pos.x < 0 or clicked_lattice_pos.x >= level_max_x-1 or clicked_lattice_pos.y < 0 or clicked_lattice_pos.y >= level_max_y-1:
 		return
 	var poly_point = POLY_POINT_SCENE.instantiate()
 	poly_point.lattice_position = clicked_lattice_pos
