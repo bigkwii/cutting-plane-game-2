@@ -102,8 +102,6 @@ func _input(event):
 				return
 			if SHOW_HULL_BUTTON.get_global_rect().has_point(event.position):
 				return
-			if COLOR_PICKER.get_global_rect().has_point(event.position): # not working...? TODO: fix
-				return
 		# click PRESSED
 		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 			# - camera stuff -
