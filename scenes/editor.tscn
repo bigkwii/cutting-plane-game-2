@@ -1,9 +1,119 @@
-[gd_scene load_steps=3 format=3 uid="uid://c5xxlw3n3vn14"]
+[gd_scene load_steps=5 format=3 uid="uid://c5xxlw3n3vn14"]
 
 [ext_resource type="Script" path="res://scenes/editor.gd" id="1_fawy0"]
+[ext_resource type="Theme" uid="uid://bqljbjsn8elrs" path="res://assets/themes/default.tres" id="2_nexu2"]
 [ext_resource type="PackedScene" uid="uid://c5ay5dvhptf23" path="res://scenes/level_editor.tscn" id="2_nm4vb"]
+[ext_resource type="FontFile" uid="uid://bvvtosdeupbva" path="res://assets/fonts/extrathick.ttf" id="3_co0u5"]
 
 [node name="editor" type="Node2D"]
 script = ExtResource("1_fawy0")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="HUD_TOP" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 64.0
+offset_top = 64.0
+offset_right = -64.0
+offset_bottom = -952.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("2_nexu2")
+
+[node name="gamemode_label" type="Label" parent="CanvasLayer/HUD_TOP"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+theme = ExtResource("2_nexu2")
+theme_override_fonts/font = ExtResource("3_co0u5")
+theme_override_font_sizes/font_size = 30
+text = "Level Editor Mode"
+
+[node name="play_level_options" type="VBoxContainer" parent="CanvasLayer"]
+anchors_preset = -1
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 64.0
+offset_top = -114.0
+offset_right = 208.0
+offset_bottom = 114.0
+grow_vertical = 2
+theme = ExtResource("2_nexu2")
+
+[node name="edit_level_button" type="Button" parent="CanvasLayer/play_level_options"]
+layout_mode = 2
+theme = ExtResource("2_nexu2")
+text = "Edit
+Level"
+
+[node name="reset_level_button" type="Button" parent="CanvasLayer/play_level_options"]
+layout_mode = 2
+theme = ExtResource("2_nexu2")
+text = "Reset
+Level"
+
+[node name="MENU" type="Control" parent="CanvasLayer"]
+process_mode = 2
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_nexu2")
+
+[node name="panel" type="Panel" parent="CanvasLayer/MENU"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -446.0
+offset_top = -286.0
+offset_right = 446.0
+offset_bottom = 286.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MENU/panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -226.0
+offset_top = -142.0
+offset_right = 226.0
+offset_bottom = 142.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 64
+
+[node name="Label" type="Label" parent="CanvasLayer/MENU/panel/VBoxContainer"]
+layout_mode = 2
+text = "Level Editor"
+horizontal_alignment = 1
+
+[node name="exit" type="Button" parent="CanvasLayer/MENU/panel/VBoxContainer"]
+layout_mode = 2
+text = "Back to
+Main Menu"
+
+[node name="x" type="Button" parent="CanvasLayer/MENU/panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_top = 32.0
+offset_right = -32.0
+grow_horizontal = 0
+text = "X"
 
 [node name="level_editor" parent="." instance=ExtResource("2_nm4vb")]

@@ -2,7 +2,8 @@ extends Node2D
 ## level editor scene. handles the logic of creation of new polygons. not to be confused with the editor game mode scene.
 
 # - signals -
-var open_menu
+signal open_menu
+signal play_level(data: Dictionary)
 
 # - vars -
 ## dimensions of the lattice grid
@@ -16,12 +17,12 @@ var MAX_VERTS: int = 50
 ## max_y for the lattice grid. from 4 to 10.
 @export var level_max_y: int = 6:
 	set(value):
-		level_max_y = clamp(value, 4, 10)
+		level_max_y = level_max_y
 		_set_lattice_grid_parameters(level_max_y)
 ## max_x for the lattice grid. gets set by _set_lattice_grid_parameters.
 var level_max_x: int = -1
 ## vertices (in lattice coords)
-@export var verts: Array[Vector2] = []
+@export var initial_verts: Array[Vector2] = []
 ## color
 @export var color: Color = Color(1, 1, 1)
 
@@ -58,13 +59,11 @@ var invalidation_timer_timed_out: bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	if verts != []:
-		for vert in verts:
+	if initial_verts != []:
+		for vert in initial_verts:
 			var poly_point = POLY_POINT_SCENE.instantiate()
 			poly_point.position = vert * SCALING + OFFSET
 			VERTS.add_child(poly_point)
-		verts = []
-		# open the menu
 	_set_lattice_grid_parameters(level_max_y)
 
 ## called every frame
@@ -81,6 +80,8 @@ func _process(_delta):
 	update_polygon_editor()
 	# update the vert count. it sucks that i have to place this here, but queue_free() isn't fast enough for me to put it inside try_to_drop_vert()
 	update_vert_count()
+	# update play level button
+	update_play_level_button()
 
 func _input(event):
 	# handle clicking with mouse 1
@@ -186,6 +187,10 @@ func try_to_drop_vert(clicked_lattice_pos: Vector2) -> void:
 func update_vert_count():
 	VERT_COUNT_LABEL.text = str(VERTS.get_child_count()) + "/" + str(MAX_VERTS)
 
+## updates the play level button
+func update_play_level_button():
+	PLAY_LEVEL_BUTTON.disabled = not POLYGON_EDITOR.validate_level()
+
 ## updates the verts such that the one being hovered is highlighted
 func _handle_hover():
 	var mouse_lattice_pos = (get_global_mouse_position() - OFFSET) / SCALING
@@ -249,10 +254,29 @@ func _on_camera_zoom_level_changed(zoom_level:float):
 	GUIDE_GRID.update_alpha(zoom_level - 0.05) # -0.5 so the grid doesn't show up too early
 
 func _on_open_menu_pressed():
-	open_menu.emut()
+	open_menu.emit()
 
 func _on_color_picker_color_changed(new_color: Color):
 	color = new_color
 	for vert in VERTS.get_children():
 		vert.color = color
 	POLYGON_EDITOR.color = color
+
+func _on_play_level_button_pressed():
+	if POLYGON_EDITOR.validate_level() == false:
+		DEBUG.log("level.gd: level is invalid, not playing.")
+		return
+	var packed_vertices: PackedVector2Array = POLYGON_EDITOR.convex_hull
+	var initial_vertices: Array[Array] = []
+	for vert in packed_vertices: # need to convert to an array of arrays
+		initial_vertices.append( [vert.x, vert.y] )
+	var data: Dictionary = {
+		"name": "Playing Level",
+		"max_y": level_max_y,
+		"poly_color": color.to_html(false),
+		"circle_budget": -1,
+		"gomory_budget": 0,
+		"split_budget": 0,
+		"poly_vertices" : initial_vertices
+	}
+	play_level.emit(data)

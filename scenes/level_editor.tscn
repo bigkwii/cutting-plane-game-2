@@ -134,5 +134,6 @@ one_shot = true
 [connection signal="button_down" from="CanvasLayer/HUD/show_hull" to="." method="_on_show_hull_button_down"]
 [connection signal="button_up" from="CanvasLayer/HUD/show_hull" to="." method="_on_show_hull_button_up"]
 [connection signal="pressed" from="CanvasLayer/HUD/open_menu" to="." method="_on_open_menu_pressed"]
+[connection signal="pressed" from="CanvasLayer/HUD/play_level_button" to="." method="_on_play_level_button_pressed"]
 [connection signal="color_changed" from="CanvasLayer/HUD/color_picker" to="." method="_on_color_picker_color_changed"]
 [connection signal="timeout" from="invalidate_click_timer" to="." method="_on_invalidate_click_timer_timeout"]

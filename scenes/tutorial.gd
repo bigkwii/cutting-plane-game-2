@@ -451,8 +451,6 @@ func load_level(level_data: Dictionary):
 	LEVEL.cut_made.connect(_on_cut_made)
 	get_tree().paused = false
 	_setup_initial_conditions()
-	# LEVEL._on_show_hull_button_down() # show hull
-	# LEVEL._on_show_hull_button_up() # hide hull
 
 ## function to setup the initial conditions for each tutorial level. call after loading a new level
 func _setup_initial_conditions():
