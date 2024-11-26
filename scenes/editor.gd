@@ -11,6 +11,8 @@ signal quit_gamemode
 		max_y = clamp(value, 4, 10)
 ## save verts of level editor in case the player wants to come back
 var saved_verts: Array[Vector2] = []
+## likewise with the color
+var saved_color: Color = Color(1, 0, 0)
 
 # - child nodes -
 @onready var MENU = $CanvasLayer/MENU
@@ -33,6 +35,7 @@ func load_level_editor(initial_verts: Array[Vector2] = []) -> void:
 		LEVEL_EDITOR.queue_free()
 	LEVEL_EDITOR = LEVEL_EDITOR_SCENE.instantiate()
 	LEVEL_EDITOR.initial_verts = initial_verts
+	LEVEL_EDITOR.color = saved_color
 	add_child(LEVEL_EDITOR)
 	LEVEL_EDITOR.level_max_y = max_y
 	LEVEL_EDITOR.open_menu.connect(_on_level_editor_open_menu)
@@ -59,6 +62,7 @@ func _on_level_editor_play_level(level_data: Dictionary):
 	saved_verts = []
 	for vert in LEVEL_EDITOR.VERTS.get_children():
 		saved_verts.append(vert.lattice_position)
+	saved_color = LEVEL_EDITOR.color
 	load_level(level_data)
 
 func _on_level_editor_open_menu():
@@ -70,7 +74,8 @@ func _on_level_open_menu():
 	MENU.visible = true
 
 func _on_reset_level_button_pressed():
-	pass
+	var level_data = LEVEL.level_data
+	load_level(level_data)
 
 func _on_edit_level_button_pressed():
 	load_level_editor(saved_verts)

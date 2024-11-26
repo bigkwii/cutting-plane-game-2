@@ -24,7 +24,7 @@ var level_max_x: int = -1
 ## vertices (in lattice coords)
 @export var initial_verts: Array[Vector2] = []
 ## color
-@export var color: Color = Color(1, 1, 1)
+@export var color: Color = Color(1, 0, 0)
 
 ## the vert currently being dragged
 var vert_being_dragged = null
@@ -67,6 +67,10 @@ func _ready():
 			poly_point.editable = true
 			VERTS.add_child(poly_point)
 	_set_lattice_grid_parameters(level_max_y)
+	COLOR_PICKER.color = color
+	for vert in VERTS.get_children():
+		vert.color = color
+	POLYGON_EDITOR.color = color
 
 ## called every frame
 func _process(_delta):
@@ -275,7 +279,7 @@ func _on_play_level_button_pressed():
 	var data: Dictionary = {
 		"name": "Playing Level",
 		"max_y": level_max_y,
-		"poly_color": color.to_html(false),
+		"poly_color": "#" + color.to_html(false),
 		"circle_budget": -1,
 		"gomory_budget": 0,
 		"split_budget": 0,
