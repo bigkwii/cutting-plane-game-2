@@ -106,6 +106,8 @@ func calculate_hull_centroid() -> Vector2:
 ## Returns the convex hull of the vertices in a PackedVector2Array.
 func build_polygon(packed_vertices: PackedVector2Array) -> PackedVector2Array:
 	convex_hull = Geometry2D.convex_hull(packed_vertices)
+	if convex_hull.size() > 0:
+		convex_hull.remove_at(convex_hull.size() - 1) # remove the last point, as it's the same as the first
 	calculate_convex_integer_hull(convex_hull)
 	calculate_hull_centroid()
 	return convex_hull

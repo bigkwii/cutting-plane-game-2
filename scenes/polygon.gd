@@ -875,8 +875,8 @@ func compute_inverse_basis_rows(a: float, b: float, c: float, d: float) -> Array
 	var out_rows: Array[Vector2] = []
 	var determinant = a * d - b * c
 	if abs(determinant) < GLOBALS.GEOMETRY_EPSILON:
-		DEBUG.log("compute_inverse_basis_rows: Error: Determinant is (too close to) zero!")
-		return []
+		DEBUG.log("polygon.compute_inverse_basis_rows: Error: Determinant is (too close to) zero!")
+		# return []
 	out_rows.append(Vector2(d / determinant, -b / determinant))
 	out_rows.append(Vector2(-c / determinant, a / determinant))
 	return out_rows
