@@ -269,7 +269,7 @@ theme_override_constants/separation = 32
 
 [node name="Label" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer"]
 layout_mode = 2
-text = "Arcade Mode Results"
+text = "Speedrun Mode Results"
 horizontal_alignment = 1
 
 [node name="results" type="GridContainer" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer"]

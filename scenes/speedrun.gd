@@ -51,7 +51,7 @@ var results: Array[Dictionary] = []
 @onready var SUBMIT_SCORE_BTN = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/HBoxContainer/submit_btn
 @onready var SUBMIT_SCORE_NAME = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/HBoxContainer/name_entry
 
-@onready var GAME_FINISH_TOTAL_TIME = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/timeHBoxContainer2/time_label
+@onready var GAME_FINISH_TOTAL_TIME = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/timeHBoxContainer2/score_label
 @onready var GAME_FINISH_EXIT_BTN = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/exit
 
 @onready var GAME_FINISH_LVL1_RANK = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl1/hbox/rank
@@ -159,7 +159,7 @@ func _on_next_level_btn_pressed():
 	else: # after final level
 		LEVEL_FINISH_POPUP.visible = false
 		GAME_FINISH_POPUP.visible = true
-		#GAME_FINISH_TOTAL_SCORE.text = str(total_score)
+		GAME_FINISH_TOTAL_TIME.text = format_time(total_time)[0] + ":" + format_time(total_time)[1] + "." + format_time(total_time)[2]
 		# assign all the results
 		GAME_FINISH_LVL1_RANK.text = results[0]["rank"]
 		var formated_time_1 = format_time(results[0]["time"])
