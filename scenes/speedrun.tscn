@@ -34,7 +34,7 @@ theme_override_fonts/font = ExtResource("3_vo8m3")
 theme_override_font_sizes/font_size = 30
 text = "Speedrun Mode"
 
-[node name="score_container" type="VBoxContainer" parent="CanvasLayer/HUD"]
+[node name="time_container" type="VBoxContainer" parent="CanvasLayer/HUD"]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 1.0
@@ -44,21 +44,39 @@ offset_right = 251.0
 offset_bottom = -128.0
 grow_vertical = 0
 
-[node name="total_score_title" type="Label" parent="CanvasLayer/HUD/score_container"]
+[node name="total_time_title" type="Label" parent="CanvasLayer/HUD/time_container"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_vo8m3")
 theme_override_font_sizes/font_size = 30
-text = "TOTAL SCORE:"
+text = "TIME:"
 
-[node name="total_score_label" type="Label" parent="CanvasLayer/HUD/score_container"]
+[node name="total_time_container" type="HBoxContainer" parent="CanvasLayer/HUD/time_container"]
+layout_mode = 2
+alignment = 2
+
+[node name="minutes" type="Label" parent="CanvasLayer/HUD/time_container/total_time_container"]
+custom_minimum_size = Vector2(45, 0)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_vo8m3")
 theme_override_font_sizes/font_size = 30
-text = "0"
+text = "00"
+
+[node name="seconds" type="Label" parent="CanvasLayer/HUD/time_container/total_time_container"]
+custom_minimum_size = Vector2(55, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_vo8m3")
+theme_override_font_sizes/font_size = 30
+text = ":00"
+
+[node name="milliseconds" type="Label" parent="CanvasLayer/HUD/time_container/total_time_container"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_vo8m3")
+theme_override_font_sizes/font_size = 30
+text = ".000"
 
 [node name="MENU" type="Control" parent="CanvasLayer"]
 process_mode = 2
-visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -69,6 +87,7 @@ mouse_filter = 2
 theme = ExtResource("2_esy4r")
 
 [node name="panel" type="Panel" parent="CanvasLayer/MENU"]
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -98,7 +117,7 @@ theme_override_constants/separation = 128
 
 [node name="Label" type="Label" parent="CanvasLayer/MENU/panel/VBoxContainer"]
 layout_mode = 2
-text = "Arcade"
+text = "Speedrun"
 horizontal_alignment = 1
 
 [node name="exit" type="Button" parent="CanvasLayer/MENU/panel/VBoxContainer"]
@@ -158,7 +177,7 @@ theme_override_constants/separation = 64
 
 [node name="Label" type="Label" parent="CanvasLayer/LEVEL_FINISH_POPUP/panel/VBoxContainer"]
 layout_mode = 2
-text = "LEVEL COMPLETE!"
+text = "LEVEL COMPLETE"
 horizontal_alignment = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/LEVEL_FINISH_POPUP/panel/VBoxContainer"]
@@ -181,39 +200,18 @@ theme_override_fonts/font = ExtResource("3_vo8m3")
 layout_mode = 2
 horizontal_alignment = 1
 
-[node name="RankBonuxHBoxContainer" type="HBoxContainer" parent="CanvasLayer/LEVEL_FINISH_POPUP/panel/VBoxContainer/VBoxContainer"]
+[node name="level_time_container" type="VBoxContainer" parent="CanvasLayer/LEVEL_FINISH_POPUP/panel/VBoxContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="bonus_title" type="Label" parent="CanvasLayer/LEVEL_FINISH_POPUP/panel/VBoxContainer/VBoxContainer/RankBonuxHBoxContainer"]
+[node name="level_time_title" type="Label" parent="CanvasLayer/LEVEL_FINISH_POPUP/panel/VBoxContainer/VBoxContainer/level_time_container"]
 layout_mode = 2
-text = "RANK BONUS: "
+text = "LEVEL TIME:"
+horizontal_alignment = 1
 
-[node name="bonus_label" type="Label" parent="CanvasLayer/LEVEL_FINISH_POPUP/panel/VBoxContainer/VBoxContainer/RankBonuxHBoxContainer"]
+[node name="level_time_label" type="Label" parent="CanvasLayer/LEVEL_FINISH_POPUP/panel/VBoxContainer/VBoxContainer/level_time_container"]
 layout_mode = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/LEVEL_FINISH_POPUP/panel/VBoxContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="BudgetBonusHBoxContainer2" type="HBoxContainer" parent="CanvasLayer/LEVEL_FINISH_POPUP/panel/VBoxContainer/VBoxContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-
-[node name="budget_title" type="Label" parent="CanvasLayer/LEVEL_FINISH_POPUP/panel/VBoxContainer/VBoxContainer/VBoxContainer/BudgetBonusHBoxContainer2"]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("3_vo8m3")
-theme_override_font_sizes/font_size = 30
-text = "LEFTOVER CUTS BONUS: "
-
-[node name="budget_label" type="Label" parent="CanvasLayer/LEVEL_FINISH_POPUP/panel/VBoxContainer/VBoxContainer/VBoxContainer/BudgetBonusHBoxContainer2"]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("3_vo8m3")
-theme_override_font_sizes/font_size = 30
-
-[node name="detail" type="Label" parent="CanvasLayer/LEVEL_FINISH_POPUP/panel/VBoxContainer/VBoxContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("3_vo8m3")
-theme_override_font_sizes/font_size = 30
+text = "00:00.000"
 horizontal_alignment = 1
 
 [node name="next_level_btn" type="Button" parent="CanvasLayer/LEVEL_FINISH_POPUP/panel"]
@@ -297,11 +295,11 @@ text = "Lvl 1: "
 layout_mode = 2
 text = "-"
 
-[node name="score" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl1"]
+[node name="time" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl1"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_vo8m3")
 theme_override_font_sizes/font_size = 30
-text = "0"
+text = "00:00.000"
 
 [node name="lvl2" type="VBoxContainer" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results"]
 layout_mode = 2
@@ -319,11 +317,11 @@ text = "Lvl 2: "
 layout_mode = 2
 text = "-"
 
-[node name="score" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl2"]
+[node name="time" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl2"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_vo8m3")
 theme_override_font_sizes/font_size = 30
-text = "0"
+text = "00:00.000"
 
 [node name="lvl3" type="VBoxContainer" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results"]
 layout_mode = 2
@@ -341,11 +339,11 @@ text = "Lvl 3: "
 layout_mode = 2
 text = "-"
 
-[node name="score" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl3"]
+[node name="time" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl3"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_vo8m3")
 theme_override_font_sizes/font_size = 30
-text = "0"
+text = "00:00.000"
 
 [node name="lvl4" type="VBoxContainer" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results"]
 layout_mode = 2
@@ -363,11 +361,11 @@ text = "Lvl 4: "
 layout_mode = 2
 text = "-"
 
-[node name="score" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl4"]
+[node name="time" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl4"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_vo8m3")
 theme_override_font_sizes/font_size = 30
-text = "0"
+text = "00:00.000"
 
 [node name="lvl5" type="VBoxContainer" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results"]
 layout_mode = 2
@@ -385,11 +383,11 @@ text = "Lvl 5: "
 layout_mode = 2
 text = "-"
 
-[node name="score" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl5"]
+[node name="time" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl5"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_vo8m3")
 theme_override_font_sizes/font_size = 30
-text = "0"
+text = "00:00.000"
 
 [node name="lvl6" type="VBoxContainer" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results"]
 layout_mode = 2
@@ -407,11 +405,11 @@ text = "Lvl 6: "
 layout_mode = 2
 text = "-"
 
-[node name="score" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl6"]
+[node name="time" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl6"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_vo8m3")
 theme_override_font_sizes/font_size = 30
-text = "0"
+text = "00:00.000"
 
 [node name="lvl7" type="VBoxContainer" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results"]
 layout_mode = 2
@@ -429,11 +427,11 @@ text = "Lvl 7: "
 layout_mode = 2
 text = "-"
 
-[node name="score" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl7"]
+[node name="time" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl7"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_vo8m3")
 theme_override_font_sizes/font_size = 30
-text = "0"
+text = "00:00.000"
 
 [node name="lvl8" type="VBoxContainer" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results"]
 layout_mode = 2
@@ -451,11 +449,11 @@ text = "Lvl 8: "
 layout_mode = 2
 text = "-"
 
-[node name="score" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl8"]
+[node name="time" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl8"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_vo8m3")
 theme_override_font_sizes/font_size = 30
-text = "0"
+text = "00:00.000"
 
 [node name="lvl9" type="VBoxContainer" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results"]
 layout_mode = 2
@@ -473,23 +471,24 @@ text = "Lvl 9: "
 layout_mode = 2
 text = "-"
 
-[node name="score" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl9"]
+[node name="time" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl9"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_vo8m3")
 theme_override_font_sizes/font_size = 30
-text = "0"
+text = "00:00.000"
 
-[node name="scoreHBoxContainer2" type="VBoxContainer" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer"]
+[node name="timeHBoxContainer2" type="VBoxContainer" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer"]
 layout_mode = 2
 alignment = 1
 
-[node name="score_title" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/scoreHBoxContainer2"]
+[node name="time_title" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/timeHBoxContainer2"]
 layout_mode = 2
-text = "Total Score: "
+text = "Total Time:"
 horizontal_alignment = 1
 
-[node name="score_label" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/scoreHBoxContainer2"]
+[node name="score_label" type="Label" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/timeHBoxContainer2"]
 layout_mode = 2
+text = "00:00.000"
 horizontal_alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer"]

@@ -20,21 +20,30 @@ var level_paths: Array[String] = [
 ]
 var current_level_idx: int = 0
 
-## total score
-var total_time = 0
+## flag to count time
+var counting_time: bool = false
+## total time
+var total_time: float = 0
+var minutes: int = 0
+var seconds: int = 0
+var milliseconds: int = 0
+## keep track of level time as well
+var level_time: float = 0
+## keep track of it the player got an S rank in the current level
+var got_s_rank: bool = false
 
 ## array of dictionaries to store the scores and ranks of each level
 var results: Array[Dictionary] = []
 
 # - child nodes -
-@onready var TOTAL_SCORE_LABEL = $CanvasLayer/HUD/score_container/total_score_label
+@onready var TOTAL_MINUTES_LABEL = $CanvasLayer/HUD/time_container/total_time_container/minutes
+@onready var TOTAL_SECONDS_LABEL = $CanvasLayer/HUD/time_container/total_time_container/seconds
+@onready var TOTAL_MILLISECONDS_LABEL = $CanvasLayer/HUD/time_container/total_time_container/milliseconds
 @onready var MENU = $CanvasLayer/MENU
 @onready var LEVEL = null # assigned dynamically
 @onready var RANK_LABEL = $CanvasLayer/LEVEL_FINISH_POPUP/panel/VBoxContainer/VBoxContainer/RankHBoxContainer/rank_label
 @onready var RANK_MESSAGE = $CanvasLayer/LEVEL_FINISH_POPUP/panel/VBoxContainer/VBoxContainer/rank_message
-@onready var RANK_BONUS_LABEL = $CanvasLayer/LEVEL_FINISH_POPUP/panel/VBoxContainer/VBoxContainer/RankBonuxHBoxContainer/bonus_label
-@onready var BUDGET_BONUS_LABEL = $CanvasLayer/LEVEL_FINISH_POPUP/panel/VBoxContainer/VBoxContainer/VBoxContainer/BudgetBonusHBoxContainer2/budget_label
-@onready var BUDGET_BONUS_DETAIL = $CanvasLayer/LEVEL_FINISH_POPUP/panel/VBoxContainer/VBoxContainer/VBoxContainer/detail
+@onready var LEVEL_TIME_LABEL = $CanvasLayer/LEVEL_FINISH_POPUP/panel/VBoxContainer/VBoxContainer/level_time_container/level_time_label
 @onready var LEVEL_FINISH_POPUP = $CanvasLayer/LEVEL_FINISH_POPUP
 @onready var NEXT_LEVEL_BTN = $CanvasLayer/LEVEL_FINISH_POPUP/panel/next_level_btn
 @onready var GAME_FINISH_POPUP = $CanvasLayer/GAME_FINISH_POPUP
@@ -42,45 +51,51 @@ var results: Array[Dictionary] = []
 @onready var SUBMIT_SCORE_BTN = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/HBoxContainer/submit_btn
 @onready var SUBMIT_SCORE_NAME = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/HBoxContainer/name_entry
 
-@onready var GAME_FINISH_TOTAL_SCORE = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/scoreHBoxContainer2/score_label
+@onready var GAME_FINISH_TOTAL_TIME = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/timeHBoxContainer2/time_label
 @onready var GAME_FINISH_EXIT_BTN = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/exit
 
 @onready var GAME_FINISH_LVL1_RANK = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl1/hbox/rank
-@onready var GAME_FINISH_LVL1_SCORE = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl1/score
+@onready var GAME_FINISH_LVL1_TIME = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl1/time
 @onready var GAME_FINISH_LVL2_RANK = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl2/hbox/rank
-@onready var GAME_FINISH_LVL2_SCORE = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl2/score
+@onready var GAME_FINISH_LVL2_TIME = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl2/time
 @onready var GAME_FINISH_LVL3_RANK = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl3/hbox/rank
-@onready var GAME_FINISH_LVL3_SCORE = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl3/score
+@onready var GAME_FINISH_LVL3_TIME = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl3/time
 @onready var GAME_FINISH_LVL4_RANK = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl4/hbox/rank
-@onready var GAME_FINISH_LVL4_SCORE = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl4/score
+@onready var GAME_FINISH_LVL4_TIME = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl4/time
 @onready var GAME_FINISH_LVL5_RANK = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl5/hbox/rank
-@onready var GAME_FINISH_LVL5_SCORE = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl5/score
+@onready var GAME_FINISH_LVL5_TIME = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl5/time
 @onready var GAME_FINISH_LVL6_RANK = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl6/hbox/rank
-@onready var GAME_FINISH_LVL6_SCORE = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl6/score
+@onready var GAME_FINISH_LVL6_TIME = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl6/time
 @onready var GAME_FINISH_LVL7_RANK = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl7/hbox/rank
-@onready var GAME_FINISH_LVL7_SCORE = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl7/score
+@onready var GAME_FINISH_LVL7_TIME = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl7/time
 @onready var GAME_FINISH_LVL8_RANK = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl8/hbox/rank
-@onready var GAME_FINISH_LVL8_SCORE = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl8/score
+@onready var GAME_FINISH_LVL8_TIME = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl8/time
 @onready var GAME_FINISH_LVL9_RANK = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl9/hbox/rank
-@onready var GAME_FINISH_LVL9_SCORE = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl9/score
+@onready var GAME_FINISH_LVL9_TIME = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/results/lvl9/time
 
 # - preloaded scenes -
 @onready var LEVEL_SCENE = preload("res://scenes/level.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	counting_time = true
 	# fill the results array with initial values
 	for i in range(level_paths.size()):
 		results.append({
-			"score": 0,
-			"rank": "-"
+			"rank": "-",
+			"time": 0,
 		})
 	# create and add the level scene
 	load_level(level_paths[current_level_idx])
 
 func _process(delta):
-	total_time += delta
-	TOTAL_SCORE_LABEL.text = str(total_time)
+	if counting_time:
+		level_time += delta
+		total_time += delta
+	var formated_time = format_time(total_time)
+	TOTAL_MINUTES_LABEL.text = formated_time[0]
+	TOTAL_SECONDS_LABEL.text = ":" + formated_time[1]
+	TOTAL_MILLISECONDS_LABEL.text = "." + formated_time[2]
 
 func load_level(level_json_path: String):
 	if LEVEL != null:
@@ -106,25 +121,38 @@ func _on_exit_pressed():
 	quit_gamemode.emit()
 	queue_free()
 
-func _on_level_completed(rank: String, rank_bonus: int, budget_bonus: int, remaining_circle: int, remaining_gomory: int, remaining_split: int):
+func _on_level_completed(rank: String, _rank_bonus: int, _budget_bonus: int, _remaining_circle: int, _remaining_gomory: int, _remaining_split: int):
 	RANK_LABEL.text = rank
-	RANK_MESSAGE.text = SCORE.RANK_MESSAGES[rank]
-	RANK_BONUS_LABEL.text = str(rank_bonus)
-	BUDGET_BONUS_LABEL.text = str(budget_bonus)
-	BUDGET_BONUS_DETAIL.text = "(%d X %d + %d X %d + %d X %d)" % \
-		[remaining_circle, SCORE.CIRCLE_CUT_BONUS, remaining_gomory, SCORE.GOMORY_CUT_BONUS, remaining_split, SCORE.SPLIT_CUT_BONUS]
-	# update total
-	#total_score += rank_bonus + budget_bonus
-	# update the results array
-	results[current_level_idx]["score"] = LEVEL.score
 	results[current_level_idx]["rank"] = rank
+	LEVEL_TIME_LABEL.text = format_time(level_time)[0] + ":" + format_time(level_time)[1] + "." + format_time(level_time)[2]
+	# if rank is S, save time and allow to continue
+	if rank == "S":
+		# if level 9, stop counting time
+		if current_level_idx == level_paths.size() - 1:
+			counting_time = false
+		RANK_MESSAGE.text = "YOU PASS!"
+		got_s_rank = true
+		results[current_level_idx]["time"] = level_time
+		NEXT_LEVEL_BTN.text = ">>NEXT LEVEL"
+	else:
+		RANK_MESSAGE.text = "NOT GOOD ENOUGH."
+		NEXT_LEVEL_BTN.text = "<<TRY AGAIN"
 	# pause and show the level finish popup
 	get_tree().paused = true
 	LEVEL_FINISH_POPUP.visible = true
 
 func _on_next_level_btn_pressed():
+	if not got_s_rank:
+		LEVEL_FINISH_POPUP.visible = false
+		get_tree().paused = false
+		load_level(level_paths[current_level_idx])
+		CRT.play_buzz()
+		LEVEL_FINISH_POPUP.visible = false
+		return
 	if current_level_idx < level_paths.size() - 1:
 		current_level_idx += 1
+		level_time = 0
+		got_s_rank = false
 		load_level(level_paths[current_level_idx])
 		CRT.play_buzz()
 		LEVEL_FINISH_POPUP.visible = false
@@ -134,24 +162,40 @@ func _on_next_level_btn_pressed():
 		#GAME_FINISH_TOTAL_SCORE.text = str(total_score)
 		# assign all the results
 		GAME_FINISH_LVL1_RANK.text = results[0]["rank"]
-		GAME_FINISH_LVL1_SCORE.text = str(results[0]["score"])
+		var formated_time_1 = format_time(results[0]["time"])
+		GAME_FINISH_LVL1_TIME.text = formated_time_1[0] + ":" + formated_time_1[1] + "." + formated_time_1[2]
 		GAME_FINISH_LVL2_RANK.text = results[1]["rank"]
-		GAME_FINISH_LVL2_SCORE.text = str(results[1]["score"])
+		var formated_time_2 = format_time(results[1]["time"])
+		GAME_FINISH_LVL2_TIME.text = formated_time_2[0] + ":" + formated_time_2[1] + "." + formated_time_2[2]
 		GAME_FINISH_LVL3_RANK.text = results[2]["rank"]
-		GAME_FINISH_LVL3_SCORE.text = str(results[2]["score"])
+		var formated_time_3 = format_time(results[2]["time"])
+		GAME_FINISH_LVL3_TIME.text = formated_time_3[0] + ":" + formated_time_3[1] + "." + formated_time_3[2]
 		GAME_FINISH_LVL4_RANK.text = results[3]["rank"]
-		GAME_FINISH_LVL4_SCORE.text = str(results[3]["score"])
+		var formated_time_4 = format_time(results[3]["time"])
+		GAME_FINISH_LVL4_TIME.text = formated_time_4[0] + ":" + formated_time_4[1] + "." + formated_time_4[2]
 		GAME_FINISH_LVL5_RANK.text = results[4]["rank"]
-		GAME_FINISH_LVL5_SCORE.text = str(results[4]["score"])
+		var formated_time_5 = format_time(results[4]["time"])
+		GAME_FINISH_LVL5_TIME.text = formated_time_5[0] + ":" + formated_time_5[1] + "." + formated_time_5[2]
 		GAME_FINISH_LVL6_RANK.text = results[5]["rank"]
-		GAME_FINISH_LVL6_SCORE.text = str(results[5]["score"])
+		var formated_time_6 = format_time(results[5]["time"])
+		GAME_FINISH_LVL6_TIME.text = formated_time_6[0] + ":" + formated_time_6[1] + "." + formated_time_6[2]
 		GAME_FINISH_LVL7_RANK.text = results[6]["rank"]
-		GAME_FINISH_LVL7_SCORE.text = str(results[6]["score"])
+		var formated_time_7 = format_time(results[6]["time"])
+		GAME_FINISH_LVL7_TIME.text = formated_time_7[0] + ":" + formated_time_7[1] + "." + formated_time_7[2]
 		GAME_FINISH_LVL8_RANK.text = results[7]["rank"]
-		GAME_FINISH_LVL8_SCORE.text = str(results[7]["score"])
+		var formated_time_8 = format_time(results[7]["time"])
+		GAME_FINISH_LVL8_TIME.text = formated_time_8[0] + ":" + formated_time_8[1] + "." + formated_time_8[2]
 		GAME_FINISH_LVL9_RANK.text = results[8]["rank"]
-		GAME_FINISH_LVL9_SCORE.text = str(results[8]["score"])
+		var formated_time_9 = format_time(results[8]["time"])
+		GAME_FINISH_LVL9_TIME.text = formated_time_9[0] + ":" + formated_time_9[1] + "." + formated_time_9[2]
 
 ## toggles pause
 func toggle_pause():
 	get_tree().paused = !get_tree().paused
+
+## formats time into a list of strings [minutes, seconds, milliseconds]
+func format_time(time: float) -> Array[String]:
+	var m: int = int(fmod(time, 3600) / 60)
+	var s: int = int(fmod(time, 60))
+	var ms: int = int(fmod(time, 1) * 1000)
+	return ["%02d" % m, "%02d" % s, "%03d" % ms]
