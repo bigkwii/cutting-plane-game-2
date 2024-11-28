@@ -214,6 +214,8 @@ func _input(event) -> void:
 			return
 		if SHOW_HULL_BUTTON.get_global_rect().has_point(event.position):
 			return
+		if OPEN_MENU.get_global_rect().has_point(event.position):
+			return
 		# click PRESSED
 		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 			is_m1_dragging = true
