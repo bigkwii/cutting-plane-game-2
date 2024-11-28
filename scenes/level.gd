@@ -119,7 +119,7 @@ var debug_cut_direction: Vector2 = Vector2(1, 0)
 # - hud elements -
 @onready var HUD = $CanvasLayer/HUD
 @onready var NAME_LABEL = $CanvasLayer/HUD/name_label
-@onready var BUTTONS_CONTAINER = $CanvasLayer/HUD/cut_buttons
+@onready var CUT_BUTTONS_CONTAINER = $CanvasLayer/HUD/cut_buttons
 @onready var OPEN_MENU = $CanvasLayer/HUD/open_menu
 @onready var SHOW_HULL_BUTTON = $CanvasLayer/HUD/show_hull
 @onready var CIRCLE_CUT_BUTTON = $CanvasLayer/HUD/cut_buttons/circle
@@ -208,15 +208,7 @@ func _input(event) -> void:
 		if not can_click:
 			return
 		# ignore UI
-		if CIRCLE_CUT_BUTTON.get_global_rect().has_point(event.position):
-			return
-		if GOMORY_CUT_BUTTON.get_global_rect().has_point(event.position):
-			return
-		if H_SPLIT_CUT_BUTTON.get_global_rect().has_point(event.position):
-			return
-		if V_SPLIT_CUT_BUTTON.get_global_rect().has_point(event.position):
-			return
-		if OPEN_MENU.get_global_rect().has_point(event.position):
+		if CUT_BUTTONS_CONTAINER.get_global_rect().has_point(event.position):
 			return
 		if DEBUG_CONTAINER.visible and DEBUG_CONTAINER.get_global_rect().has_point(event.position):
 			return

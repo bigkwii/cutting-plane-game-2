@@ -51,6 +51,8 @@ var invalidation_timer_timed_out: bool = false
 @onready var INVALIDATE_CLICK_TIMER = $invalidate_click_timer
 @onready var SHOW_HULL_BUTTON = $CanvasLayer/HUD/show_hull
 @onready var COLOR_PICKER = $CanvasLayer/HUD/color_picker
+## since COLOR_PICKER is rotated -90 degs, it's rect got a bit bugged. this container is a hacky way of ignoring the UI on _input
+@onready var COLOR_PICKER_HITBOX = $CanvasLayer/HUD/color_picker_hitbox
 @onready var VERT_COUNT_CONTAINER = $CanvasLayer/HUD/vert_count_container
 @onready var VERT_COUNT_LABEL = $CanvasLayer/HUD/vert_count_container/vert_count_label
 
@@ -105,6 +107,9 @@ func _input(event):
 			# commenting this out for now. by all accounts this should work, but the color picker being rotated is messing with the rect
 			# if COLOR_PICKER.get_global_rect().has_point(event.position):
 			# 	return
+			# hacky way to ignore the color picker
+			if COLOR_PICKER_HITBOX.get_global_rect().has_point(event.position):
+				return
 		# click PRESSED
 		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 			# - camera stuff -

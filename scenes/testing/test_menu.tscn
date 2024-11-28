@@ -614,11 +614,16 @@ text = "A game made with the intent of illustrating an important concept in appl
 Made by Alvaro \"big_kwii\" Morales T.
 
 Source Code:
+
 [url]https://github.com/bigkwii/cutting-plane-game-2[/url]
 
 Based on the original The Cutting Plane Game by Gonzalo Muñoz:
 
-[url]https://gonzalomunoz.org/the-cutting-plane-game/[/url]"
+[url]https://gonzalomunoz.org/the-cutting-plane-game/[/url]
+
+Made with Godot Engine:
+
+[url]https://godotengine.org[/url]"
 fit_content = true
 
 [node name="about_x_btn" type="Button" parent="CanvasLayer/UI/about_popup"]

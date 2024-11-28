@@ -89,14 +89,24 @@ grow_vertical = 2
 text = "Play
 Level"
 
+[node name="color_picker_hitbox" type="HBoxContainer" parent="CanvasLayer/HUD"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -380.0
+offset_right = 200.0
+offset_bottom = 364.0
+grow_vertical = 2
+
 [node name="color_picker" type="ColorPicker" parent="CanvasLayer/HUD"]
 layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
-offset_top = 348.0
-offset_right = 695.0
-offset_bottom = 552.0
+offset_top = 364.0
+offset_right = 744.0
+offset_bottom = 564.0
 grow_vertical = 2
 rotation = -1.5708
 color = Color(1, 0, 0, 1)
