@@ -48,7 +48,7 @@ grow_vertical = 0
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_vo8m3")
 theme_override_font_sizes/font_size = 30
-text = "TIME:"
+text = "TOTAL TIME:"
 
 [node name="total_time_container" type="HBoxContainer" parent="CanvasLayer/HUD/time_container"]
 layout_mode = 2
@@ -499,7 +499,7 @@ alignment = 1
 layout_mode = 2
 disabled = true
 text = "Submit
-Score"
+Time"
 
 [node name="name_entry" type="LineEdit" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
