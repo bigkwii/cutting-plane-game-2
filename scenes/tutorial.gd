@@ -179,16 +179,18 @@ These points also form a polygon. It's called the [color=blue][b]INTEGER CONVEX 
 How? With [b]the cutting planes[/b]."""
 	},
 	"0_7" : { # SHOW CIRCLE CUT BUTTON
-		"size": Vector2(391, 272),
-		"position": Vector2(1248, 280),
-		"text": """Introducting the first cutting plane: [color=red][b]the circle cut[/b][/color]"""
+		"size": Vector2(391, 460),
+		"position": Vector2(1248, 200),
+		"text": """Introducting the first cutting plane: [color=red][b]the circle cut[/b][/color]
+
+It belongs to the family of [color=red][b]intersection cuts[/b][/color]."""
 	},
 	"0_8" : {
-		"size": Vector2(631, 552),
-		"position": Vector2(1008, 200),
+		"size": Vector2(631, 582),
+		"position": Vector2(1008, 180),
 		"text": """It will grow a circle until it hits the [b]lattice grid[/b].
 
-Then, if the [b]circle[/b] intersects the [color="red"][b]polygon[/b][/color], it will try to cut it along that line.
+Then, it will try to [color=red][b]make a cut along the intersection of the circle and the polygon[/b][/color].
 
 Try using it to get to the [color="blue"][b]convex hull[/b][/color]!
 
@@ -200,11 +202,11 @@ Try using it to get to the [color="blue"][b]convex hull[/b][/color]!
 		"text": """Nice job! Circle cuts are simple, but not very efficient..."""
 	},
 	"1_0" : { # split cut introduction. show only h and v cuts
-		"size": Vector2(448, 448), 
-		"position": Vector2(1192, 240),
+		"size": Vector2(448, 550), 
+		"position": Vector2(1192, 150),
 		"text": """Let's try something more powerful.
 
-Introducing: [color=red][b]horizontal and vertical split cuts[/b][/color].
+Introducing: [color=red][b]horizontal and vertical split cuts[/b][/color], another type of [color=red][b]intersection cut[/b][/color].
 
 Try them out!"""
 	},
@@ -236,7 +238,7 @@ Also, if you get [color=red][b]more than one cut[/b][/color] with one cutting pl
 		"position": Vector2(64, 408),
 		"text": """Like circle cuts, split cuts [color=red][b]stop as soon as they hit the lattice grid[/b][/color].
 
-A good strategy is to use a [color=red][b]circle cut[/b][/color] first to [color=red][b]trim a corner[/b][/color] split cuts can't get to, and then use a [color=red][b]split cut[/b][/color] to [color=red][b]finish the job[/b][/color]."""
+A good strategy is to use a [color=red][b]circle cut[/b][/color] to [color=red][b]trim a corner[/b][/color] split cuts can't get to, and then use a [color=red][b]split cut[/b][/color] to [color=red][b]finish the job[/b][/color]."""
 	},
 	"3_1" : { # on level complete
 		"size": Vector2(320, 265),
@@ -251,9 +253,11 @@ A good strategy is to use a [color=red][b]circle cut[/b][/color] first to [color
 Cutting polygons isn't hard, the [color=red][b]tricky part[/b][/color] is doing it in such a way that [color=red][b]won't get rid of the lattice points inside[/b][/color]."""
 	},
 	"4_1" : { # gomory cut pt 1
-		"size": Vector2(376, 286),
-		"position": Vector2(1262, 304),
-		"text" : """[color=red][b]Gomory cuts[/b][/color] are an efficient way of doing that."""
+		"size": Vector2(376, 500),
+		"position": Vector2(1262, 100),
+		"text" : """[color=red][b]Gomory cuts[/b][/color] are an efficient way of doing that.
+
+This type of cut is a bit more [color=red][b]algebraic[/b][/color]."""
 	},
 	"4_2" : { # gomory cut pt 1
 		"size": Vector2(512, 288),
@@ -280,13 +284,13 @@ But whoops! [b]x'[/b] and [b]y'[/b] are [b]decimals[/b]! And you want [b]whole n
 		"position": Vector2(64, 208),
 		"text" : """The [color=red][b]Gomory cut method[/b][/color] says:
 
-First, write out [b]x'[/b] algebraically in a special way, as per the Gomory cut method.
+First, write out [b]x'[/b] algebraically in a special way, using the equations of the two lines.
 
 Since it's a decimal value, it will end up looking something like:
 
 [color=red][b]x' = (some whole number) + (some decimal)[/b][/color]
 
-That decimal part can be used to generate a [color=red][b]new line[/b][/color] that, when used to cut the polygon, will [color=red][b]nudge you closer to whole number values[/b][/color]!"""
+That decimal part can be [color=red][b]rounded[/b][/color] to generate a [color=red][b]new line[/b][/color] that, when used to cut the polygon, will [color=red][b]nudge you closer to whole number values[/b][/color]!"""
 	},
 	"4_5" : { # gomory cut pt 1
 		"size": Vector2(896, 520),
@@ -295,7 +299,7 @@ That decimal part can be used to generate a [color=red][b]new line[/b][/color] t
 
 Both of these lines are [color=red][b]Gomory cuts[/b][/color]! And they're mathematically guaranteed to converge to the [color=blue][b]convex hull[/b][/color] (eventually)!
 
-As to which one of these 2 cuts will get chosen here: [color=red][b]the game will automatically pick the most "optimal" one[/b][/color]."""
+As to which one of these 2 cuts will get chosen here: [color=red][b]the game will automatically pick the one that cuts the most[/b][/color]."""
 	},
 	"4_6" : { # gomory cut pt 1
 		"size": Vector2(576, 288),
@@ -334,18 +338,16 @@ Take some time to get a feel for them."""
 doesn't it?"""
 	},
 	"6_2" : { # after 4 cuts
-		"size": Vector2(768, 390),
+		"size": Vector2(768, 200),
 		"position": Vector2(64, 442),
-		"text" : """[color=red][b]Gomory cuts[/b][/color] Are efficient, but they're not perfect.
-
-They're [color=red][b]guaranteed to get closer and closer[/b][/color] to a solution, but [color=red][b]won't always converge quickly[/b][/color]. They can get stuck like this."""
+		"text" : """[color=red][b]Gomory cuts[/b][/color] Are usually efficient, but may not always converge quickly."""
 	},
 	"6_3" : { # after 4 cuts
 		"size": Vector2(760, 312),
 		"position": Vector2(64, 520),
 		"text" : """Don't worry, in this game, [color=red][b]close enough is good enough[/b][/color]!
 
-If you get [color=red][b]close enough[/b][/color] to a solution, the polygon will [color=red][b]correct itself[/b][/color]."""
+If you get [color=red][b]close enough[/b][/color] to the hull, the polygon will [color=red][b]correct itself[/b][/color]."""
 	},
 	"6_4" : {
 		"size": Vector2(256, 256),
