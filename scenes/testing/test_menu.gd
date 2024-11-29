@@ -20,8 +20,6 @@ signal start_arcade
 signal start_tutorial
 signal start_editor
 signal start_speedrun
-signal start_arcade_leaderboard
-signal start_speedrun_leaderboard
 
 # - preloaded scenes -
 var cut_vfx = preload("res://scenes/cut_vfx.tscn")

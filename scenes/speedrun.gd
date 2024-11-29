@@ -48,8 +48,8 @@ var results: Array[Dictionary] = []
 @onready var NEXT_LEVEL_BTN = $CanvasLayer/LEVEL_FINISH_POPUP/panel/next_level_btn
 @onready var GAME_FINISH_POPUP = $CanvasLayer/GAME_FINISH_POPUP
 
-@onready var SUBMIT_SCORE_BTN = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/HBoxContainer/submit_btn
-@onready var SUBMIT_SCORE_NAME = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/HBoxContainer/name_entry
+@onready var SUBMIT_TIME_BTN = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/HBoxContainer/submit_btn
+@onready var SUBMIT_TIME_NAME = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/HBoxContainer/name_entry
 
 @onready var GAME_FINISH_TOTAL_TIME = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/timeHBoxContainer2/score_label
 @onready var GAME_FINISH_EXIT_BTN = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/exit
@@ -199,3 +199,27 @@ func format_time(time: float) -> Array[String]:
 	var s: int = int(fmod(time, 60))
 	var ms: int = int(fmod(time, 1) * 1000)
 	return ["%02d" % m, "%02d" % s, "%03d" % ms]
+
+func _on_name_entry_text_changed(new_text:String):
+	var allowed_chars = " -_<>+=/*'0123456789qwertyuiopasdfghjklñzxcvbnmQWERTYUIOPASDFGHJKLÑZXCVBNM!?.,"
+	var old_caret_pos = SUBMIT_TIME_NAME.caret_column
+	var filtered_text = ""
+	for character in new_text:
+		if allowed_chars.find(character) != -1:
+			filtered_text += character
+	SUBMIT_TIME_NAME.text = filtered_text
+	SUBMIT_TIME_NAME.caret_column = old_caret_pos
+
+func _on_submit_btn_pressed():
+	DEBUG.log("submitting score...")
+	SUBMIT_TIME_BTN.disabled = true
+	SUBMIT_TIME_BTN.text = "LOADING..."
+	var submitted: bool = await Leaderboards.post_guest_score("tcpgv2-speedrun-Uerr", total_time, SUBMIT_TIME_NAME.text, {}, 0, true)
+	if submitted:
+		DEBUG.log("score submitted")
+		SUBMIT_TIME_BTN.disabled = true
+		SUBMIT_TIME_BTN.text = "SUBMITTED"
+	else:
+		SUBMIT_TIME_BTN.text = "FAILED.\nTRY AGAIN"
+		SUBMIT_TIME_BTN.disabled = false
+		DEBUG.log("score not submitted")

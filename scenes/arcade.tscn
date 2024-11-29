@@ -548,15 +548,20 @@ alignment = 1
 
 [node name="submit_btn" type="Button" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-disabled = true
 text = "Submit
 Score"
 
 [node name="name_entry" type="LineEdit" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("3_0205m")
+theme_override_font_sizes/font_size = 35
 placeholder_text = "Enter Name"
-max_length = 10
+max_length = 16
+context_menu_enabled = false
+shortcut_keys_enabled = false
+middle_mouse_paste_enabled = false
+drag_and_drop_selection_enabled = false
 caret_blink = true
 
 [node name="exit" type="Button" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer"]
@@ -572,4 +577,6 @@ libraries = {
 [connection signal="pressed" from="CanvasLayer/MENU/panel/VBoxContainer/exit" to="." method="_on_exit_pressed"]
 [connection signal="pressed" from="CanvasLayer/MENU/panel/x" to="." method="_on_x_pressed"]
 [connection signal="pressed" from="CanvasLayer/LEVEL_FINISH_POPUP/panel/next_level_btn" to="." method="_on_next_level_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/HBoxContainer/submit_btn" to="." method="_on_submit_btn_pressed"]
+[connection signal="text_changed" from="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/HBoxContainer/name_entry" to="." method="_on_name_entry_text_changed"]
 [connection signal="pressed" from="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/exit" to="." method="_on_exit_pressed"]

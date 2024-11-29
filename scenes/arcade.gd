@@ -160,3 +160,27 @@ func play_level_finish_anim():
 ## toggles pause
 func toggle_pause():
 	get_tree().paused = !get_tree().paused
+
+func _on_name_entry_text_changed(new_text:String):
+	var allowed_chars = " -_<>+=/*'0123456789qwertyuiopasdfghjklñzxcvbnmQWERTYUIOPASDFGHJKLÑZXCVBNM!?.,"
+	var old_caret_pos = SUBMIT_SCORE_NAME.caret_column
+	var filtered_text = ""
+	for character in new_text:
+		if allowed_chars.find(character) != -1:
+			filtered_text += character
+	SUBMIT_SCORE_NAME.text = filtered_text
+	SUBMIT_SCORE_NAME.caret_column = old_caret_pos
+
+func _on_submit_btn_pressed():
+	DEBUG.log("submitting score...")
+	SUBMIT_SCORE_BTN.disabled = true
+	SUBMIT_SCORE_BTN.text = "LOADING..."
+	var submitted: bool = await Leaderboards.post_guest_score("tcpgv2-arcade-lJ2Z", total_score, SUBMIT_SCORE_NAME.text, {}, 0, true)
+	if submitted:
+		DEBUG.log("score submitted")
+		SUBMIT_SCORE_BTN.disabled = true
+		SUBMIT_SCORE_BTN.text = "SUBMITTED"
+	else:
+		SUBMIT_SCORE_BTN.text = "FAILED.\nTRY AGAIN"
+		SUBMIT_SCORE_BTN.disabled = false
+		DEBUG.log("score not submitted")
