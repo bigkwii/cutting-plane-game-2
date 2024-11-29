@@ -591,12 +591,12 @@ layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -649.5
+offset_left = -736.0
 offset_top = 32.0
-offset_right = 649.5
-offset_bottom = 110.0
+offset_right = 736.0
+offset_bottom = 768.0
 grow_horizontal = 2
-theme_override_constants/separation = 64
+theme_override_constants/separation = 32
 
 [node name="about_label" type="Label" parent="CanvasLayer/UI/about_popup/VBoxContainer"]
 layout_mode = 2
@@ -614,16 +614,19 @@ text = "A game made with the intent of illustrating an important concept in appl
 Made by Alvaro \"big_kwii\" Morales T.
 
 Source Code:
-
 [url]https://github.com/bigkwii/cutting-plane-game-2[/url]
 
 Based on the original The Cutting Plane Game by Gonzalo Muñoz:
-
 [url]https://gonzalomunoz.org/the-cutting-plane-game/[/url]
 
 Made with Godot Engine:
+[url]https://godotengine.org[/url]
 
-[url]https://godotengine.org[/url]"
+Leaderboards made with and hosted on Quiver:
+[url]https://quiver.dev[/url]
+
+CRT shader taken from here:
+[url]https://godotshaders.com/shader/realistic-crt-shader/[/url]"
 fit_content = true
 
 [node name="about_x_btn" type="Button" parent="CanvasLayer/UI/about_popup"]
