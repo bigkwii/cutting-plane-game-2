@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://bd8gp0vj5fd1j"]
+
+[ext_resource type="Script" path="res://addons/quiver_player_accounts/player_accounts.gd" id="1_h0x3x"]
+
+[node name="PlayerAccounts" type="Node"]
+script = ExtResource("1_h0x3x")
+
+[node name="HTTPRequest" type="HTTPRequest" parent="."]

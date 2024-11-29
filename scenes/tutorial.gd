@@ -254,7 +254,7 @@ Cutting polygons isn't hard, the [color=red][b]tricky part[/b][/color] is doing 
 	},
 	"4_1" : { # gomory cut pt 1
 		"size": Vector2(376, 500),
-		"position": Vector2(1262, 100),
+		"position": Vector2(1262, 180),
 		"text" : """[color=red][b]Gomory cuts[/b][/color] are an efficient way of doing that.
 
 This type of cut is a bit more [color=red][b]algebraic[/b][/color]."""
