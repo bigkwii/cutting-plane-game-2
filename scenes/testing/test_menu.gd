@@ -14,6 +14,11 @@ extends Node2D
 @onready var CRT_TOGGLE_BTN = $CanvasLayer/UI/HBoxContainer/toggle_crt
 @onready var FULLSCREEN_TOGGLE_BTN = $CanvasLayer/UI/HBoxContainer/toggle_fullscreen
 
+@onready var ARCADE_LEADERBOARD = null
+@onready var SPEEDRUN_LEADERBOARD = null
+@onready var LEADERBOARDS_CONTROL_NODE = $CanvasLayer/UI/leaderboards
+@onready var CLOSE_LEADERBOARDS_BTN = $CanvasLayer/UI/close_leaderboards_btn
+
 # - signals -
 signal start_free_play(level_path: String)
 signal start_arcade
@@ -23,6 +28,8 @@ signal start_speedrun
 
 # - preloaded scenes -
 var cut_vfx = preload("res://scenes/cut_vfx.tscn")
+var ARCADE_LEADERBOARD_UI_SCENE = preload("res://scenes/arcade_leaderboard_ui.tscn")
+var SPEEDRUN_LEADERBOARD_UI_SCENE = preload("res://scenes/speedrun_leaderboard_ui.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -192,3 +199,29 @@ func _on_toggle_fullscreen_pressed():
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
 	else:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+
+# - leaderboards -
+
+## opens the arcade leaderboard
+func _on_see_speedrun_leaderboard_pressed():
+	if SPEEDRUN_LEADERBOARD == null:
+		SPEEDRUN_LEADERBOARD = SPEEDRUN_LEADERBOARD_UI_SCENE.instantiate()
+		LEADERBOARDS_CONTROL_NODE.add_child(SPEEDRUN_LEADERBOARD)
+	SPEEDRUN_LEADERBOARD.visible = true
+	CLOSE_LEADERBOARDS_BTN.visible = true
+
+## opens the speedrun leaderboard
+func _on_see_arcade_leaderboard_pressed():
+	if ARCADE_LEADERBOARD == null:
+		ARCADE_LEADERBOARD = ARCADE_LEADERBOARD_UI_SCENE.instantiate()
+		LEADERBOARDS_CONTROL_NODE.add_child(ARCADE_LEADERBOARD)
+	ARCADE_LEADERBOARD.visible = true
+	CLOSE_LEADERBOARDS_BTN.visible = true
+
+## closes both leaderboards
+func _on_close_leaderboards_btn_pressed():
+	if ARCADE_LEADERBOARD != null:
+		ARCADE_LEADERBOARD.queue_free()
+	if SPEEDRUN_LEADERBOARD != null:
+		SPEEDRUN_LEADERBOARD.queue_free()
+	CLOSE_LEADERBOARDS_BTN.visible = false

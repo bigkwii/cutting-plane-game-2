@@ -549,13 +549,13 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 64
 
-[node name="start_arcade_leaderboard" type="Button" parent="CanvasLayer/UI/leaderboards_popup/HBoxContainer"]
+[node name="see_arcade_leaderboard" type="Button" parent="CanvasLayer/UI/leaderboards_popup/HBoxContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_b4vfd")
 theme_override_font_sizes/font_size = 120
 text = "Arcade"
 
-[node name="start_speedrun_leaderboard" type="Button" parent="CanvasLayer/UI/leaderboards_popup/HBoxContainer"]
+[node name="see_speedrun_leaderboard" type="Button" parent="CanvasLayer/UI/leaderboards_popup/HBoxContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_b4vfd")
 theme_override_font_sizes/font_size = 120
@@ -638,6 +638,24 @@ offset_bottom = 60.0
 grow_horizontal = 0
 text = " X "
 
+[node name="leaderboards" type="Control" parent="CanvasLayer/UI"]
+anchors_preset = 0
+offset_right = 1792.0
+offset_bottom = 952.0
+mouse_filter = 2
+
+[node name="close_leaderboards_btn" type="Button" parent="CanvasLayer/UI"]
+visible = false
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -48.0
+offset_bottom = 60.0
+grow_horizontal = 0
+text = " X "
+
 [node name="polygon" parent="." instance=ExtResource("2_3o1bf")]
 position = Vector2(960, 576)
 initial_vertices = Array[Vector2]([Vector2(-1.8, -1.5), Vector2(-1.5, -1.8), Vector2(1.5, -1.8), Vector2(1.8, -1.5), Vector2(1.8, 1.5), Vector2(1.5, 1.8), Vector2(-1.5, 1.8), Vector2(-1.8, 1.5)])
@@ -673,6 +691,9 @@ position = Vector2(960, 576)
 [connection signal="pressed" from="CanvasLayer/UI/editor_mode_popup/editor_x_btn" to="." method="_on_editor_x_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/speedrun_mode_popup/start_speedrun" to="." method="_on_start_speedrun_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/speedrun_mode_popup/speedrun_x_btn" to="." method="_on_speedrun_x_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/UI/leaderboards_popup/HBoxContainer/see_arcade_leaderboard" to="." method="_on_see_arcade_leaderboard_pressed"]
+[connection signal="pressed" from="CanvasLayer/UI/leaderboards_popup/HBoxContainer/see_speedrun_leaderboard" to="." method="_on_see_speedrun_leaderboard_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/leaderboards_popup/leaderboards_x_btn" to="." method="_on_leaderboards_x_btn_pressed"]
 [connection signal="meta_clicked" from="CanvasLayer/UI/about_popup/VBoxContainer/about_desc" to="." method="_on_about_desc_meta_clicked"]
 [connection signal="pressed" from="CanvasLayer/UI/about_popup/about_x_btn" to="." method="_on_about_x_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/UI/close_leaderboards_btn" to="." method="_on_close_leaderboards_btn_pressed"]

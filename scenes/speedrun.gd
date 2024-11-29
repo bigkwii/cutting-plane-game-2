@@ -214,7 +214,9 @@ func _on_submit_btn_pressed():
 	DEBUG.log("submitting score...")
 	SUBMIT_TIME_BTN.disabled = true
 	SUBMIT_TIME_BTN.text = "LOADING..."
-	var submitted: bool = await Leaderboards.post_guest_score("tcpgv2-speedrun-Uerr", total_time, SUBMIT_TIME_NAME.text, {}, 0, true)
+	var formated_time = format_time(total_time)
+	var time_str = formated_time[0] + ":" + formated_time[1] + "." + formated_time[2]
+	var submitted: bool = await Leaderboards.post_guest_score("tcpgv2-speedrun-Uerr", total_time, SUBMIT_TIME_NAME.text, {"formated_time" : time_str}, 0, true)
 	if submitted:
 		DEBUG.log("score submitted")
 		SUBMIT_TIME_BTN.disabled = true

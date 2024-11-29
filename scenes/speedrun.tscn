@@ -497,7 +497,6 @@ alignment = 1
 
 [node name="submit_btn" type="Button" parent="CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-disabled = true
 text = "Submit
 Time"
 
