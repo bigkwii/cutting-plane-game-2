@@ -321,3 +321,9 @@ I fixed split cuts, and on the same stride fixed a whole bunch of things, includ
 Gomory cuts are still broken. I'm not sure exactly what went wrong, since the implementation looks more or less identical to the demo's. Debugging this is hard since the demo's code is all over the place. I'll keep at it.
 
 I'll go to bed now. Night!
+
+## FRI 2024-11-29
+
+Just for the record, after the last entry I just kinda stopped writing here because I started taking notes on paper. At some point I just needed to draw stuff more than I needed to write stuff.
+
+Anyways, v1.0 is out! Now all that's left is the final report.
