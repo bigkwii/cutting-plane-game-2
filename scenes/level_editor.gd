@@ -67,6 +67,7 @@ func _ready():
 			var poly_point = POLY_POINT_SCENE.instantiate()
 			poly_point.lattice_position = vert
 			poly_point.editable = true
+			poly_point.debug_label_visible = true
 			VERTS.add_child(poly_point)
 	COLOR_PICKER.color = color
 	for vert in VERTS.get_children():
@@ -81,6 +82,7 @@ func _process(_delta):
 		var actual_lattice_pos = clicked_lattice_pos.clamp(Vector2(0, 0), Vector2(level_max_x-1, level_max_y-1))
 		vert_being_dragged.lattice_position = actual_lattice_pos
 		vert_being_dragged.position = actual_lattice_pos * SCALING + OFFSET
+		vert_being_dragged.DEBUG_LABEL.text = str(vert_being_dragged.lattice_position)
 	# handle hover
 	_handle_hover()
 	# update the polygon editor
@@ -178,6 +180,7 @@ func try_to_add_vert(clicked_lattice_pos: Vector2) -> void:
 	poly_point.position = clicked_lattice_pos * SCALING + OFFSET
 	poly_point.editable = true
 	poly_point.color = color
+	poly_point.debug_label_visible = true
 	VERTS.add_child(poly_point)
 
 ## attempts to drop a vert at the clicked lattice position.

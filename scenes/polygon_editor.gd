@@ -25,7 +25,7 @@ func _process(_delta):
 	pass
 
 func _draw():
-	var alpha = 0.6 if being_edited else 1.0 # might deprecate this
+	var alpha = 0.8 if being_edited else 1.0 # might deprecate this
 	var points = PackedVector2Array()
 	var colors = PackedColorArray()
 	for vert in convex_hull:

@@ -821,14 +821,15 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> Array:
 		bad_point1.y = 0.0
 		bad_point2.x = badGMIb / badGMIaLattice.x
 		bad_point2.y = 1.0
-	# !!! HACK !!! TODO: FIX
-	if abs(GMIb) < GLOBALS.GEOMETRY_EPSILON: # special case: if b is 0, the cut is the line x = y, and thus point1 came out as equal to point2
-		DEBUG.log("GMIb is 0.0! cut line is x = y")
+	# !!! HACK !!!
+	# special case. if GMIb is 0, the cut line passes through the origin. in other words, the line has form Ax + By = 0
+	if abs(GMIb) < GLOBALS.GEOMETRY_EPSILON:
+		DEBUG.log("GMIb is 0.0! cut line passes through the origin.")
 		point1 = Vector2(0, 0)
-		point2 = Vector2(1, 1)
+		point2 = Vector2(-GMIaLattice.y, GMIaLattice.x)
 	if abs(badGMIb) < GLOBALS.GEOMETRY_EPSILON: # same ordeal
 		bad_point1 = Vector2(0, 0)
-		bad_point2 = Vector2(1, 1)
+		bad_point2 = Vector2(-badGMIaLattice.y, badGMIaLattice.x)
 	# turn the points into a line
 	var line_point = point1
 	var line_dir = point2 - point1
