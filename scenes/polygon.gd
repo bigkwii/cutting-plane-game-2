@@ -252,7 +252,7 @@ func is_point_on_segment(point: Vector2, segment_start: Vector2, segment_end: Ve
 func line_intersects_segment(line_point: Vector2, line_direction: Vector2, segment_start: Vector2, segment_end: Vector2):
 	var segment_direction = segment_end - segment_start
 	var intersection = Geometry2D.line_intersects_line(line_point, line_direction, segment_start, segment_direction)
-	if not intersection:
+	if intersection == null:
 		return null
 	if not is_point_on_segment(intersection, segment_start, segment_end):
 		return null
@@ -296,7 +296,6 @@ func polygon_signed_area(polygon: PackedVector2Array) -> float:
 	area /= 2
 	return area
 
-
 ## Splits a polygon in two halves given a line, and returns BOTH halves' vertices in a Array[PackedVector2Array] (and the intersection points)
 ## [br][br]
 ## If something goes wrong, returns an empty array.
@@ -317,9 +316,8 @@ func split_polygon(polygon: PackedVector2Array, line_point: Vector2, line_dir: V
 			new_poly_1.append(current_point)
 		else:
 			new_poly_2.append(current_point)
-		#if not current_on_line and not next_on_line:
 		var intersection_candidate = line_intersects_segment(line_point, line_dir, current_point, next_point)
-		if intersection_candidate:
+		if intersection_candidate != null:
 			# snap the intersection candidate to avoid floating point imprecision
 			intersection_candidate = snapped(intersection_candidate, Vector2(GLOBALS.INTERSECTION_SNAP_EPSILON, GLOBALS.INTERSECTION_SNAP_EPSILON))
 			# check for duplicates
@@ -711,7 +709,7 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> Array:
 	if selected_index == -1:
 		DEBUG.log("gomory_cut: No vertex in range")
 		return [0, 0.0]
-	DEBUG.log("gomory_cut: selected vertex: %s" % packed_vertices[selected_index])
+	DEBUG.log("gomory_cut: selected vertex: %s of index %s" % [packed_vertices[selected_index], selected_index])
 	
 	# gomory mixed integer cut algorithm (logic ripped straight from the demo)
 	var selected_vertex = packed_vertices[selected_index]
@@ -823,6 +821,14 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> Array:
 		bad_point1.y = 0.0
 		bad_point2.x = badGMIb / badGMIaLattice.x
 		bad_point2.y = 1.0
+	# !!! HACK !!! TODO: FIX
+	if abs(GMIb) < GLOBALS.GEOMETRY_EPSILON: # special case: if b is 0, the cut is the line x = y, and thus point1 came out as equal to point2
+		DEBUG.log("GMIb is 0.0! cut line is x = y")
+		point1 = Vector2(0, 0)
+		point2 = Vector2(1, 1)
+	if abs(badGMIb) < GLOBALS.GEOMETRY_EPSILON: # same ordeal
+		bad_point1 = Vector2(0, 0)
+		bad_point2 = Vector2(1, 1)
 	# turn the points into a line
 	var line_point = point1
 	var line_dir = point2 - point1
@@ -856,6 +862,7 @@ func gomory_cut(clicked_lattice_pos: Vector2) -> Array:
 	_play_gomory_cut_animation(data)
 	await GOMORY_VFX.animation_finished
 	# Perform the cut on the polygon
+	DEBUG.log("gomory_cut: performing cut %s, %s" % [line_point, line_dir])
 	var cut_result = cut_polygon(line_point, line_dir, true) # gomory cuts are mathematically guaranteed to not cut the hull (in theory)
 	var is_valid_cut = cut_result[0]
 	var shaved_off_area = cut_result[1]
