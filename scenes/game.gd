@@ -8,7 +8,6 @@ var ARCADE_SCENE = preload("res://scenes/arcade.tscn")
 var FREE_PLAY_SCENE = preload("res://scenes/free_play.tscn")
 var EDITOR_SCENE = preload("res://scenes/editor.tscn")
 var SPEEDRUN_SCENE = preload("res://scenes/speedrun.tscn")
-# TODO: leaderboard
 
 var CLICK_VFX = preload("res://scenes/click_vfx.tscn")
 
