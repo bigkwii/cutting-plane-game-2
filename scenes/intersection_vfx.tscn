@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://k13doojmenwl"]
 
-[ext_resource type="Script" path="res://scenes/intersection_vfx.gd" id="1_xnwn2"]
+[ext_resource type="Script" uid="uid://bs0yomxaf84lm" path="res://scenes/intersection_vfx.gd" id="1_xnwn2"]
 
 [sub_resource type="Animation" id="Animation_jbr62"]
 length = 0.001
@@ -34,8 +34,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_3s1gc"]
 _data = {
-"RESET": SubResource("Animation_jbr62"),
-"fade": SubResource("Animation_d7m8l")
+&"RESET": SubResource("Animation_jbr62"),
+&"fade": SubResource("Animation_d7m8l")
 }
 
 [node name="intersection_vfx" type="Node2D"]

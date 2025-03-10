@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://dnibem6i2pwss"]
 
-[ext_resource type="Script" path="res://scenes/polygon.gd" id="1_f3ty0"]
+[ext_resource type="Script" uid="uid://c0reskw6nrony" path="res://scenes/polygon.gd" id="1_f3ty0"]
 [ext_resource type="PackedScene" uid="uid://cmslkpm8c6211" path="res://scenes/convex_integer_hull.tscn" id="2_7mll7"]
 [ext_resource type="PackedScene" uid="uid://73u01oqmgx6x" path="res://scenes/poly_point.tscn" id="3_f2xql"]
 [ext_resource type="PackedScene" uid="uid://crej6vcgv7wwt" path="res://scenes/split_vfx.tscn" id="5_27eb1"]

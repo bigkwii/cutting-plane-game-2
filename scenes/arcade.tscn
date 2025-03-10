@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://dy0r3jrpws0sn"]
 
-[ext_resource type="Script" path="res://scenes/arcade.gd" id="1_umj7k"]
+[ext_resource type="Script" uid="uid://fqvde8b7no3i" path="res://scenes/arcade.gd" id="1_umj7k"]
 [ext_resource type="Theme" uid="uid://bqljbjsn8elrs" path="res://assets/themes/default.tres" id="2_gfycv"]
 [ext_resource type="FontFile" uid="uid://bvvtosdeupbva" path="res://assets/fonts/extrathick.ttf" id="3_0205m"]
 
@@ -51,8 +51,8 @@ tracks/1/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_fjl8j"]
 _data = {
-"RESET": SubResource("Animation_45olp"),
-"level_finish": SubResource("Animation_wobo4")
+&"RESET": SubResource("Animation_45olp"),
+&"level_finish": SubResource("Animation_wobo4")
 }
 
 [node name="arcade" type="Node2D"]

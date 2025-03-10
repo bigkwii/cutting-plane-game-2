@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://bfek6xefcc6mf"]
 
-[ext_resource type="Script" path="res://scenes/speedrun.gd" id="1_djdx2"]
+[ext_resource type="Script" uid="uid://dornpmch5uarw" path="res://scenes/speedrun.gd" id="1_djdx2"]
 [ext_resource type="Theme" uid="uid://bqljbjsn8elrs" path="res://assets/themes/default.tres" id="2_esy4r"]
 [ext_resource type="FontFile" uid="uid://bvvtosdeupbva" path="res://assets/fonts/extrathick.ttf" id="3_vo8m3"]
 

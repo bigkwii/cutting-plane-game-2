@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://cx0x4k7do4xil"]
 
-[ext_resource type="Script" path="res://scenes/free_play.gd" id="1_1ybha"]
+[ext_resource type="Script" uid="uid://f4lpg8g0isdm" path="res://scenes/free_play.gd" id="1_1ybha"]
 [ext_resource type="Theme" uid="uid://bqljbjsn8elrs" path="res://assets/themes/default.tres" id="3_p0vbc"]
 [ext_resource type="FontFile" uid="uid://bvvtosdeupbva" path="res://assets/fonts/extrathick.ttf" id="4_wi21x"]
 

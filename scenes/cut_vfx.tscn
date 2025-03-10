@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://btapwk71vhkxa"]
 
-[ext_resource type="Script" path="res://scenes/cut_vfx.gd" id="1_m7fnf"]
+[ext_resource type="Script" uid="uid://mg5xvaaurc2d" path="res://scenes/cut_vfx.gd" id="1_m7fnf"]
 
 [sub_resource type="Animation" id="Animation_7r3be"]
 length = 0.001
@@ -84,8 +84,8 @@ tracks/2/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_dtyw4"]
 _data = {
-"RESET": SubResource("Animation_7r3be"),
-"cut": SubResource("Animation_gbqwp")
+&"RESET": SubResource("Animation_7r3be"),
+&"cut": SubResource("Animation_gbqwp")
 }
 
 [node name="cut_vfx" type="Node2D"]

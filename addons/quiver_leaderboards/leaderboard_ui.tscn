@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dgygkbtm0burn"]
 
-[ext_resource type="Script" path="res://addons/quiver_leaderboards/leaderboard_ui.gd" id="1_3mlof"]
+[ext_resource type="Script" uid="uid://ctosg5yxhpctv" path="res://addons/quiver_leaderboards/leaderboard_ui.gd" id="1_3mlof"]
 
 [node name="LeaderboardUI" type="Control"]
 process_mode = 3

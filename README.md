@@ -6,7 +6,7 @@ By Álvaro Morales Torres.
 
 Based on the original demo: [The Cutting Plane Game](https://gonzalomunoz.org/the-cutting-plane-game/) by Gonzalo Muñoz.
 
-Made with [Godot Engine 4.3](https://godotengine.org).
+Made with [Godot Engine 4.4](https://godotengine.org).
 
 Leaderboards made with and hosted on [Quiver](https://quiver.dev).
 

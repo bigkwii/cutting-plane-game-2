@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://cmslkpm8c6211"]
 
-[ext_resource type="Script" path="res://scenes/convex_integer_hull.gd" id="1_qoipr"]
+[ext_resource type="Script" uid="uid://cuhxfegiwb8p0" path="res://scenes/convex_integer_hull.gd" id="1_qoipr"]
 [ext_resource type="PackedScene" uid="uid://73u01oqmgx6x" path="res://scenes/poly_point.tscn" id="2_3wbl3"]
 
 [sub_resource type="Animation" id="Animation_ocj5x"]
@@ -71,10 +71,10 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_uiww4"]
 _data = {
-"RESET": SubResource("Animation_ocj5x"),
-"hidden": SubResource("Animation_23x81"),
-"idle": SubResource("Animation_bbjxl"),
-"show_hull": SubResource("Animation_6dflq")
+&"RESET": SubResource("Animation_ocj5x"),
+&"hidden": SubResource("Animation_23x81"),
+&"idle": SubResource("Animation_bbjxl"),
+&"show_hull": SubResource("Animation_6dflq")
 }
 
 [node name="convex_integer_hull" type="Node2D"]

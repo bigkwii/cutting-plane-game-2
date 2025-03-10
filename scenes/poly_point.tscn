@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://73u01oqmgx6x"]
 
-[ext_resource type="Script" path="res://scenes/poly_point.gd" id="1_ebfn4"]
+[ext_resource type="Script" uid="uid://chc4fmfc6rebp" path="res://scenes/poly_point.gd" id="1_ebfn4"]
 [ext_resource type="FontFile" uid="uid://bvvtosdeupbva" path="res://assets/fonts/extrathick.ttf" id="2_p5x5h"]
 
 [node name="vertex" type="Node2D"]

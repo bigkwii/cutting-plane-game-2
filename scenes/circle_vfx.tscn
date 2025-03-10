@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://bbva05244jgj8"]
 
-[ext_resource type="Script" path="res://scenes/circle_vfx.gd" id="1_hp7dc"]
+[ext_resource type="Script" uid="uid://ciau5cpv564y" path="res://scenes/circle_vfx.gd" id="1_hp7dc"]
 
 [sub_resource type="Animation" id="Animation_cyxng"]
 length = 0.001
@@ -91,10 +91,10 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_33lry"]
 _data = {
-"RESET": SubResource("Animation_cyxng"),
-"failure": SubResource("Animation_yunti"),
-"grow": SubResource("Animation_l4gtp"),
-"success": SubResource("Animation_hjd16")
+&"RESET": SubResource("Animation_cyxng"),
+&"failure": SubResource("Animation_yunti"),
+&"grow": SubResource("Animation_l4gtp"),
+&"success": SubResource("Animation_hjd16")
 }
 
 [node name="circle_vfx" type="Node2D"]

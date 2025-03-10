@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://cbqmiq1wcv46b"]
 
-[ext_resource type="Script" path="res://scenes/cut_piece.gd" id="1_ku2v0"]
+[ext_resource type="Script" uid="uid://dmq3xpwjojw2p" path="res://scenes/cut_piece.gd" id="1_ku2v0"]
 
 [sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_d1x0g"]
 
@@ -36,8 +36,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_4r4w2"]
 _data = {
-"RESET": SubResource("Animation_66msw"),
-"fade": SubResource("Animation_8t58a")
+&"RESET": SubResource("Animation_66msw"),
+&"fade": SubResource("Animation_8t58a")
 }
 
 [node name="cut_piece" type="RigidBody2D"]

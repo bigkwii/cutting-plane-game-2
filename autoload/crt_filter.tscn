@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://g6tm7g6rdrq6"]
 
-[ext_resource type="Script" path="res://autoload/crt_filter.gd" id="1_7fa33"]
-[ext_resource type="Shader" path="res://assets/shaders/crt.gdshader" id="1_uliut"]
+[ext_resource type="Script" uid="uid://bxglrdeun6gu4" path="res://autoload/crt_filter.gd" id="1_7fa33"]
+[ext_resource type="Shader" uid="uid://qt7pdmxdbk7a" path="res://assets/shaders/crt.gdshader" id="1_uliut"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ces05"]
 shader = ExtResource("1_uliut")
@@ -141,9 +141,9 @@ tracks/3/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_bf1jc"]
 _data = {
-"RESET": SubResource("Animation_eomuj"),
-"buzz": SubResource("Animation_hj672"),
-"zoom": SubResource("Animation_nsi7a")
+&"RESET": SubResource("Animation_eomuj"),
+&"buzz": SubResource("Animation_hj672"),
+&"zoom": SubResource("Animation_nsi7a")
 }
 
 [node name="crt_filter" type="CanvasLayer"]

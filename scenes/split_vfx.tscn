@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://crej6vcgv7wwt"]
 
-[ext_resource type="Script" path="res://scenes/split_vfx.gd" id="1_s8den"]
+[ext_resource type="Script" uid="uid://baspc26dabhgc" path="res://scenes/split_vfx.gd" id="1_s8den"]
 
 [sub_resource type="Animation" id="Animation_k4bml"]
 length = 0.001
@@ -91,10 +91,10 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_b4u2f"]
 _data = {
-"RESET": SubResource("Animation_k4bml"),
-"failure": SubResource("Animation_seqre"),
-"grow": SubResource("Animation_lpdsq"),
-"success": SubResource("Animation_0jyoc")
+&"RESET": SubResource("Animation_k4bml"),
+&"failure": SubResource("Animation_seqre"),
+&"grow": SubResource("Animation_lpdsq"),
+&"success": SubResource("Animation_0jyoc")
 }
 
 [node name="split_vfx" type="Node2D"]
