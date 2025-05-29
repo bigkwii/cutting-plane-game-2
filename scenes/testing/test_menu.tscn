@@ -56,14 +56,13 @@ anchors_preset = -1
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -832.0
-offset_top = 64.0
+offset_top = 96.0
 offset_right = 832.0
 offset_bottom = 217.0
 grow_horizontal = 2
 theme_override_fonts/font = ExtResource("2_b4vfd")
 theme_override_font_sizes/font_size = 150
-text = "The Cutting Plane
-Game v2"
+text = "The Cutting Plane Game"
 horizontal_alignment = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI"]
@@ -118,7 +117,6 @@ text = "About"
 
 [node name="exit_btn" type="Button" parent="CanvasLayer/UI/VBoxContainer"]
 layout_mode = 2
-tooltip_text = "W.I.P!!!"
 theme_override_fonts/font = ExtResource("3_7mkkd")
 text = "Exit"
 
@@ -601,7 +599,7 @@ theme_override_constants/separation = 32
 [node name="about_label" type="Label" parent="CanvasLayer/UI/about_popup/VBoxContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("5_ba3wp")
-text = "About The Cutting Plane Game v2"
+text = "About The Cutting Plane Game"
 horizontal_alignment = 1
 
 [node name="about_desc" type="RichTextLabel" parent="CanvasLayer/UI/about_popup/VBoxContainer"]
@@ -616,7 +614,7 @@ Made by Alvaro \"big_kwii\" Morales T.
 Source Code:
 [url]https://github.com/bigkwii/cutting-plane-game-2[/url]
 
-Based on the original The Cutting Plane Game by Gonzalo Muñoz:
+Based on the original prototype by Gonzalo Muñoz:
 [url]https://gonzalomunoz.org/the-cutting-plane-game/[/url]
 
 Made with Godot Engine:
