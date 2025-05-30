@@ -253,7 +253,7 @@ anchors_preset = -1
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -649.5
-offset_top = 32.0
+offset_top = 64.0
 offset_right = 649.5
 offset_bottom = 110.0
 grow_horizontal = 2
@@ -319,7 +319,7 @@ anchors_preset = -1
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -649.5
-offset_top = 32.0
+offset_top = 64.0
 offset_right = 649.5
 offset_bottom = 110.0
 grow_horizontal = 2
@@ -385,7 +385,7 @@ anchors_preset = -1
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -649.5
-offset_top = 32.0
+offset_top = 64.0
 offset_right = 649.5
 offset_bottom = 110.0
 grow_horizontal = 2
@@ -450,7 +450,7 @@ anchors_preset = -1
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -649.5
-offset_top = 32.0
+offset_top = 64.0
 offset_right = 649.5
 offset_bottom = 110.0
 grow_horizontal = 2
@@ -516,7 +516,7 @@ anchors_preset = -1
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -649.5
-offset_top = 32.0
+offset_top = 64.0
 offset_right = 649.5
 offset_bottom = 110.0
 grow_horizontal = 2
@@ -610,12 +610,12 @@ theme_override_font_sizes/normal_font_size = 40
 bbcode_enabled = true
 text = "A game made with the intent of illustrating an important concept in applied optimization: The Cutting Planes.
 
-Made by Alvaro \"big_kwii\" Morales T.
+Developed by Alvaro \"big_kwii\" Morales T.
 
 Source Code:
 [url]https://github.com/bigkwii/cutting-plane-game-2[/url]
 
-Based on the original prototype by Gonzalo Muñoz:
+Based on the original concept and prototype by Gonzalo Muñoz:
 [url]https://gonzalomunoz.org/the-cutting-plane-game/[/url]
 
 Made with Godot Engine:

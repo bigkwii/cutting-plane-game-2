@@ -14,9 +14,9 @@ extends Node2D
 func _draw():
 	## draw a grid of lines
 	for x in range(DIMENSIONS.x * 2 - 1):
-		draw_line(Vector2(x * SCALING * 0.5, 0) + OFFSET, Vector2(x * SCALING * 0.5, (DIMENSIONS.y - 1) * SCALING) + OFFSET, Color(1, 1, 1, alpha))
+		draw_line(Vector2(x * SCALING * 0.5, 0) + OFFSET, Vector2(x * SCALING * 0.5, (DIMENSIONS.y - 1) * SCALING) + OFFSET, Color(1, 1, 1, alpha), 0.25, true)
 	for y in range(DIMENSIONS.y * 2 - 1):
-		draw_line(Vector2(0, y * SCALING * 0.5) + OFFSET, Vector2( (DIMENSIONS.x - 1) * SCALING, y * SCALING * 0.5) + OFFSET, Color(1, 1, 1, alpha))
+		draw_line(Vector2(0, y * SCALING * 0.5) + OFFSET, Vector2( (DIMENSIONS.x - 1) * SCALING, y * SCALING * 0.5) + OFFSET, Color(1, 1, 1, alpha), 0.25, true)
 
 ## called when the alpha value is changed
 func update_alpha(new_alpha: float):

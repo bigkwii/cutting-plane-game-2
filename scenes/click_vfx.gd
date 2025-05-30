@@ -15,7 +15,7 @@ func _process(_delta):
 	queue_redraw()
 
 func _draw():
-	draw_circle(Vector2(0, 0), growing_factor * radius, color, false, 1, true)
+	draw_circle(Vector2(0, 0), growing_factor * radius, color, false, 1)
 
 func play_click(backwards = false):
 	if backwards:
