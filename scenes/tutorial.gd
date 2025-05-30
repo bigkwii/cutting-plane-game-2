@@ -176,7 +176,7 @@ These points also form a polygon. It's called the [color=blue][b]INTEGER CONVEX 
 		"position": Vector2(1144, 576),
 		"text": """In this game, your goal is to get to that [color=blue][b]convex hull[/b][/color].
 
-How? With [b]the cutting planes[/b]."""
+How? With [b]cutting planes[/b]."""
 	},
 	"0_7" : { # SHOW CIRCLE CUT BUTTON
 		"size": Vector2(391, 460),
@@ -186,9 +186,9 @@ How? With [b]the cutting planes[/b]."""
 It belongs to the family of [color=red][b]intersection cuts[/b][/color]."""
 	},
 	"0_8" : {
-		"size": Vector2(631, 582),
-		"position": Vector2(1008, 180),
-		"text": """It will grow a circle until it hits the [b]lattice grid[/b].
+		"size": Vector2(650, 600),
+		"position": Vector2(989, 180),
+		"text": """If you click the screen, a circle will grow until it hits the [b]lattice[/b].
 
 Then, it will try to [color=red][b]make a cut along the intersection of the circle and the polygon[/b][/color].
 
@@ -215,7 +215,7 @@ Try them out!"""
 		"position": Vector2(65, 384),
 		"text": """That was a lot more efficient, wasn't it?
 
-Note that [color=red][b]splits[/b][/color] also stop as soon as they hit the [b]lattice grid[/b].
+Note that [color=red][b]splits[/b][/color] also stop as soon as they hit the [b]lattice[/b].
 
 Depending on where you click, the cut [color=red][b]won't always be maximal[/b][/color]. Be precise!
 
@@ -229,14 +229,14 @@ Depending on where you click, the cut [color=red][b]won't always be maximal[/b][
 	"2_1" : { # on level complete
 		"size": Vector2(767, 280),
 		"position": Vector2(65, 552),
-		"text": """Yup! split cuts can do that!
+		"text": """Yup! Split cuts can do that!
 
 Also, if you get [color=red][b]more than one cut[/b][/color] with one cutting plane, you'll get [color=red][b]bonus points[/b][/color]!"""
 	},
 	"3_0" : { # split and circle
 		"size": Vector2(767, 424),
 		"position": Vector2(64, 408),
-		"text": """Like circle cuts, split cuts [color=red][b]stop as soon as they hit the lattice grid[/b][/color].
+		"text": """Like circle cuts, split cuts [color=red][b]stop as soon as they hit the lattice[/b][/color].
 
 A good strategy is to use a [color=red][b]circle cut[/b][/color] to [color=red][b]trim a corner[/b][/color] split cuts can't get to, and then use a [color=red][b]split cut[/b][/color] to [color=red][b]finish the job[/b][/color]."""
 	},
@@ -293,11 +293,11 @@ Since it's a decimal value, it will end up looking something like:
 That decimal part can be [color=red][b]rounded[/b][/color] to generate a [color=red][b]new line[/b][/color] that, when used to cut the polygon, will [color=red][b]nudge you closer to whole number values[/b][/color]!"""
 	},
 	"4_5" : { # gomory cut pt 1
-		"size": Vector2(896, 520),
-		"position": Vector2(64, 312),
+		"size": Vector2(896, 450),
+		"position": Vector2(64, 362),
 		"text" : """You can repeat this process with [b]y'[/b] to get a second line.
 
-Both of these lines are [color=red][b]Gomory cuts[/b][/color]! And they're mathematically guaranteed to converge to the [color=blue][b]convex hull[/b][/color] (eventually)!
+Both of these lines are [color=red][b]Gomory cuts[/b][/color]!
 
 As to which one of these 2 cuts will get chosen here: [color=red][b]the game will automatically pick the one that cuts the most[/b][/color]."""
 	},
@@ -340,7 +340,7 @@ doesn't it?"""
 	"6_2" : { # after 4 cuts
 		"size": Vector2(768, 200),
 		"position": Vector2(64, 442),
-		"text" : """[color=red][b]Gomory cuts[/b][/color] Are usually efficient, but may not always converge quickly."""
+		"text" : """[color=red][b]Gomory cuts[/b][/color] are usually efficient, but may not always converge quickly."""
 	},
 	"6_3" : { # after 4 cuts
 		"size": Vector2(760, 312),

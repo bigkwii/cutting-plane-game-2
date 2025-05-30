@@ -1,4 +1,4 @@
-# The Cutting Plane Game v2
+# The Cutting Plane Game
 
 My CS thesis project. An educational game with the purpose of teaching a very important concept in advanced optimization: the cutting planes.
 
