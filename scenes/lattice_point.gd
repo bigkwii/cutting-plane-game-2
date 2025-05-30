@@ -18,7 +18,7 @@ func _process(_delta):
 
 func _draw() -> void:
 	# little white circle on top of itself
-	draw_circle(Vector2.ZERO, radius, color)
+	draw_circle(Vector2.ZERO, radius, color, true, -1.0, true)
 
 ## Changes the color of the lattice point
 func change_color(new_color: Color) -> void:

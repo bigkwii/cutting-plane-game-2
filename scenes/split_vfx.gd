@@ -20,11 +20,11 @@ func _process(_delta):
 
 func _draw():
 	if is_horizontal:
-		draw_line(Vector2(-length, growing_factor * width), Vector2(length, growing_factor * width), color, 1.5)
-		draw_line(Vector2(-length, -1 * growing_factor * width), Vector2(length, -1 * growing_factor * width), color, 1.5)
+		draw_line(Vector2(-length, growing_factor * width), Vector2(length, growing_factor * width), color, 1.5, true)
+		draw_line(Vector2(-length, -1 * growing_factor * width), Vector2(length, -1 * growing_factor * width), color, 1.5, true)
 	else:
-		draw_line(Vector2(growing_factor * width, -length), Vector2(growing_factor * width, length), color, 1.5)
-		draw_line(Vector2(-1 * growing_factor * width, -length), Vector2(-1 * growing_factor * width, length), color, 1.5)
+		draw_line(Vector2(growing_factor * width, -length), Vector2(growing_factor * width, length), color, 1.5, true)
+		draw_line(Vector2(-1 * growing_factor * width, -length), Vector2(-1 * growing_factor * width, length), color, 1.5, true)
 
 # play the grow animation
 func play_grow(speed: float = 1.0):

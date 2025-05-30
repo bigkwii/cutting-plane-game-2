@@ -65,7 +65,7 @@ func _draw():
 	draw_polygon(points, colors)
 
 	points.append(points[0]) # complete round trip
-	draw_polyline(points, Color(color, 1), 2) # solid border
+	draw_polyline(points, Color(color, 1), 2, true) # solid border
 
 ## Instantiates a PolyPoint node for a given lattice position.
 func _add_new_vertex(lattice_pos: Vector2):
