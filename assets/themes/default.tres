@@ -4,10 +4,10 @@
 [ext_resource type="FontFile" uid="uid://bvvtosdeupbva" path="res://assets/fonts/extrathick.ttf" id="2_j084k"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qywiv"]
-content_margin_left = 4.0
-content_margin_top = 4.0
-content_margin_right = 4.0
-content_margin_bottom = 4.0
+content_margin_left = 8.0
+content_margin_top = 12.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
 bg_color = Color(0.0392157, 0.0392157, 0.0392157, 1)
 border_color = Color(1, 1, 1, 1)
 corner_detail = 5
@@ -20,16 +20,16 @@ content_margin_bottom = 4.0
 bg_color = Color(1, 1, 1, 0.75)
 draw_center = false
 corner_detail = 5
-expand_margin_left = 2.0
-expand_margin_top = 2.0
-expand_margin_right = 2.0
-expand_margin_bottom = 2.0
+expand_margin_left = 8.0
+expand_margin_top = 12.0
+expand_margin_right = 8.0
+expand_margin_bottom = 8.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hr0cv"]
-content_margin_left = 4.0
-content_margin_top = 4.0
-content_margin_right = 4.0
-content_margin_bottom = 4.0
+content_margin_left = 8.0
+content_margin_top = 12.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
 bg_color = Color(0.0392157, 0.0392157, 0.0392157, 1)
 border_width_left = 6
 border_width_top = 6
@@ -39,10 +39,10 @@ border_color = Color(1, 1, 1, 1)
 corner_detail = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oisg8"]
-content_margin_left = 4.0
-content_margin_top = 4.0
-content_margin_right = 4.0
-content_margin_bottom = 4.0
+content_margin_left = 8.0
+content_margin_top = 12.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
 bg_color = Color(0.0392157, 0.0392157, 0.0392157, 1)
 border_width_left = 2
 border_width_top = 2
@@ -52,10 +52,10 @@ border_color = Color(1, 1, 1, 1)
 corner_detail = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nk8hv"]
-content_margin_left = 4.0
-content_margin_top = 4.0
-content_margin_right = 4.0
-content_margin_bottom = 4.0
+content_margin_left = 8.0
+content_margin_top = 12.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
 bg_color = Color(1, 1, 1, 1)
 
 [sub_resource type="Image" id="Image_oa4jb"]
