@@ -21,6 +21,10 @@ var current_level_idx: int = 0
 ## total score
 var total_score = 0
 
+## anti-cheat
+var anti_cheat_multiplier: float = randf_range(1.000001, 1.999999)
+var anti_cheat_total_score: float = 0.0
+
 ## array of dictionaries to store the scores and ranks of each level
 var results: Array[Dictionary] = []
 
@@ -105,6 +109,7 @@ func _on_exit_pressed():
 func _on_cut_made(score: int):
 	# update the total score
 	total_score += score
+	anti_cheat_total_score += score * anti_cheat_multiplier
 	TOTAL_SCORE_LABEL.text = str(total_score)
 
 func _on_level_completed(rank: String, rank_bonus: int, budget_bonus: int, remaining_circle: int, remaining_gomory: int, remaining_split: int):
@@ -116,6 +121,7 @@ func _on_level_completed(rank: String, rank_bonus: int, budget_bonus: int, remai
 		[remaining_circle, SCORE.CIRCLE_CUT_BONUS, remaining_gomory, SCORE.GOMORY_CUT_BONUS, remaining_split, SCORE.SPLIT_CUT_BONUS]
 	# update total
 	total_score += rank_bonus + budget_bonus
+	anti_cheat_total_score += (rank_bonus + budget_bonus) * anti_cheat_multiplier
 	# update the results array
 	results[current_level_idx]["score"] = LEVEL.score
 	results[current_level_idx]["rank"] = rank
@@ -172,6 +178,9 @@ func _on_name_entry_text_changed(new_text:String):
 	SUBMIT_SCORE_NAME.caret_column = old_caret_pos
 
 func _on_submit_btn_pressed():
+	if cheat_check():
+		SUBMIT_SCORE_BTN.text = "NICE TRY"
+		return
 	DEBUG.log("submitting score...")
 	SUBMIT_SCORE_BTN.disabled = true
 	SUBMIT_SCORE_BTN.text = "LOADING..."
@@ -184,3 +193,6 @@ func _on_submit_btn_pressed():
 		SUBMIT_SCORE_BTN.text = "FAILED.\nTRY AGAIN"
 		SUBMIT_SCORE_BTN.disabled = false
 		DEBUG.log("score not submitted")
+
+func cheat_check() -> bool:
+	return int(anti_cheat_total_score / anti_cheat_multiplier) != total_score

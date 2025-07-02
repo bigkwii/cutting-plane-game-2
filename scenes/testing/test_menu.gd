@@ -19,6 +19,8 @@ extends Node2D
 @onready var LEADERBOARDS_CONTROL_NODE = $CanvasLayer/UI/leaderboards
 @onready var CLOSE_LEADERBOARDS_BTN = $CanvasLayer/UI/close_leaderboards_btn
 
+@onready var VERSION_LABEL = $CanvasLayer/UI/version
+
 # - signals -
 signal start_free_play(level_path: String)
 signal start_arcade
@@ -33,6 +35,9 @@ var SPEEDRUN_LEADERBOARD_UI_SCENE = preload("res://scenes/speedrun_leaderboard_u
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	# set current version on title screen (if present)
+	if ProjectSettings.get_setting("application/config/version"):
+		VERSION_LABEL.text = "v" + ProjectSettings.get_setting("application/config/version")
 	# crt filter can lag devices with no gpu
 	if OS.get_name() in ["Android", "iOS"]: # disable crt filter and fullscreen toggle on mobile
 		CRT_TOGGLE_BTN.visible = false

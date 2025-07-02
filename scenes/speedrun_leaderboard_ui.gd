@@ -18,7 +18,7 @@ func refresh_scores():
 		printerr("[Quiver Leaderboards] Scores couldn't be fetched since leaderboard ID not set in Leaderboard UI.")
 		return
 
-	prev_button.disabled = score_offset == 0
+	prev_button.disabled = true
 	next_button.disabled = true
 
 	score_list.clear()
@@ -46,4 +46,5 @@ func refresh_scores():
 		else:
 			row.set_text(0, "No scores were found")
 
+	prev_button.disabled = score_offset == 0
 	next_button.disabled = not score_data["has_more_scores"]

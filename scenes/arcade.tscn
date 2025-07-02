@@ -557,7 +557,7 @@ size_flags_horizontal = 3
 theme_override_fonts/font = ExtResource("3_0205m")
 theme_override_font_sizes/font_size = 35
 placeholder_text = "Enter Name"
-max_length = 16
+max_length = 15
 context_menu_enabled = false
 shortcut_keys_enabled = false
 middle_mouse_paste_enabled = false
@@ -571,7 +571,7 @@ Main Menu"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_fjl8j")
+&"": SubResource("AnimationLibrary_fjl8j")
 }
 
 [connection signal="pressed" from="CanvasLayer/MENU/panel/VBoxContainer/exit" to="." method="_on_exit_pressed"]
