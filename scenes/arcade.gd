@@ -179,6 +179,8 @@ func _on_name_entry_text_changed(new_text:String):
 
 func _on_submit_btn_pressed():
 	if cheat_check():
+		DEBUG.log("CHEATING DETECTED! reported score: %s, expected score: %s, anticheat mult: %s, times score: %s" 
+		% [total_score, roundi(anti_cheat_total_score / anti_cheat_multiplier), anti_cheat_multiplier, anti_cheat_total_score], 100)
 		SUBMIT_SCORE_BTN.text = "NICE TRY"
 		return
 	DEBUG.log("submitting score...")
@@ -195,4 +197,4 @@ func _on_submit_btn_pressed():
 		DEBUG.log("score not submitted")
 
 func cheat_check() -> bool:
-	return int(anti_cheat_total_score / anti_cheat_multiplier) != total_score
+	return roundi(anti_cheat_total_score / anti_cheat_multiplier) != total_score # tolerance of 1 unit
