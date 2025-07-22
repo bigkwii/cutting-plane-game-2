@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=75 format=4 uid="uid://bqljbjsn8elrs"]
+[gd_resource type="Theme" load_steps=78 format=4 uid="uid://bqljbjsn8elrs"]
 
 [ext_resource type="FontFile" uid="uid://3jdkpqo41bvf" path="res://assets/fonts/thick.ttf" id="1_yc2pu"]
 [ext_resource type="FontFile" uid="uid://bvvtosdeupbva" path="res://assets/fonts/extrathick.ttf" id="2_j084k"]
@@ -215,6 +215,21 @@ data = {
 
 [sub_resource type="ImageTexture" id="ImageTexture_tc4bk"]
 image = SubResource("Image_2xv77")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0ecif"]
+content_margin_top = 20.0
+content_margin_bottom = 20.0
+bg_color = Color(0.223103, 0.223103, 0.223103, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hvkdh"]
+content_margin_top = 20.0
+content_margin_bottom = 20.0
+bg_color = Color(0.470076, 0.470076, 0.470076, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oa4jb"]
+content_margin_top = 20.0
+content_margin_bottom = 20.0
+bg_color = Color(1, 1, 1, 0)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yy4jk"]
 content_margin_left = 0.0
@@ -2071,6 +2086,15 @@ ColorPicker/icons/screen_picker = SubResource("ImageTexture_qe2jt")
 ColorPicker/icons/shape_circle = SubResource("ImageTexture_nuvot")
 ColorPicker/icons/shape_rect = SubResource("ImageTexture_j3epo")
 ColorPicker/icons/shape_rect_wheel = SubResource("ImageTexture_tc4bk")
+HSlider/constants/center_grabber = 0
+HSlider/constants/grabber_offset = 0
+HSlider/icons/grabber = null
+HSlider/icons/grabber_disabled = null
+HSlider/icons/grabber_highlight = null
+HSlider/icons/tick = null
+HSlider/styles/grabber_area = SubResource("StyleBoxFlat_0ecif")
+HSlider/styles/grabber_area_highlight = SubResource("StyleBoxFlat_hvkdh")
+HSlider/styles/slider = SubResource("StyleBoxFlat_oa4jb")
 Panel/styles/panel = SubResource("StyleBoxFlat_yy4jk")
 PopupDialog/styles/panel = SubResource("StyleBoxFlat_j81u1")
 PopupMenu/colors/font_accelerator_color = Color(0.7, 0.7, 0.7, 0.8)
@@ -2160,3 +2184,12 @@ TextEdit/icons/tab = SubResource("ImageTexture_d3835")
 TextEdit/styles/focus = SubResource("StyleBoxFlat_0id6t")
 TextEdit/styles/normal = SubResource("StyleBoxFlat_lvlw6")
 TextEdit/styles/read_only = SubResource("StyleBoxFlat_xvxe5")
+VSlider/constants/center_grabber = 0
+VSlider/constants/grabber_offset = 0
+VSlider/icons/grabber = null
+VSlider/icons/grabber_disabled = null
+VSlider/icons/grabber_highlight = null
+VSlider/icons/tick = null
+VSlider/styles/grabber_area = null
+VSlider/styles/grabber_area_highlight = null
+VSlider/styles/slider = null

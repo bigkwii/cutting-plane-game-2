@@ -40,7 +40,10 @@ func _setup_data():
 	var eq3_y_sign = " + " if data["GMIaLatticey"] >= 0 else " - "
 	EQ1.text = str(snapped(data["A1x"], 0.001)) + "x" + eq1_y_sign + str(abs(snapped(data["A1y"], 0.001))) + "y" + " = " + str(snapped(data["B1"], 0.001))
 	EQ2.text = str(snapped(data["A2x"], 0.001)) + "x" + eq2_y_sign + str(abs(snapped(data["A2y"], 0.001))) + "y" + " = " + str(snapped(data["B2"], 0.001))
-	EQ3.text = str(snapped(data["badGMIaLatticex"], 0.001)) + "x" + eq3_y_sign + str(abs(snapped(data["badGMIaLatticey"], 0.001))) + "y" + " = " + str(snapped(data["badGMIb"], 0.001))
+	if data["badGMIaLatticex"] == 0 and data["badGMIaLatticey"] == 0:
+		EQ3.text = " "
+	else:
+		EQ3.text = str(snapped(data["badGMIaLatticex"], 0.001)) + "x" + eq3_y_sign + str(abs(snapped(data["badGMIaLatticey"], 0.001))) + "y" + " = " + str(snapped(data["badGMIb"], 0.001))
 	EQ4.text = str(snapped(data["GMIaLatticex"], 0.001)) + "x" + eq3_y_sign + str(abs(snapped(data["GMIaLatticey"], 0.001))) + "y" + " = " + str(snapped(data["GMIb"], 0.001))
 	# make the lines
 	# line 1 goes from data["neigh_before"] to data["selected_vertex"]

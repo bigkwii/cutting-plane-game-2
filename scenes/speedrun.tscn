@@ -55,14 +55,12 @@ layout_mode = 2
 alignment = 2
 
 [node name="minutes" type="Label" parent="CanvasLayer/HUD/time_container/total_time_container"]
-custom_minimum_size = Vector2(45, 0)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_vo8m3")
 theme_override_font_sizes/font_size = 30
 text = "00"
 
 [node name="seconds" type="Label" parent="CanvasLayer/HUD/time_container/total_time_container"]
-custom_minimum_size = Vector2(55, 0)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_vo8m3")
 theme_override_font_sizes/font_size = 30

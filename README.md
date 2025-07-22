@@ -10,6 +10,8 @@ Made with [Godot Engine 4.4](https://godotengine.org).
 
 Leaderboards made with and hosted on [Quiver](https://quiver.dev).
 
-CRT shader taken from [here](https://godotshaders.com/shader/realistic-crt-shader/).
+CRT shader taken from [here](https://godotshaders.com/shader/lightweight-crt-effect/).
+
+Font taken from [here](https://www.fontspace.com/sebastian-gothic-nbp-font-f16160).
 
 Play now: [The Cutting Plane Game v2](https://bigkwii.github.io/cutting-plane-game-2-web-test/).

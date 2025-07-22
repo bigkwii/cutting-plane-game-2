@@ -9,7 +9,7 @@ signal quit_gamemode
 @export var max_y: int = 6:
 	set(value):
 		max_y = clamp(value, 4, 16)
-		Y_MAX_LINE.text = str(max_y)
+		RESTART_BTN.text = "Restart Editor\n(level size: %s)" % str(max_y)
 ## save verts of level editor in case the player wants to come back
 var saved_verts: Array[Vector2] = []
 ## likewise with the color
@@ -20,7 +20,8 @@ var saved_color: Color = Color(1, 0, 0)
 @onready var LEVEL_EDITOR = null # assigned dynamically
 @onready var LEVEL = null # assigned dynamically
 @onready var PLAY_LEVEL_OPTIONS = $CanvasLayer/play_level_options
-@onready var Y_MAX_LINE = $CanvasLayer/MENU/panel/VBoxContainer/restart_container/y_max_line
+@onready var RESTART_BTN = $CanvasLayer/MENU/panel/VBoxContainer/restart_container/restart_btn
+@onready var LVL_SIZE_SLIDER = $CanvasLayer/MENU/panel/VBoxContainer/restart_container/lvl_size_slider
 
 # - preloaded scenes -
 var LEVEL_EDITOR_SCENE = preload("res://scenes/level_editor.tscn")
@@ -28,7 +29,7 @@ var LEVEL_SCENE = preload("res://scenes/level.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	Y_MAX_LINE.text = str(max_y)
+	RESTART_BTN.text = "Restart Editor\n(level size: %s)" % str(max_y)
 	load_level_editor()
 
 func load_level_editor(initial_verts: Array[Vector2] = []) -> void:
@@ -92,17 +93,16 @@ func _on_exit_pressed():
 	quit_gamemode.emit()
 	queue_free()
 
-func _on_y_max_line_text_changed(new_text):
-	var regex = RegEx.new()
-	regex.compile("([0-9]+)")
-	# only allow numbers or empty string
-	if not regex.search(new_text):
-		# remove the last character
-		Y_MAX_LINE.text = new_text.left(new_text.length() - 1)
-
 func _on_restart_btn_pressed():
 	saved_verts = []
-	max_y = Y_MAX_LINE.text.to_int() if Y_MAX_LINE.text != "" else 6
+	max_y = int(LVL_SIZE_SLIDER.value)
 	load_level_editor()
 	MENU.visible = false
 	get_tree().paused = false
+
+func _on_lvl_size_slider_drag_ended(value_changed:bool): # most likely unnecessary
+	if value_changed:
+		max_y = int(LVL_SIZE_SLIDER.value)
+
+func _on_lvl_size_slider_value_changed(value:float):
+	max_y = int(value)

@@ -34,7 +34,7 @@ theme_override_font_sizes/font_size = 30
 text = "Level Editor Mode"
 
 [node name="play_level_options" type="VBoxContainer" parent="CanvasLayer"]
-anchors_preset = -1
+anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
 offset_left = 64.0
@@ -101,25 +101,23 @@ layout_mode = 2
 text = "Level Editor"
 horizontal_alignment = 1
 
-[node name="restart_container" type="HBoxContainer" parent="CanvasLayer/MENU/panel/VBoxContainer"]
+[node name="restart_container" type="VBoxContainer" parent="CanvasLayer/MENU/panel/VBoxContainer"]
 layout_mode = 2
-
-[node name="y_max_line" type="LineEdit" parent="CanvasLayer/MENU/panel/VBoxContainer/restart_container"]
-layout_mode = 2
-placeholder_text = "4..16"
-max_length = 2
-context_menu_enabled = false
-virtual_keyboard_type = 2
-shortcut_keys_enabled = false
-middle_mouse_paste_enabled = false
-selecting_enabled = false
-deselect_on_focus_loss_enabled = false
-drag_and_drop_selection_enabled = false
 
 [node name="restart_btn" type="Button" parent="CanvasLayer/MENU/panel/VBoxContainer/restart_container"]
 layout_mode = 2
 text = "Restart Editor
-<- set lvl size"
+(level size: 6)"
+
+[node name="lvl_size_slider" type="HSlider" parent="CanvasLayer/MENU/panel/VBoxContainer/restart_container"]
+layout_mode = 2
+min_value = 4.0
+max_value = 16.0
+value = 6.0
+rounded = true
+scrollable = false
+tick_count = 13
+ticks_on_borders = true
 
 [node name="exit" type="Button" parent="CanvasLayer/MENU/panel/VBoxContainer"]
 layout_mode = 2
@@ -138,7 +136,8 @@ text = "X"
 
 [connection signal="pressed" from="CanvasLayer/play_level_options/edit_level_button" to="." method="_on_edit_level_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/play_level_options/reset_level_button" to="." method="_on_reset_level_button_pressed"]
-[connection signal="text_changed" from="CanvasLayer/MENU/panel/VBoxContainer/restart_container/y_max_line" to="." method="_on_y_max_line_text_changed"]
 [connection signal="pressed" from="CanvasLayer/MENU/panel/VBoxContainer/restart_container/restart_btn" to="." method="_on_restart_btn_pressed"]
+[connection signal="drag_ended" from="CanvasLayer/MENU/panel/VBoxContainer/restart_container/lvl_size_slider" to="." method="_on_lvl_size_slider_drag_ended"]
+[connection signal="value_changed" from="CanvasLayer/MENU/panel/VBoxContainer/restart_container/lvl_size_slider" to="." method="_on_lvl_size_slider_value_changed"]
 [connection signal="pressed" from="CanvasLayer/MENU/panel/VBoxContainer/exit" to="." method="_on_exit_pressed"]
 [connection signal="pressed" from="CanvasLayer/MENU/panel/x" to="." method="_on_x_pressed"]

@@ -448,11 +448,12 @@ anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
 offset_left = -480.0
-offset_top = -52.0
+offset_top = -66.0
 offset_right = -30.0
-offset_bottom = 56.0
+offset_bottom = 74.0
 grow_horizontal = 0
 grow_vertical = 2
+theme_override_constants/separation = 0
 
 [node name="eq1" type="Label" parent="short/VBoxContainer"]
 visible = false
@@ -515,7 +516,7 @@ width = 2.0
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 process_mode = 1
 libraries = {
-"": SubResource("AnimationLibrary_b625j")
+&"": SubResource("AnimationLibrary_b625j")
 }
 
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
