@@ -33,7 +33,7 @@ func refresh_scores():
 	if score_data["scores"].size() > 0:
 		for score in score_data["scores"]:
 			var row: TreeItem = score_list.create_item(root)
-			row.set_text(0, str(score["rank"]))
+			row.set_text(0, str(int(score["rank"])))
 			row.set_text(1, str(score["name"]))
 			row.set_text(2, str(score["metadata"]["formated_time"])) # the only change
 			if score["is_current_player"]:

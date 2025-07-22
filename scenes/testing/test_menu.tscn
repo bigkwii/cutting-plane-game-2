@@ -56,15 +56,33 @@ anchors_preset = -1
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -832.0
-offset_top = 32.0
+offset_top = 64.0
 offset_right = 832.0
 offset_bottom = 217.0
 grow_horizontal = 2
 theme_override_fonts/font = ExtResource("2_b4vfd")
-theme_override_font_sizes/font_size = 150
-text = "The Cutting
-Plane Game"
+theme_override_font_sizes/font_size = 130
+text = "The Cutting Plane Game"
 horizontal_alignment = 1
+
+[node name="version" type="Label" parent="CanvasLayer/UI"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -587.0
+offset_top = -117.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("5_ba3wp")
+theme_override_font_sizes/font_size = 30
+text = "NO VERSION SET.
+GO TO  Project Settings >
+ Application > Config > Version"
+horizontal_alignment = 2
+vertical_alignment = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI"]
 layout_mode = 1
@@ -166,10 +184,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -598.0
-offset_top = -80.0
-offset_right = 598.0
-offset_bottom = 224.0
+offset_left = -584.0
+offset_top = -216.0
+offset_right = 599.0
+offset_bottom = 380.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/h_separation = 128
@@ -178,7 +196,6 @@ columns = 3
 
 [node name="lvl1_btn" type="Button" parent="CanvasLayer/UI/free_play_level_select/GridContainer"]
 layout_mode = 2
-theme = ExtResource("4_xvnma")
 text = "Level 1
 After Eight"
 
@@ -221,18 +238,19 @@ Igloo"
 layout_mode = 2
 text = "Level 9
 Shine Bright
-Like a
-Diamond"
+Like a Diamond"
 
 [node name="x_btn" type="Button" parent="CanvasLayer/UI/free_play_level_select"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 1.0
 anchor_right = 1.0
+offset_left = -104.0
 offset_top = 32.0
 offset_right = -32.0
+offset_bottom = 108.0
 grow_horizontal = 0
-text = " X "
+text = "X"
 
 [node name="arcade_mode_popup" type="Panel" parent="CanvasLayer/UI"]
 visible = false
@@ -276,29 +294,28 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -124.0
-offset_top = -82.0
-offset_right = 124.0
-offset_bottom = 82.0
+offset_left = -448.0
+offset_top = -136.0
+offset_right = 448.0
+offset_bottom = 237.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_fonts/font = ExtResource("2_b4vfd")
 theme_override_font_sizes/font_size = 120
 text = "Start
-Arcade
-Mode"
+Arcade Mode"
 
 [node name="arcade_x_btn" type="Button" parent="CanvasLayer/UI/arcade_mode_popup"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -48.0
+offset_left = -104.0
 offset_top = 32.0
 offset_right = -32.0
-offset_bottom = 60.0
+offset_bottom = 108.0
 grow_horizontal = 0
-text = " X "
+text = "X"
 
 [node name="tutorial_mode_popup" type="Panel" parent="CanvasLayer/UI"]
 visible = false
@@ -343,10 +360,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -124.0
-offset_top = -82.0
-offset_right = 124.0
-offset_bottom = 82.0
+offset_left = -272.0
+offset_top = -80.0
+offset_right = 272.0
+offset_bottom = 222.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_fonts/font = ExtResource("2_b4vfd")
@@ -359,12 +376,12 @@ layout_mode = 1
 anchors_preset = -1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -48.0
+offset_left = -104.0
 offset_top = 32.0
 offset_right = -32.0
-offset_bottom = 60.0
+offset_bottom = 108.0
 grow_horizontal = 0
-text = " X "
+text = "X"
 
 [node name="editor_mode_popup" type="Panel" parent="CanvasLayer/UI"]
 visible = false
@@ -408,10 +425,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -124.0
-offset_top = -82.0
-offset_right = 124.0
-offset_bottom = 82.0
+offset_left = -240.0
+offset_top = -104.0
+offset_right = 248.0
+offset_bottom = 198.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_fonts/font = ExtResource("2_b4vfd")
@@ -424,12 +441,12 @@ layout_mode = 1
 anchors_preset = -1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -48.0
+offset_left = -104.0
 offset_top = 32.0
 offset_right = -32.0
-offset_bottom = 60.0
+offset_bottom = 108.0
 grow_horizontal = 0
-text = " X "
+text = "X"
 
 [node name="speedrun_mode_popup" type="Panel" parent="CanvasLayer/UI"]
 visible = false
@@ -474,10 +491,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -124.0
-offset_top = -82.0
-offset_right = 124.0
-offset_bottom = 82.0
+offset_left = -288.0
+offset_top = -88.0
+offset_right = 291.0
+offset_bottom = 214.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_fonts/font = ExtResource("2_b4vfd")
@@ -541,7 +558,7 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -548.0
-offset_top = -7.0
+offset_top = 86.0
 offset_right = 548.0
 offset_bottom = 117.0
 grow_horizontal = 2
@@ -611,20 +628,15 @@ bbcode_enabled = true
 text = "A game made with the intent of illustrating an important concept in applied optimization: The Cutting Planes.
 
 Based on the original concept and prototype by Gonzalo Muñoz.
-
 First stable and enhanced development by Alvaro \"big_kwii\" Morales T.
 
-Source Code:
-[color=cyan][url]https://github.com/bigkwii/cutting-plane-game-2[/url][/color]
-
-Made with Godot Engine:
-[color=cyan][url]https://godotengine.org[/url][/color]
-
-Leaderboards made with and hosted on Quiver:
-[color=cyan][url]https://quiver.dev[/url][/color]
-
+Source Code: [color=cyan][url]https://github.com/bigkwii/cutting-plane-game-2[/url][/color]
+Made with Godot Engine: [color=cyan][url]https://godotengine.org[/url][/color]
+Leaderboards made with and hosted on Quiver: [color=cyan][url]https://quiver.dev[/url][/color]
 CRT shader taken from here:
-[color=cyan][url]https://godotshaders.com/shader/realistic-crt-shader/[/url][/color]"
+[color=cyan][url]https://godotshaders.com/shader/realistic-crt-shader/[/url][/color]
+Font taken (and slightly modified) from:
+[color=cyan][url]https://www.fontspace.com/sebastian-gothic-nbp-font-f16160[/url][/color]"
 fit_content = true
 
 [node name="about_x_btn" type="Button" parent="CanvasLayer/UI/about_popup"]
@@ -656,24 +668,6 @@ offset_left = -48.0
 offset_bottom = 60.0
 grow_horizontal = 0
 text = " X "
-
-[node name="version" type="Label" parent="CanvasLayer/UI"]
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -92.0
-offset_top = -27.0
-grow_horizontal = 0
-grow_vertical = 0
-theme_override_fonts/font = ExtResource("5_ba3wp")
-theme_override_font_sizes/font_size = 30
-text = "NO VERSION SET.
-GO TO  Project Settings >
- Application > Config > Version"
-horizontal_alignment = 2
 
 [node name="polygon" parent="." instance=ExtResource("2_3o1bf")]
 position = Vector2(960, 576)

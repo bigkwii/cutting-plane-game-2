@@ -102,7 +102,6 @@ grow_horizontal = 0
 text = "X"
 
 [node name="LEVEL_SELECTOR" type="Control" parent="CanvasLayer"]
-visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
@@ -147,10 +146,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -598.0
-offset_top = -200.0
-offset_right = 598.0
-offset_bottom = 224.0
+offset_left = -584.0
+offset_top = -292.0
+offset_right = 599.0
+offset_bottom = 364.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/h_separation = 128
@@ -202,8 +201,7 @@ Igloo"
 layout_mode = 2
 text = "Level 9
 Shine Bright
-Like a
-Diamond"
+Like a Diamond"
 
 [node name="selector_x_btn" type="Button" parent="CanvasLayer/LEVEL_SELECTOR/panel"]
 layout_mode = 1

@@ -5,7 +5,7 @@
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qywiv"]
 content_margin_left = 8.0
-content_margin_top = 12.0
+content_margin_top = 8.0
 content_margin_right = 8.0
 content_margin_bottom = 8.0
 bg_color = Color(0.0392157, 0.0392157, 0.0392157, 1)
@@ -13,21 +13,17 @@ border_color = Color(1, 1, 1, 1)
 corner_detail = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ffwuv"]
-content_margin_left = 4.0
-content_margin_top = 4.0
-content_margin_right = 4.0
-content_margin_bottom = 4.0
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
 bg_color = Color(1, 1, 1, 0.75)
 draw_center = false
 corner_detail = 5
-expand_margin_left = 8.0
-expand_margin_top = 12.0
-expand_margin_right = 8.0
-expand_margin_bottom = 8.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hr0cv"]
 content_margin_left = 8.0
-content_margin_top = 12.0
+content_margin_top = 8.0
 content_margin_right = 8.0
 content_margin_bottom = 8.0
 bg_color = Color(0.0392157, 0.0392157, 0.0392157, 1)
@@ -40,7 +36,7 @@ corner_detail = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oisg8"]
 content_margin_left = 8.0
-content_margin_top = 12.0
+content_margin_top = 8.0
 content_margin_right = 8.0
 content_margin_bottom = 8.0
 bg_color = Color(0.0392157, 0.0392157, 0.0392157, 1)
@@ -53,7 +49,7 @@ corner_detail = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nk8hv"]
 content_margin_left = 8.0
-content_margin_top = 12.0
+content_margin_top = 8.0
 content_margin_right = 8.0
 content_margin_bottom = 8.0
 bg_color = Color(1, 1, 1, 1)
@@ -2030,7 +2026,7 @@ corner_detail = 5
 
 [resource]
 default_font = ExtResource("1_yc2pu")
-default_font_size = 60
+default_font_size = 50
 Button/colors/font_color = Color(1, 1, 1, 1)
 Button/colors/font_disabled_color = Color(0.87451, 0.87451, 0.87451, 0.196078)
 Button/colors/font_focus_color = Color(0.95, 0.95, 0.95, 1)
@@ -2048,7 +2044,7 @@ Button/constants/align_to_largest_stylebox = 0
 Button/constants/h_separation = 4
 Button/constants/icon_max_width = 0
 Button/constants/outline_size = 0
-Button/font_sizes/font_size = 60
+Button/font_sizes/font_size = 50
 Button/fonts/font = ExtResource("1_yc2pu")
 Button/styles/disabled = SubResource("StyleBoxFlat_qywiv")
 Button/styles/focus = SubResource("StyleBoxFlat_ffwuv")

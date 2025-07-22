@@ -182,14 +182,13 @@ offset_right = 162.5
 offset_bottom = -64.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 32
+theme_override_constants/separation = 16
 
 [node name="title" type="Label" parent="CanvasLayer/HUD/TUTORIAL_FINISH/panel/VBoxContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("5_313qa")
 theme_override_font_sizes/font_size = 140
-text = "Tutorial
-Complete!"
+text = "Tutorial Complete!"
 horizontal_alignment = 1
 
 [node name="congrats" type="Label" parent="CanvasLayer/HUD/TUTORIAL_FINISH/panel/VBoxContainer"]
