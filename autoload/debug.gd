@@ -17,6 +17,7 @@ func _ready() -> void:
 	if not is_enabled():
 		return
 	InputMap.load_from_project_settings() # workaround for a bug where @tool scripts load before the input map
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(canvas_layer)
 	canvas_layer.layer = 1_000_000 # on top of everything
 	canvas_layer.add_child(log_container)
@@ -79,6 +80,7 @@ func log(message: Variant, seconds: float = 2) -> void:
 	# do NOT show debug on release builds
 	if not is_enabled():
 		return
+	print(message)
 	var label = Label.new() # message label
 	label.text = str(message)
 	# black outline, white text
