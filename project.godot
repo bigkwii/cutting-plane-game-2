@@ -11,6 +11,7 @@ config_version=5
 [application]
 
 config/name="cutting-plane-game-2"
+config/version="1.0.7"
 run/main_scene="res://scenes/main.tscn"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
@@ -24,6 +25,7 @@ SCORE="*res://autoload/score.gd"
 CRT="*res://autoload/crt_filter.tscn"
 Leaderboards="*res://addons/quiver_leaderboards/leaderboards.tscn"
 PlayerAccounts="*res://addons/quiver_player_accounts/player_accounts.tscn"
+Talo="*res://addons/talo/talo_manager.gd"
 
 [display]
 
@@ -35,7 +37,7 @@ window/handheld/orientation=4
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/quiver_leaderboards/plugin.cfg", "res://addons/quiver_player_accounts/plugin.cfg")
+enabled=PackedStringArray("res://addons/quiver_leaderboards/plugin.cfg", "res://addons/quiver_player_accounts/plugin.cfg", "res://addons/talo/plugin.cfg")
 
 [input]
 
@@ -144,7 +146,7 @@ toggle_crt_filter={
 
 [quiver]
 
-general/auth_token="PUT QUIVER TOKEN HERE"
+general/auth_token="DEPRECATED"
 
 [rendering]
 
