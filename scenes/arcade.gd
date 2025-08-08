@@ -16,7 +16,7 @@ var level_paths: Array[String] = [
 	"res://levels/demo/8.json",
 	"res://levels/demo/9.json"
 ]
-var current_level_idx: int = 8
+var current_level_idx: int = 0
 
 ## total score
 var total_score = 0
@@ -186,12 +186,10 @@ func _on_submit_btn_pressed():
 	DEBUG.log("submitting score...")
 	SUBMIT_SCORE_BTN.disabled = true
 	SUBMIT_SCORE_BTN.text = "LOADING..."
-	# var submitted: bool = await Leaderboards.post_guest_score("tcpgv2-arcade-lJ2Z", total_score, SUBMIT_SCORE_NAME.text, {}, 0, true)
 	await Talo.players.identify("username", SUBMIT_SCORE_NAME.text)
 	DEBUG.log("username identified")
 	var submit_response = await Talo.leaderboards.add_entry("tcpg-arcade", total_score)
-	DEBUG.log("submit_response: %s" % submit_response.updated)
-	if submit_response and submit_response.updated:
+	if submit_response != null:
 		DEBUG.log("score submitted")
 		SUBMIT_SCORE_BTN.disabled = true
 		SUBMIT_SCORE_BTN.text = "SUBMITTED"

@@ -5,4 +5,4 @@
 
 [node name="arcade_leaderboard_ui" instance=ExtResource("1_p6mem")]
 theme = ExtResource("2_dq53c")
-leaderboard_id = "tcpgv2-arcade-lJ2Z"
+leaderboard_id = "tcpg-arcade"

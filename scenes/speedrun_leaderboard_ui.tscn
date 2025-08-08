@@ -7,7 +7,7 @@
 [node name="SpeedrunLeaderboardUI" instance=ExtResource("1_bgcg3")]
 theme = ExtResource("2_dkk7e")
 script = ExtResource("3_l01py")
-leaderboard_id = "tcpgv2-speedrun-Uerr"
+leaderboard_id = "tcpg-speedrun"
 
 [node name="ScoresLabel" parent="PanelContainer/VBoxContainer/Nav" index="1"]
 text = "Times"
