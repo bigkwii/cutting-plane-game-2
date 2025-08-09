@@ -17,8 +17,9 @@ var CLICK_VFX = preload("res://scenes/click_vfx.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	if OS.get_name() in ["Android", "iOS", "Web"]: # hidden by default on mobile and web
-		CRT.visible = false
+	# if OS.get_name() in ["Android", "iOS", "Web"]: # hidden by default on mobile and web
+	# 	CRT.visible = false
+	pass
 
 func _input(event):
 	if event is InputEventMouseButton:
@@ -26,6 +27,15 @@ func _input(event):
 			_play_click_vfx(get_global_mouse_position(), true)
 		if event.button_index == MOUSE_BUTTON_LEFT and not event.pressed: # play on release
 			_play_click_vfx(get_global_mouse_position())
+
+# - fps check -
+func _on_fps_timer_timeout():
+	var avg_fps := Engine.get_frames_per_second()
+	if avg_fps < 30 and CRT.visible:
+		DEBUG.log("FPS too low (%s). CRT Shader OFF." % [avg_fps])
+		CRT.visible = false
+	else:
+		DEBUG.log("FPS good enough (%s). CRT Shader ON." % [avg_fps])
 
 # - vfx -
 func _play_click_vfx(pos: Vector2, backwards: bool = false):
@@ -126,4 +136,5 @@ func _on_speedrun_quit_gamemode():
 	TEST_MENU.start_tutorial.connect(_on_test_menu_start_tutorial)
 	TEST_MENU.start_editor.connect(_on_test_menu_start_editor)
 	TEST_MENU.start_speedrun.connect(_on_test_menu_start_speedrun)
+
 

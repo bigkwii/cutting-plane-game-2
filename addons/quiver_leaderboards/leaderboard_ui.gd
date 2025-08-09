@@ -50,9 +50,17 @@ func _ready() -> void:
 
 func refresh_scores():
 	if not leaderboard_id:
-		printerr("[Quiver Leaderboards] Scores couldn't be fetched since leaderboard ID not set in Leaderboard UI.")
+		printerr("[Leaderboards] Invalid Leaderboard ID.")
 		return
-
+	# TODO: THIS!!!!! SEE addons\talo\samples\leaderboards\scripts\leaderboard.gd 
+	var talo_options := Talo.leaderboards.GetEntriesOptions.new()
+	talo_options.page = 0
+	DEBUG.log("getting talo entries...")
+	var talo_res := await Talo.leaderboards.get_entries(leaderboard_id, talo_options)
+	var talo_entries: Array[TaloLeaderboardEntry] = talo_res.entries
+	var talo_count: int = talo_res.count
+	var talo_is_last_page = talo_res.is_last_page
+	
 	prev_button.disabled = true
 	next_button.disabled = true
 

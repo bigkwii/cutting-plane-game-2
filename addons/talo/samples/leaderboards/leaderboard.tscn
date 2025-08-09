@@ -5,7 +5,7 @@
 
 [node name="Leaderboard" type="Node2D"]
 script = ExtResource("1_ul1ks")
-leaderboard_internal_name = "team-scores"
+leaderboard_internal_name = "tcpg-arcade"
 
 [node name="UI" type="Control" parent="."]
 layout_mode = 3

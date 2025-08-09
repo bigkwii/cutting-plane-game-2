@@ -18,7 +18,7 @@ var level_paths: Array[String] = [
 	"res://levels/demo/8.json",
 	"res://levels/demo/9.json"
 ]
-var current_level_idx: int = 8
+var current_level_idx: int = 0
 
 ## flag to count time
 var counting_time: bool = false
@@ -216,8 +216,8 @@ func _on_submit_btn_pressed():
 	SUBMIT_TIME_BTN.text = "LOADING..."
 	var formated_time = format_time(total_time)
 	var time_str = formated_time[0] + ":" + formated_time[1] + "." + formated_time[2]
-	# var submitted: bool = await Leaderboards.post_guest_score("tcpgv2-speedrun-Uerr", total_time, SUBMIT_TIME_NAME.text, {"formated_time" : time_str}, 0, true)
-	await Talo.players.identify("username", SUBMIT_TIME_NAME.text)
+	var username: String = "Anonymous" if SUBMIT_TIME_NAME.text == "" else SUBMIT_TIME_NAME.text
+	await Talo.players.identify("username", username)
 	DEBUG.log("username identified")
 	var submit_response = await Talo.leaderboards.add_entry("tcpg-speedrun", total_time, {"formated_time" : time_str})
 	if submit_response != null:
