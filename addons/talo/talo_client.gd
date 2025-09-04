@@ -92,7 +92,8 @@ func _build_headers(extra_headers: Array[String] = []) -> Array[String]:
 		"Content-Type: application/json",
 		"Accept: application/json",
 		"X-Talo-Dev-Build: %s" % ("1" if Talo.settings.is_debug_build() else "0"),
-		"X-Talo-Include-Dev-Data: %s" % ("1" if Talo.settings.is_debug_build() else "0"),
+		# "X-Talo-Include-Dev-Data: %s" % ("1" if Talo.settings.is_debug_build() else "0"),
+		"X-Talo-Include-Dev-Data: %s" % ("1" if Talo.settings.is_debug_build() else "1"), ## TODO: hack to always include scores even if they're made in debug builds
 		"X-Talo-Client: godot:%s" % TALO_CLIENT_VERSION
 	]
 
