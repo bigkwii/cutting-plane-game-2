@@ -8,7 +8,7 @@ Based on the original demo: [The Cutting Plane Game](https://gonzalomunoz.org/th
 
 Made with [Godot Engine 4.4](https://godotengine.org).
 
-Leaderboards made with and hosted on [Quiver](https://quiver.dev).
+Leaderboards made with and hosted on [Talo](https://trytalo.com/).
 
 CRT shader taken from [here](https://godotshaders.com/shader/lightweight-crt-effect/).
 
