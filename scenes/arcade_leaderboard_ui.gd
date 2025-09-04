@@ -73,6 +73,7 @@ func refresh_scores():
 			row.set_text(1, str(entry.player_alias.identifier))
 			row.set_text(2, str(int(entry.score)))
 	else:
+		# TODO: ERROR HANDLING
 		var row: TreeItem = score_list.create_item(root)
 		if score_data["error"]:
 			row.set_text(0, "There was an error fetching scores.")

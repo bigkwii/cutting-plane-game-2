@@ -95,17 +95,16 @@ offset_bottom = 240.0
 grow_vertical = 2
 theme_override_fonts/font = ExtResource("5_ba3wp")
 theme_override_font_sizes/font_size = 30
-text = "NOTICE 2025-08-08:
-Leaderboards will be unavilable
-for the time being.
-The Quiver Leaderboards 
-service has SHUT DOWN, and as such
-The Cutting Plane Game is currently
-in the process of migrating to a new
-Leaderboard backend.
-Unfortunately, old Leaderboard
-scores were lost along with Quiver.
-Thank you for underestanding."
+text = "NOTICE 2025-09-04:
+Leaderboards are avilable again, but
+unfortunately, old score data was lost
+along with Quiver, the old leaderboard
+backend which suddenly shut down in july.
+An attempt was made to recover the data,
+but there hasn't been a response from
+Quiver's end yet.
+Thank you for underestanding.
+-TCPG dev team."
 vertical_alignment = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI"]
