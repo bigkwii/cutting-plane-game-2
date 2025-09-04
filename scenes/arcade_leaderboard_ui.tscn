@@ -1,8 +1,14 @@
-[gd_scene load_steps=3 format=3 uid="uid://cnves1msstbry"]
+[gd_scene load_steps=4 format=3 uid="uid://cnves1msstbry"]
 
 [ext_resource type="PackedScene" uid="uid://dgygkbtm0burn" path="res://addons/quiver_leaderboards/leaderboard_ui.tscn" id="1_p6mem"]
 [ext_resource type="Theme" uid="uid://bqljbjsn8elrs" path="res://assets/themes/default.tres" id="2_dq53c"]
+[ext_resource type="Script" uid="uid://cs51vsp85bk65" path="res://scenes/arcade_leaderboard_ui.gd" id="3_so7oy"]
 
 [node name="arcade_leaderboard_ui" instance=ExtResource("1_p6mem")]
 theme = ExtResource("2_dq53c")
+script = ExtResource("3_so7oy")
 leaderboard_id = "tcpg-arcade"
+score_offset = 0
+score_limit = 10
+nearby_count = 5
+current_player_highlight_color = Color(0, 0.321569, 0.0862745, 1)

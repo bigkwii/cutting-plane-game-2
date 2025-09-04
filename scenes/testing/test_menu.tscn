@@ -151,7 +151,6 @@ text = "Speedrun"
 [node name="leaderboards_btn" type="Button" parent="CanvasLayer/UI/VBoxContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_7mkkd")
-disabled = true
 text = "Leaderboards"
 
 [node name="about_btn" type="Button" parent="CanvasLayer/UI/VBoxContainer"]

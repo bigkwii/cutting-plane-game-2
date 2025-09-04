@@ -75,7 +75,8 @@ func _on_submit_pressed() -> void:
 	var score := RandomNumberGenerator.new().randi_range(0, 100)
 	var team := "Blue" if RandomNumberGenerator.new().randi_range(0, 1) == 0 else "Red"
 
-	var res := await Talo.leaderboards.add_entry(leaderboard_internal_name, score, {team = team})
+	# var res := await Talo.leaderboards.add_entry(leaderboard_internal_name, score, {team = team})
+	var res := await Talo.leaderboards.add_entry(leaderboard_internal_name, score)
 	assert(is_instance_valid(res))
 	info_label.text = "You scored %s points for the %s team!%s" % [score, team, " Your highscore was updated!" if res.updated else ""]
 
