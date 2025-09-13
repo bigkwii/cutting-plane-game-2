@@ -9,7 +9,7 @@ extends Node2D
 @export var alpha: = 0.0
 
 ## The scaling factor for the hull.
-var SCALING: int = GLOBALS.DEFAULT_SCALING
+var SCALING: Vector2 = GLOBALS.DEFAULT_SCALING
 ## The offset for the hull.
 var OFFSET: Vector2 = GLOBALS.DEFAULT_OFFSET
 
@@ -43,4 +43,3 @@ func play_idle():
 
 func play_hidden():
 	ANIM_PLAYER.play("hidden")
-

@@ -417,25 +417,25 @@ func _ready():
 	DUMMY_POLYGON.visible = false
 	# set up the lines and eqs describing it
 	LINE1.position = LEVEL.OFFSET + (Vector2(1.0, 0.5) + Vector2(2.2, 0.8)) * 0.5 * LEVEL.SCALING
-	LINE1.rotation = (Vector2(2.2, 0.8) - Vector2(1.0, 0.5)).angle()
+	LINE1.rotation = -(Vector2(2.2, 0.8) - Vector2(1.0, 0.5)).angle()
 	LINE1.visible = false
 	EQ1.position = LINE1.position
 	EQ1.visible = false
 	# line 2
 	LINE2.position = LEVEL.OFFSET + (Vector2(2.2, 0.8) + Vector2(2.5, 2.0)) * 0.5 * LEVEL.SCALING
-	LINE2.rotation = (Vector2(2.5, 2.0) - Vector2(2.2, 0.8)).angle()
+	LINE2.rotation = -(Vector2(2.5, 2.0) - Vector2(2.2, 0.8)).angle()
 	LINE2.visible = false
 	EQ2.position = LINE2.position
 	EQ2.visible = false
 	# line 3
 	LINE3.position = LEVEL.OFFSET + (Vector2(2.5, 2.0) + Vector2(1.0, 2.0)) * 0.5 * LEVEL.SCALING
-	LINE3.rotation = (Vector2(1.0, 2.0) - Vector2(2.5, 2.0)).angle()
+	LINE3.rotation = -(Vector2(1.0, 2.0) - Vector2(2.5, 2.0)).angle()
 	LINE3.visible = false
 	EQ3.position = LINE3.position
 	EQ3.visible = false
 	# line 4
 	LINE4.position = LEVEL.OFFSET + (Vector2(1.0, 2.0) + Vector2(1.0, 0.5)) * 0.5 * LEVEL.SCALING
-	LINE4.rotation = (Vector2(1.0, 0.5) - Vector2(1.0, 2.0)).angle()
+	LINE4.rotation = -(Vector2(1.0, 0.5) - Vector2(1.0, 2.0)).angle()
 	LINE4.visible = false
 	EQ4.visible = false
 	EQ4.position = LINE4.position

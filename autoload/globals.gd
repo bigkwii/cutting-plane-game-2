@@ -10,7 +10,7 @@ extends Node
 ## Default lattice grid dimensions
 @export var DEFAULT_DIMENSIONS: Vector2 = Vector2(8, 6)
 ## Default lattice grid scaling
-@export var DEFAULT_SCALING: int = 142
+@export var DEFAULT_SCALING: Vector2 = Vector2(142, -142)
 ## Default lattice grid offset
 @export var DEFAULT_OFFSET: Vector2 = Vector2(16, 28)
 ## Default polygon grid color

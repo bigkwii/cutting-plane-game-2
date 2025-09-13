@@ -5,7 +5,7 @@ extends Node2D
 
 # -- vars --
 ## Scaling factor for the lattice points. To convert from lattice coordinates to screen coordinates.
-@export var SCALING: int = GLOBALS.DEFAULT_SCALING
+@export var SCALING: Vector2 = GLOBALS.DEFAULT_SCALING
 ## Offset from the game origin to the grid origin.
 @export var OFFSET: Vector2 = GLOBALS.DEFAULT_OFFSET
 ## The color of the polygon. Borders are solid, fill is semi-transparent.
@@ -922,12 +922,12 @@ func _play_cut_animation(line_point: Vector2, line_dir: Vector2) -> void:
 	var new_cut_vfx = CUT_VFX_SCENE.instantiate()
 	CUT_VFXS.add_child(new_cut_vfx)
 	new_cut_vfx.global_position = line_point * SCALING + OFFSET
-	new_cut_vfx.rotation = line_dir.angle()
+	new_cut_vfx.rotation = -line_dir.angle()
 	new_cut_vfx.play()
 
 func _play_circle_animation(circle_center: Vector2, circle_radius: float, speed: float = 1.0) -> void:
 	CIRCLE_VFX.global_position = circle_center * SCALING + OFFSET
-	CIRCLE_VFX.radius = circle_radius * SCALING
+	CIRCLE_VFX.radius = circle_radius * SCALING.x
 	CIRCLE_VFX.play_grow(speed)
 
 func _play_circle_success_animation() -> void:
@@ -938,7 +938,7 @@ func _play_circle_failure_animation() -> void:
 
 func _play_split_animation(origin: Vector2, width: float, is_horizontal: bool, speed: float = 1.0) -> void:
 	SPLIT_VFX.global_position = origin * SCALING + OFFSET
-	SPLIT_VFX.width = width * SCALING
+	SPLIT_VFX.width = width * SCALING.x
 	SPLIT_VFX.is_horizontal = is_horizontal
 	SPLIT_VFX.play_grow(speed)
 
@@ -986,7 +986,7 @@ func _make_cut_piece(lattice_verts: PackedVector2Array, initial_velocity_dir: Ve
 	new_cut_piece.SCALING = SCALING
 	new_cut_piece.OFFSET = OFFSET
 	new_cut_piece.color = color
-	new_cut_piece.initial_velocity_dir = initial_velocity_dir
+	new_cut_piece.initial_velocity_dir = initial_velocity_dir * SCALING.normalized() # correct for flipped y axis
 	CUT_PIECES.add_child(new_cut_piece)
 
 ## calculates the rank for a level based on the ratio of the area of the convex hull to the area of the polygon

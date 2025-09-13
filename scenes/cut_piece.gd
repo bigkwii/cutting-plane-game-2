@@ -5,7 +5,7 @@ extends RigidBody2D
 @export var packed_vertices: PackedVector2Array = PackedVector2Array()
 @export var color: Color = Color(1, 1, 1)
 @export var alpha: float = 1
-@export var SCALING: int = GLOBALS.DEFAULT_SCALING
+@export var SCALING: Vector2 = GLOBALS.DEFAULT_SCALING
 @export var OFFSET: Vector2 = GLOBALS.DEFAULT_OFFSET
 
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D

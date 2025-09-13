@@ -3,7 +3,7 @@ extends Node2D
 
 # -- vars --
 ## Scaling factor for the lattice points. To convert from lattice coordinates to screen coordinates.
-@export var SCALING: int = GLOBALS.DEFAULT_SCALING
+@export var SCALING: Vector2 = GLOBALS.DEFAULT_SCALING
 ## Offset from the game origin to the grid origin.
 @export var OFFSET: Vector2 = GLOBALS.DEFAULT_OFFSET
 ## The color of the polygon. Borders are solid, fill is semi-transparent.

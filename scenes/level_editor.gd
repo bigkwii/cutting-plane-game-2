@@ -9,7 +9,7 @@ signal play_level(data: Dictionary)
 ## dimensions of the lattice grid
 var DIMENSIONS: Vector2 = GLOBALS.DEFAULT_DIMENSIONS
 ## scaling factor for the lattice points
-var SCALING: int = GLOBALS.DEFAULT_SCALING
+var SCALING: Vector2 = GLOBALS.DEFAULT_SCALING
 ## offset from the game origin to the grid origin
 var OFFSET: Vector2 = GLOBALS.DEFAULT_OFFSET
 ## maximum amount of vertices that can be placed
@@ -227,11 +227,11 @@ func _set_lattice_grid_parameters(max_y: int):
 	level_max_x = max_x
 	DIMENSIONS.y = max_y
 	DIMENSIONS.x = max_x
-	SCALING = int( window_size.y / max_y )
+	SCALING = Vector2(int( window_size.y / max_y ), -int( window_size.y / max_y ))
 	# set offset such that the grid is centered
-	OFFSET.y = int(SCALING * 0.5)
+	OFFSET.y = int(SCALING.x * (max_y - 0.5))
 	# center the grid
-	OFFSET.x = int( (window_size.x - SCALING * (max_x-1)) * 0.5 )
+	OFFSET.x = int( (window_size.x - SCALING.x * (max_x-1)) * 0.5 )
 	# set the lattice grid size
 	LATTICE_GRID.DIMENSIONS = DIMENSIONS
 	LATTICE_GRID.SCALING = SCALING

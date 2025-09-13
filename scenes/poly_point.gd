@@ -14,7 +14,7 @@ extends Node2D
 ## if hovering over with mouse
 @export var hover: bool = false
 ## scaling
-@export var SCALING: int = GLOBALS.DEFAULT_SCALING
+@export var SCALING: Vector2 = GLOBALS.DEFAULT_SCALING
 ## flag to show debug label
 @export var debug_label_visible: bool = false
 ## editable attribute
@@ -40,13 +40,13 @@ func _process(_delta):
 func _draw():
 	draw_circle(Vector2.ZERO, radius, color)
 	if clickable:
-		draw_circle(Vector2.ZERO, GLOBALS.GOMORY_CUT_CLICK_RANGE * SCALING, Color(1, 0, 0, 0.5), false, 1.5)
+		draw_circle(Vector2.ZERO, GLOBALS.GOMORY_CUT_CLICK_RANGE * SCALING.x, Color(1, 0, 0, 0.5), false, 1.5)
 	if hover and not editable:
 		draw_circle(Vector2.ZERO, radius, Color.RED, false, 2)
 	if is_integral():
 		draw_circle(Vector2.ZERO, radius, Color.GREEN, false, 2)
 	if editable:
-		draw_circle(Vector2.ZERO, GLOBALS.EDIT_CLICK_RANGE * SCALING, Color(0, 0, 1, 0.5), false, 1.5)
+		draw_circle(Vector2.ZERO, GLOBALS.EDIT_CLICK_RANGE * SCALING.x, Color(0, 0, 1, 0.5), false, 1.5)
 	if hover and editable:
 		draw_circle(Vector2.ZERO, radius, Color.BLUE, false, 2)
 

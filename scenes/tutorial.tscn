@@ -271,7 +271,7 @@ width = 2.0
 default_color = Color(1, 0, 0, 1)
 
 [node name="y_axis" type="Line2D" parent="vfx/axes"]
-points = PackedVector2Array(0, 0, 0, 100, 10, 90, 0, 100, -10, 90)
+points = PackedVector2Array(0, 0, 0, -100, 10, -90, 0, -100, -10, -90)
 width = 2.0
 default_color = Color(0, 0, 1, 1)
 
