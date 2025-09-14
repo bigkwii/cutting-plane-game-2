@@ -15,6 +15,9 @@ var CLICK_VFX = preload("res://scenes/click_vfx.tscn")
 @onready var SELECTED_GAMEMODE = $selected_gamemode
 @onready var CLICK_VFXS = $vfx/click_vfxs
 
+# - vars -
+const MAX_CLICK_VFXS = 20
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	# if OS.get_name() in ["Android", "iOS", "Web"]: # hidden by default on mobile and web
@@ -39,6 +42,8 @@ func _on_fps_timer_timeout():
 
 # - vfx -
 func _play_click_vfx(pos: Vector2, backwards: bool = false):
+	if CLICK_VFXS.get_child_count() > MAX_CLICK_VFXS:
+		return
 	var click_vfx = CLICK_VFX.instantiate()
 	CLICK_VFXS.add_child(click_vfx)
 	click_vfx.position = pos
@@ -136,5 +141,3 @@ func _on_speedrun_quit_gamemode():
 	TEST_MENU.start_tutorial.connect(_on_test_menu_start_tutorial)
 	TEST_MENU.start_editor.connect(_on_test_menu_start_editor)
 	TEST_MENU.start_speedrun.connect(_on_test_menu_start_speedrun)
-
-
