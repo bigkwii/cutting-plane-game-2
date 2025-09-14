@@ -14,10 +14,10 @@ var level_dicts = [
 		"gomory_budget": 0,
 		"split_budget": 0,
 		"poly_vertices" : [
-			[1.0, 2.0],
-			[1.0, 0.5],
-			[2.2, 0.8],
-			[2.5, 2.0]
+			[1.0, 0.0],
+			[1.0, 1.5],
+			[2.2, 1.2],
+			[2.5, 0.0]
 		]
 	},
 	{
@@ -28,10 +28,10 @@ var level_dicts = [
 		"gomory_budget": 0,
 		"split_budget": 0,
 		"poly_vertices" : [
-			[1.3, 0.3],
-			[3.7, 0.3],
+			[1.3, 2.7],
 			[3.7, 2.7],
-			[1.3, 2.7]
+			[3.7, 0.3],
+			[1.3, 0.3]
 		]
 	},
 	{
@@ -42,12 +42,12 @@ var level_dicts = [
 		"gomory_budget": 0,
 		"split_budget": 0,
 		"poly_vertices" : [
-			[2.0, 1.0],
-			[2.5, 0.5],
-			[3.0, 1.0],
-			[3.0, 2.0],
+			[2.0, 2.0],
 			[2.5, 2.5],
-			[2.0, 2.0]
+			[3.0, 2.0],
+			[3.0, 1.0],
+			[2.5, 0.5],
+			[2.0, 1.0]
 		]
 	},
 	{
@@ -58,12 +58,12 @@ var level_dicts = [
 		"gomory_budget": 0,
 		"split_budget": 0,
 		"poly_vertices" : [
-			[1.8, 0.7],
-			[2.5, 0.0],
-			[3.2, 0.7],
-			[3.2, 2.3],
+			[1.8, 2.3],
 			[2.5, 3.0],
-			[1.8, 2.3]
+			[3.2, 2.3],
+			[3.2, 0.7],
+			[2.5, 0.0],
+			[1.8, 0.7]
 		]
 	},
 	{
@@ -74,13 +74,13 @@ var level_dicts = [
 		"gomory_budget": 0,
 		"split_budget": 0,
 		"poly_vertices" : [
-			[2.0, 1.0],
-			[2.5, 0.5],
-			[3.3, 0.0],
-			[3.7, 0.7],
-			[3.7, 1.3],
-			[3.3, 2.0],
-			[2.0, 2.0]
+			[2.0, 2.0],
+			[2.5, 2.5],
+			[3.3, 3.0],
+			[3.7, 2.3],
+			[3.7, 1.7],
+			[3.3, 1.0],
+			[2.0, 1.0]
 		]
 	},
 	{
@@ -91,11 +91,11 @@ var level_dicts = [
 		"gomory_budget": 0,
 		"split_budget": 0,
 		"poly_vertices" : [
-			[0.7, 0.7],
-			[3.3, 0.7],
-			[3.5, 1.5],
-			[3.3, 2.3],
 			[0.7, 2.3],
+			[3.3, 2.3],
+			[3.5, 1.5],
+			[3.3, 0.7],
+			[0.7, 0.7],
 			[0.5, 1.5]
 		]
 	},
@@ -107,13 +107,13 @@ var level_dicts = [
 		"gomory_budget": 0,
 		"split_budget": 0,
 		"poly_vertices" : [
-			[3.0, 1.0],
-			[4.0, 1.0],
+			[3.0, 3.0],
+			[4.0, 3.0],
 			[4.0, 2.0],
-			[2.0, 4.0],
-			[1.0, 4.0],
-			[1.0, 3.0],
-			[1.2, 1.9]
+			[2.0, 0.0],
+			[1.0, 0.0],
+			[1.0, 1.0],
+			[1.2, 2.1]
 		]
 	}
 ]
@@ -128,16 +128,14 @@ var current_tutorial_popup_idx: int = 0
 ## the content and sizes of the tutorial popups
 var tutorial_popups: Dictionary = {
 	"0_0" : { # ONLY SHOW ORIGIN
-		"size": Vector2(460, 312),
-		"position": Vector2(424, 64),
+		"size": Vector2(751, 256),
+		"position": Vector2(424, 750),
 		"text": "<-This little dot is [color=red][b]the origin[/b][/color], the point at coordinates (0,0)."
 	},
 	"0_1" : { # SHOW X AND Y AXIS
-		"size": Vector2(751, 352),
-		"position": Vector2(408, 152),
-		"text": """These are the [color=red][b]X AXIS[/b][/color] and the [color=blue][b]Y AXIS[/b][/color].
-
-(yes, usually the y axis is "up", not "down", but that doesn't matter too much)"""
+		"size": Vector2(751, 256),
+		"position": Vector2(424, 525),
+		"text": """These are the [color=red][b]X AXIS[/b][/color] and the [color=blue][b]Y AXIS[/b][/color]..."""
 	},
 	"0_2" : { # SHOW THE ENTIRE LATTICE GRID
 		"size": Vector2(792, 372),
@@ -282,7 +280,7 @@ But whoops! [b]x'[/b] and [b]y'[/b] are [b]decimals[/b]! And you want [b]whole n
 	"4_4" : { # gomory cut pt 1
 		"size": Vector2(1120, 750),
 		"position": Vector2(64, 100),
-		"text" : """The [color=red][b]Gomory cut method[/b][/color] says:
+		"text" : """A [color=red][b]basic Gomory cut[/b][/color] goes as follows:
 
 First, write out [b]x'[/b] algebraically in a special way, using the equations of the two lines.
 
@@ -293,13 +291,15 @@ Since it's a decimal value, it will end up looking something like:
 That decimal part can be [color=red][b]rounded[/b][/color] to generate a [color=red][b]new line[/b][/color] that, when used to cut the polygon, will [color=red][b]nudge you closer to whole number values[/b][/color]!"""
 	},
 	"4_5" : { # gomory cut pt 1
-		"size": Vector2(950, 500),
-		"position": Vector2(64, 310),
+		"size": Vector2(950, 700),
+		"position": Vector2(64, 110),
 		"text" : """You can repeat this process with [b]y'[/b] to get a second line.
 
 Both of these lines are [color=red][b]Gomory cuts[/b][/color]!
 
-As to which one of these 2 cuts will get chosen here: [color=red][b]the game will automatically pick the one that cuts the most[/b][/color]."""
+In this game, the computed cuts are actually [color=red][b]Gomory mixed-integer cuts[/b][/color], which are a bit more involved, but share the same basic idea.
+
+Since two cuts may be avilable with this procedure, [color=red][b]the game will automatically pick the one that cuts the most[/b][/color]."""
 	},
 	"4_6" : { # gomory cut pt 1
 		"size": Vector2(576, 350),
@@ -409,33 +409,33 @@ func _ready():
 	# set up the lines and eqs
 	# dummy polygon mimics the polygon in the level
 	DUMMY_POLYGON.polygon = PackedVector2Array([
-		Vector2(1.0, 0.5) * LEVEL.SCALING + LEVEL.OFFSET,
-		Vector2(2.2, 0.8) * LEVEL.SCALING + LEVEL.OFFSET,
-		Vector2(2.5, 2.0) * LEVEL.SCALING + LEVEL.OFFSET,
-		Vector2(1.0, 2.0) * LEVEL.SCALING + LEVEL.OFFSET
+		Vector2(1.0, 1.5) * LEVEL.SCALING + LEVEL.OFFSET,
+		Vector2(2.2, 1.2) * LEVEL.SCALING + LEVEL.OFFSET,
+		Vector2(2.5, 0.0) * LEVEL.SCALING + LEVEL.OFFSET,
+		Vector2(1.0, 0.0) * LEVEL.SCALING + LEVEL.OFFSET
 	])
 	DUMMY_POLYGON.visible = false
 	# set up the lines and eqs describing it
-	LINE1.position = LEVEL.OFFSET + (Vector2(1.0, 0.5) + Vector2(2.2, 0.8)) * 0.5 * LEVEL.SCALING
-	LINE1.rotation = -(Vector2(2.2, 0.8) - Vector2(1.0, 0.5)).angle()
+	LINE1.position = LEVEL.OFFSET + (Vector2(1.0, 1.5) + Vector2(2.2, 1.2)) * 0.5 * LEVEL.SCALING
+	LINE1.rotation = -(Vector2(2.2, 1.2) - Vector2(1.0, 1.5)).angle()
 	LINE1.visible = false
 	EQ1.position = LINE1.position
 	EQ1.visible = false
 	# line 2
-	LINE2.position = LEVEL.OFFSET + (Vector2(2.2, 0.8) + Vector2(2.5, 2.0)) * 0.5 * LEVEL.SCALING
-	LINE2.rotation = -(Vector2(2.5, 2.0) - Vector2(2.2, 0.8)).angle()
+	LINE2.position = LEVEL.OFFSET + (Vector2(2.2, 1.2) + Vector2(2.5, 0.0)) * 0.5 * LEVEL.SCALING
+	LINE2.rotation = -(Vector2(2.5, 0.0) - Vector2(2.2, 1.2)).angle()
 	LINE2.visible = false
 	EQ2.position = LINE2.position
 	EQ2.visible = false
 	# line 3
-	LINE3.position = LEVEL.OFFSET + (Vector2(2.5, 2.0) + Vector2(1.0, 2.0)) * 0.5 * LEVEL.SCALING
-	LINE3.rotation = -(Vector2(1.0, 2.0) - Vector2(2.5, 2.0)).angle()
+	LINE3.position = LEVEL.OFFSET + (Vector2(2.5, 0.0) + Vector2(1.0, 0.0)) * 0.5 * LEVEL.SCALING
+	LINE3.rotation = -(Vector2(1.0, 0.0) - Vector2(2.5, 0.0)).angle()
 	LINE3.visible = false
 	EQ3.position = LINE3.position
 	EQ3.visible = false
 	# line 4
-	LINE4.position = LEVEL.OFFSET + (Vector2(1.0, 2.0) + Vector2(1.0, 0.5)) * 0.5 * LEVEL.SCALING
-	LINE4.rotation = -(Vector2(1.0, 0.5) - Vector2(1.0, 2.0)).angle()
+	LINE4.position = LEVEL.OFFSET + (Vector2(1.0, 0.0) + Vector2(1.0, 1.5)) * 0.5 * LEVEL.SCALING
+	LINE4.rotation = -(Vector2(1.0, 1.5) - Vector2(1.0, 0.0)).angle()
 	LINE4.visible = false
 	EQ4.visible = false
 	EQ4.position = LINE4.position

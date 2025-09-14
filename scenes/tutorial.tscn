@@ -44,10 +44,10 @@ offset_bottom = 40.0
 [node name="tutorial_popup" type="Panel" parent="CanvasLayer/HUD/TUTORIAL"]
 custom_minimum_size = Vector2(256, 256)
 layout_mode = 0
-offset_left = 64.0
-offset_top = 576.0
-offset_right = 384.0
-offset_bottom = 832.0
+offset_left = 464.0
+offset_top = 720.0
+offset_right = 784.0
+offset_bottom = 976.0
 metadata/_edit_group_ = true
 
 [node name="tutorial_text" type="RichTextLabel" parent="CanvasLayer/HUD/TUTORIAL/tutorial_popup"]
@@ -235,21 +235,21 @@ default_color = Color(0.533333, 0, 0, 1)
 theme_override_colors/font_color = Color(1, 0, 0, 1)
 theme_override_fonts/font = ExtResource("3_esj5r")
 theme_override_font_sizes/font_size = 25
-text = "0.3x - 1.2y = -0.3"
+text = "0.3x + 1.2y = -0.3"
 horizontal_alignment = 2
 
 [node name="eq2" type="Label" parent="vfx/lines"]
 theme_override_colors/font_color = Color(1, 0, 0, 1)
 theme_override_fonts/font = ExtResource("3_esj5r")
 theme_override_font_sizes/font_size = 25
-text = "1.2x - 0.3y = 2.4"
+text = "1.2x + 0.3y = 2.4"
 horizontal_alignment = 2
 
 [node name="eq3" type="Label" parent="vfx/lines"]
 theme_override_colors/font_color = Color(1, 0, 0, 1)
 theme_override_fonts/font = ExtResource("3_esj5r")
 theme_override_font_sizes/font_size = 25
-text = "0x + 1y  = 2"
+text = "0x - 1y  = 2"
 horizontal_alignment = 2
 
 [node name="eq4" type="Label" parent="vfx/lines"]
@@ -263,7 +263,6 @@ horizontal_alignment = 2
 color = Color(0.533333, 0, 0, 0.2)
 
 [node name="axes" type="Node2D" parent="vfx"]
-position = Vector2(420, 180)
 
 [node name="x_axis" type="Line2D" parent="vfx/axes"]
 points = PackedVector2Array(0, 0, 100, 0, 90, -10, 100, 0, 90, 10)
