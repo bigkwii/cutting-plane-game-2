@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://c5ay5dvhptf23"]
+[gd_scene load_steps=9 format=3 uid="uid://c5ay5dvhptf23"]
 
 [ext_resource type="PackedScene" uid="uid://dgb3ubanl7ucn" path="res://scenes/lattice_grid.tscn" id="1_ivbwy"]
 [ext_resource type="Script" uid="uid://clrs5w5gr01bm" path="res://scenes/level_editor.gd" id="1_ywrdm"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://lotaw6d6q6u5" path="res://scenes/camera.tscn" id="4_k37p4"]
 [ext_resource type="Theme" uid="uid://bqljbjsn8elrs" path="res://assets/themes/default.tres" id="5_al5fl"]
 [ext_resource type="PackedScene" uid="uid://dx4csne7vpmre" path="res://scenes/cut_button.tscn" id="6_uasds"]
+[ext_resource type="PackedScene" uid="uid://xm3cwilodwfo" path="res://scenes/level_editor_equation_input.tscn" id="8_l4hv8"]
 
 [node name="level_editor" type="Node2D"]
 script = ExtResource("1_ywrdm")
@@ -57,8 +58,8 @@ offset_right = 0.0
 offset_bottom = 0.0
 grow_horizontal = 0
 grow_vertical = 0
-theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
 theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
 text = "CONV.
 HULL"
 visible_budget = false
@@ -74,29 +75,37 @@ grow_horizontal = 0
 text = "Open
 Menu"
 
-[node name="play_level_button" type="Button" parent="CanvasLayer/HUD"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/HUD"]
 layout_mode = 1
 anchors_preset = 6
 anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -195.0
-offset_top = -56.0
-offset_bottom = 56.0
+offset_left = -266.0
+offset_top = -138.0
+offset_bottom = 138.0
 grow_horizontal = 0
 grow_vertical = 2
+
+[node name="play_level_button" type="Button" parent="CanvasLayer/HUD/VBoxContainer"]
+layout_mode = 2
 text = "Play
 Level"
+
+[node name="equations_button" type="Button" parent="CanvasLayer/HUD/VBoxContainer"]
+layout_mode = 2
+text = "Make From
+Equations"
 
 [node name="color_picker_hitbox" type="HBoxContainer" parent="CanvasLayer/HUD"]
 layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
-offset_top = -380.0
-offset_right = 200.0
-offset_bottom = 364.0
+offset_top = -372.0
+offset_right = 288.0
+offset_bottom = 352.0
 grow_vertical = 2
 
 [node name="color_picker" type="ColorPicker" parent="CanvasLayer/HUD"]
@@ -104,9 +113,10 @@ layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
-offset_top = 364.0
-offset_right = 744.0
-offset_bottom = 564.0
+offset_left = 0.00010238381
+offset_top = 348.2827
+offset_right = 720.283
+offset_bottom = 636.2827
 grow_vertical = 2
 rotation = -1.5708
 color = Color(1, 0, 0, 1)
@@ -136,6 +146,83 @@ text = "POINTS:"
 layout_mode = 2
 text = "0/50"
 
+[node name="EQ_MENU" type="Control" parent="CanvasLayer"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("5_al5fl")
+
+[node name="panel" type="Panel" parent="CanvasLayer/EQ_MENU"]
+custom_minimum_size = Vector2(720, 720)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -512.0
+offset_top = -412.0
+offset_right = 512.0
+offset_bottom = 416.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/EQ_MENU/panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -192.0
+offset_top = -378.0
+offset_right = 194.0
+offset_bottom = -318.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Input Equations"
+
+[node name="EQS_CONTAINER" type="ScrollContainer" parent="CanvasLayer/EQ_MENU/panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 120.0
+offset_top = 100.0
+offset_right = -96.0
+offset_bottom = -108.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="EQ_LIST" type="VBoxContainer" parent="CanvasLayer/EQ_MENU/panel/EQS_CONTAINER"]
+layout_mode = 2
+
+[node name="EQ1" parent="CanvasLayer/EQ_MENU/panel/EQS_CONTAINER/EQ_LIST" instance=ExtResource("8_l4hv8")]
+layout_mode = 2
+
+[node name="add_eq_btn" type="Button" parent="CanvasLayer/EQ_MENU/panel/EQS_CONTAINER/EQ_LIST"]
+layout_mode = 2
+text = "+"
+
+[node name="make_level_btn" type="Button" parent="CanvasLayer/EQ_MENU/panel"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -8.0
+offset_top = -36.0
+offset_right = 8.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Make Level"
+
 [node name="invalidate_click_timer" type="Timer" parent="."]
 wait_time = 0.5
 one_shot = true
@@ -144,6 +231,6 @@ one_shot = true
 [connection signal="button_down" from="CanvasLayer/HUD/show_hull" to="." method="_on_show_hull_button_down"]
 [connection signal="button_up" from="CanvasLayer/HUD/show_hull" to="." method="_on_show_hull_button_up"]
 [connection signal="pressed" from="CanvasLayer/HUD/open_menu" to="." method="_on_open_menu_pressed"]
-[connection signal="pressed" from="CanvasLayer/HUD/play_level_button" to="." method="_on_play_level_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/HUD/VBoxContainer/play_level_button" to="." method="_on_play_level_button_pressed"]
 [connection signal="color_changed" from="CanvasLayer/HUD/color_picker" to="." method="_on_color_picker_color_changed"]
 [connection signal="timeout" from="invalidate_click_timer" to="." method="_on_invalidate_click_timer_timeout"]

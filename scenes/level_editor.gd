@@ -42,7 +42,7 @@ var invalidation_timer_timed_out: bool = false
 
 # - child nodes -
 @onready var OPEN_MENU = $CanvasLayer/HUD/open_menu
-@onready var PLAY_LEVEL_BUTTON = $CanvasLayer/HUD/play_level_button
+@onready var PLAY_LEVEL_BUTTON = $CanvasLayer/HUD/VBoxContainer/play_level_button
 @onready var VERTS = $verts
 @onready var LATTICE_GRID = $lattice_grid
 @onready var GUIDE_GRID = $guide_grid
