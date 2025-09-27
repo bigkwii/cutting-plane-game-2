@@ -1,11 +1,13 @@
-[gd_scene load_steps=2 format=3 uid="uid://xm3cwilodwfo"]
+[gd_scene load_steps=3 format=3 uid="uid://xm3cwilodwfo"]
 
 [ext_resource type="Theme" uid="uid://bqljbjsn8elrs" path="res://assets/themes/default.tres" id="1_85c2h"]
+[ext_resource type="Script" uid="uid://go6003x2u317" path="res://scenes/level_editor_equation_input.gd" id="2_6suwm"]
 
-[node name="EQ1" type="HBoxContainer"]
+[node name="level_editor_equation_input" type="HBoxContainer"]
 theme = ExtResource("1_85c2h")
+script = ExtResource("2_6suwm")
 
-[node name="A" type="TextEdit" parent="."]
+[node name="A" type="LineEdit" parent="."]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 placeholder_text = "A"
@@ -14,16 +16,16 @@ placeholder_text = "A"
 layout_mode = 2
 text = "x + "
 
-[node name="B" type="TextEdit" parent="."]
+[node name="B" type="LineEdit" parent="."]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 placeholder_text = "B"
 
-[node name="y =" type="Label" parent="."]
+[node name="y <" type="Label" parent="."]
 layout_mode = 2
-text = "y ="
+text = "y <"
 
-[node name="C" type="TextEdit" parent="."]
+[node name="C" type="LineEdit" parent="."]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 placeholder_text = "C"
@@ -31,3 +33,8 @@ placeholder_text = "C"
 [node name="delete_btn" type="Button" parent="."]
 layout_mode = 2
 text = "-"
+
+[connection signal="text_changed" from="A" to="." method="_on_A_text_changed"]
+[connection signal="text_changed" from="B" to="." method="_on_B_text_changed"]
+[connection signal="text_changed" from="C" to="." method="_on_C_text_changed"]
+[connection signal="pressed" from="delete_btn" to="." method="_on_delete_btn_pressed"]

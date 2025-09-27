@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://c5ay5dvhptf23"]
+[gd_scene load_steps=10 format=3 uid="uid://c5ay5dvhptf23"]
 
 [ext_resource type="PackedScene" uid="uid://dgb3ubanl7ucn" path="res://scenes/lattice_grid.tscn" id="1_ivbwy"]
 [ext_resource type="Script" uid="uid://clrs5w5gr01bm" path="res://scenes/level_editor.gd" id="1_ywrdm"]
@@ -8,9 +8,13 @@
 [ext_resource type="Theme" uid="uid://bqljbjsn8elrs" path="res://assets/themes/default.tres" id="5_al5fl"]
 [ext_resource type="PackedScene" uid="uid://dx4csne7vpmre" path="res://scenes/cut_button.tscn" id="6_uasds"]
 [ext_resource type="PackedScene" uid="uid://xm3cwilodwfo" path="res://scenes/level_editor_equation_input.tscn" id="8_l4hv8"]
+[ext_resource type="FontFile" uid="uid://bvvtosdeupbva" path="res://assets/fonts/extrathick.ttf" id="9_2rodj"]
 
 [node name="level_editor" type="Node2D"]
 script = ExtResource("1_ywrdm")
+level_max_y = null
+initial_verts = null
+color = null
 
 [node name="verts" type="Node2D" parent="."]
 
@@ -82,7 +86,7 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -266.0
+offset_left = -234.0
 offset_top = -138.0
 offset_bottom = 138.0
 grow_horizontal = 0
@@ -95,8 +99,8 @@ Level"
 
 [node name="equations_button" type="Button" parent="CanvasLayer/HUD/VBoxContainer"]
 layout_mode = 2
-text = "Make From
-Equations"
+text = "Equation
+Input"
 
 [node name="color_picker_hitbox" type="HBoxContainer" parent="CanvasLayer/HUD"]
 layout_mode = 1
@@ -104,7 +108,7 @@ anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
 offset_top = -372.0
-offset_right = 288.0
+offset_right = 216.0
 offset_bottom = 352.0
 grow_vertical = 2
 
@@ -116,11 +120,12 @@ anchor_bottom = 0.5
 offset_left = 0.00010238381
 offset_top = 348.2827
 offset_right = 720.283
-offset_bottom = 636.2827
+offset_bottom = 564.2827
 grow_vertical = 2
 rotation = -1.5708
 color = Color(1, 0, 0, 1)
 edit_alpha = false
+edit_intensity = false
 picker_shape = 4
 can_add_swatches = false
 sampler_visible = false
@@ -147,6 +152,7 @@ layout_mode = 2
 text = "0/50"
 
 [node name="EQ_MENU" type="Control" parent="CanvasLayer"]
+process_mode = 2
 visible = false
 layout_mode = 3
 anchors_preset = 15
@@ -184,7 +190,24 @@ offset_right = 194.0
 offset_bottom = -318.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "Input Equations"
+text = "Make Polygon with Line Equations"
+
+[node name="desc" type="Label" parent="CanvasLayer/EQ_MENU/panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -394.0
+offset_top = -318.0
+offset_right = 397.0
+offset_bottom = -274.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 25
+text = "(Line equations represent half-planes)"
+horizontal_alignment = 1
 
 [node name="EQS_CONTAINER" type="ScrollContainer" parent="CanvasLayer/EQ_MENU/panel"]
 layout_mode = 1
@@ -192,9 +215,9 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 120.0
-offset_top = 100.0
+offset_top = 128.0
 offset_right = -96.0
-offset_bottom = -108.0
+offset_bottom = -148.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -215,13 +238,34 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -8.0
-offset_top = -36.0
-offset_right = 8.0
-offset_bottom = -20.0
+offset_left = -136.0
+offset_top = -140.0
+offset_right = 137.0
+offset_bottom = -64.0
 grow_horizontal = 2
 grow_vertical = 0
 text = "Make Level"
+
+[node name="err_message" type="Label" parent="CanvasLayer/EQ_MENU"]
+layout_mode = 0
+offset_left = 512.0
+offset_top = 904.0
+offset_right = 1408.0
+offset_bottom = 940.0
+theme_override_colors/font_color = Color(1, 0.26666668, 0.27450982, 1)
+theme_override_fonts/font = ExtResource("9_2rodj")
+theme_override_font_sizes/font_size = 25
+text = "[WARNING] bla bla bla"
+horizontal_alignment = 1
+clip_text = true
+
+[node name="eq_x" type="Button" parent="CanvasLayer/EQ_MENU"]
+layout_mode = 0
+offset_left = 1376.0
+offset_top = 160.0
+offset_right = 1448.0
+offset_bottom = 236.0
+text = "X"
 
 [node name="invalidate_click_timer" type="Timer" parent="."]
 wait_time = 0.5
@@ -232,5 +276,9 @@ one_shot = true
 [connection signal="button_up" from="CanvasLayer/HUD/show_hull" to="." method="_on_show_hull_button_up"]
 [connection signal="pressed" from="CanvasLayer/HUD/open_menu" to="." method="_on_open_menu_pressed"]
 [connection signal="pressed" from="CanvasLayer/HUD/VBoxContainer/play_level_button" to="." method="_on_play_level_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/HUD/VBoxContainer/equations_button" to="." method="_on_equations_button_pressed"]
 [connection signal="color_changed" from="CanvasLayer/HUD/color_picker" to="." method="_on_color_picker_color_changed"]
+[connection signal="pressed" from="CanvasLayer/EQ_MENU/panel/EQS_CONTAINER/EQ_LIST/add_eq_btn" to="." method="_on_add_eq_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/EQ_MENU/panel/make_level_btn" to="." method="_on_make_level_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/EQ_MENU/eq_x" to="." method="_on_eq_x_pressed"]
 [connection signal="timeout" from="invalidate_click_timer" to="." method="_on_invalidate_click_timer_timeout"]

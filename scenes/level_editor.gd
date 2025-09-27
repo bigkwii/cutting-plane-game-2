@@ -14,6 +14,8 @@ var SCALING: Vector2 = GLOBALS.DEFAULT_SCALING
 var OFFSET: Vector2 = GLOBALS.DEFAULT_OFFSET
 ## maximum amount of vertices that can be placed
 var MAX_VERTS: int = 50
+## maximum amount of equations for creating a level with equations
+var MAX_EQS: int = 16
 ## max_y for the lattice grid. from 4 to 10.
 @export var level_max_y: int = 6:
 	set(value):
@@ -55,9 +57,17 @@ var invalidation_timer_timed_out: bool = false
 @onready var COLOR_PICKER_HITBOX = $CanvasLayer/HUD/color_picker_hitbox
 @onready var VERT_COUNT_CONTAINER = $CanvasLayer/HUD/vert_count_container
 @onready var VERT_COUNT_LABEL = $CanvasLayer/HUD/vert_count_container/vert_count_label
+# - equation input stuff -
+@onready var EQ_MENU = $CanvasLayer/EQ_MENU
+@onready var EQ_LIST = $CanvasLayer/EQ_MENU/panel/EQS_CONTAINER/EQ_LIST
+@onready var EQ_BUTTON = $CanvasLayer/HUD/VBoxContainer/equations_button
+@onready var EQ_ADD_BTN = $CanvasLayer/EQ_MENU/panel/EQS_CONTAINER/EQ_LIST/add_eq_btn
+@onready var EQ_ERR_MSG = $CanvasLayer/EQ_MENU/err_message
+@onready var EQ_MAKE_LEVEL_BTN = $CanvasLayer/EQ_MENU/panel/make_level_btn
 
 # - preloaded scenes -
 @onready var POLY_POINT_SCENE = preload("res://scenes/poly_point.tscn")
+@onready var LEVEL_EDITOR_EQUATION_INPUT_SCENE = preload("res://scenes/level_editor_equation_input.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -73,6 +83,11 @@ func _ready():
 	for vert in VERTS.get_children():
 		vert.color = color
 	POLYGON_EDITOR.color = color
+	# start first eq del btn disabled
+	EQ_LIST.get_child(0).disable_delete_btn()
+	EQ_LIST.get_child(0).changed_input.connect(_on_eq_changed_input)
+	EQ_LIST.get_child(0).eq_deleted.connect(_on_eq_deleted)
+	_update_eq_list()
 
 ## called every frame
 func _process(_delta):
@@ -103,6 +118,8 @@ func _input(event):
 			if OPEN_MENU.get_global_rect().has_point(event.position):
 				return
 			if PLAY_LEVEL_BUTTON.get_global_rect().has_point(event.position):
+				return
+			if EQ_BUTTON.get_global_rect().has_point(event.position):
 				return
 			if SHOW_HULL_BUTTON.get_global_rect().has_point(event.position):
 				return
@@ -199,6 +216,11 @@ func try_to_drop_vert(clicked_lattice_pos: Vector2) -> void:
 			break
 	return
 
+## removes every vert immediatelly
+func clear_verts():
+	for vert in VERTS.get_children():
+		vert.free()
+
 ## updates the vert count
 func update_vert_count():
 	VERT_COUNT_LABEL.text = str(VERTS.get_child_count()) + "/" + str(MAX_VERTS)
@@ -257,10 +279,154 @@ func update_polygon_editor():
 	POLYGON_EDITOR.build_polygon(packed_vertices)
 	POLYGON_EDITOR.queue_redraw()
 
+## returns the intersection between to lines [A,B,C] (null if parallel)
+func _line_intersection(l1: Array, l2: Array):
+	var A1: float = l1[0]
+	var B1: float = l1[1]
+	var C1: float = l1[2]
+	var A2: float = l2[0]
+	var B2: float = l2[1]
+	var C2: float = l2[2]
+	var det: float = A1 * B2 - A2 * B1
+	if abs(det) < GLOBALS.GEOMETRY_EPSILON:
+		return null
+	var x: float = (C1 * B2 - C2 * B1) / det
+	var y: float = (A1 * C2 - A2 * C1) / det
+	return Vector2(x, y)
+
+## returns true if a point satisfies A*x + B*y <= C (line represented by [A,B,C])
+func _inside(point, line) -> bool:
+	var A = line[0]
+	var B = line[1]
+	var C = line[2]
+	return A * point.x + B * point.y <= C + GLOBALS.GEOMETRY_EPSILON
+
+## clips polygon against a half-plane defined by a line [A,B,C] Ax+By<C
+func _clip_poly(poly, line):
+	if poly == []:
+		return []
+	var output = []
+	var n = len(poly)
+	for i in range(n):
+		var cur = poly[i]
+		var nxt = poly[(i+1) % n]
+		var A = nxt.y - cur.y
+		var B = cur.x - nxt.x
+		var C = A * cur.x + B * cur.y
+		var cur_in = _inside(cur, line)
+		var nxt_in = _inside(nxt, line)
+		if cur_in and nxt_in:
+			output.append(nxt)
+		elif cur_in and not nxt_in:
+			var inter = _line_intersection(line, [A, B, C])
+			if inter != null:
+				output.append(inter)
+		elif not cur_in and nxt_in:
+			var inter = _line_intersection(line, [A, B, C])
+			if inter != null:
+				output.append(inter)
+			output.append(nxt)
+	return output
+
+## returns an array of Vector2 representing a closed polygon, given a bunch of lines [A,B,C]: Ax + By <= C
+## [br][br]
+## (returns [] if no such polygon is possible)
+func _polygon_from_lines(lines: Array) -> Array:
+	# start with biggest bounding box
+	var poly = [Vector2(-1e9, -1e9), Vector2(1e9, -1e9), Vector2(1e9, 1e9), Vector2(-1e9, 1e9)] # TODO maybe replace 1e9 with editor bound max_x and max_y
+	for line in lines:
+		poly = _clip_poly(poly, line)
+		if poly == []: # empty intersection
+			return []
+	# if still unbounded
+	for point in poly:
+		if abs(point.x) > 5e8 or abs(point.y) > 5e8: # TODO maybe replace 5e8 with editor bound max_x and max_y
+			return []
+	# remove duplicates
+	var unique_points = []
+	for p in poly:
+		var is_unique = true
+		for q in unique_points:
+			if p.distance_to(q) < GLOBALS.EDIT_CLICK_RANGE:
+				is_unique = false
+				break
+		if is_unique:
+			unique_points.append(p)
+	# check if polygon is valid
+	if len(unique_points) < 3:
+		return []
+	# rounding to prevent floating point nonsense
+	for i in range(len(unique_points)): # TODO: SOMETIMES IT STILL BREAKS WHEN VERY CLOSE TO level_max_y OR level_max_x (finge case, prbably not important)
+		unique_points[i] = unique_points[i].snapped(Vector2(GLOBALS.CLICK_EPSILON, GLOBALS.CLICK_EPSILON))
+	return unique_points
+
+## returns [valid: bool, error_msg: String, verts: Array[Vector2]]
+func validate_eqs() -> Array:
+	var verts: Array = []
+	# check for invalid line eqs
+	for idx in range(EQ_LIST.get_child_count() - 1):
+		var eq = EQ_LIST.get_child(idx)
+		if eq.A == 0.0 and eq.B == 0.0 and eq.C == 0.0:
+			return [false, "[WARNING] @ equation %s: A, B and C can't all be zero." % [idx + 1], []]
+		if eq.A == 0.0 and eq.B == 0.0:
+			return [false, "[WARNING] @ equation %s: A and B can't both be zero." % [idx + 1], []]
+	# get line eqs
+	var eqs: Array[Array] = []
+	for idx in range(EQ_LIST.get_child_count() - 1):
+		var eq = EQ_LIST.get_child(idx)
+		eqs.append([eq.A, eq.B, eq.C])
+	# check if the lines define a closed polygon
+	verts = _polygon_from_lines(eqs)
+	if verts == []:
+		return [false, "[ERROR] Invalid Polygon.", verts]
+	# don't go over MAX_VERTS
+	if len(verts) + VERTS.get_child_count() > MAX_VERTS:
+		return [false, "[ERROR] Adding this many vertices: %s would go over the maximum." % [len(verts)], verts]
+	# check for out of bound verts
+	for vert in verts:
+		var out_of_bound_verts = []
+		if vert.x < 0 or vert.x >= level_max_x-1 or vert.y < 0 or vert.y >= level_max_y-1:
+			out_of_bound_verts.append(vert)
+		if out_of_bound_verts != []:
+			return [false, "[ERROR] Out of bound vertices: %s (Maybe try resizing the editor?)" % [out_of_bound_verts], verts]
+	return [true, "", verts]
+
+func _update_eq_list():
+	var validation_result = validate_eqs()
+	EQ_ERR_MSG.text = validation_result[1]
+	if validation_result[0]:
+		EQ_MAKE_LEVEL_BTN.disabled = false
+	else:
+		EQ_MAKE_LEVEL_BTN.disabled = true
+
 # - signal callbacks -
 
 func _on_invalidate_click_timer_timeout():
 	invalidation_timer_timed_out = true
+
+func _on_eq_changed_input():
+	var eq_count: int = EQ_LIST.get_child_count() - 1
+	if eq_count > 1:
+		EQ_LIST.get_child(0).enable_delete_btn()
+	if eq_count > MAX_EQS - 1:
+		EQ_ADD_BTN.disabled = true
+	else:
+		EQ_ADD_BTN.disabled = false
+	_update_eq_list()
+
+func _on_eq_deleted():
+	var eq_count: int = EQ_LIST.get_child_count() - 1
+	if eq_count == 2:
+		EQ_LIST.get_child(0).disable_delete_btn()
+		EQ_LIST.get_child(1).disable_delete_btn()
+	else:
+		EQ_LIST.get_child(0).enable_delete_btn()
+		EQ_LIST.get_child(1).enable_delete_btn()
+	if eq_count > MAX_EQS:
+		EQ_ADD_BTN.disabled = true
+	else:
+		EQ_ADD_BTN.disabled = false
+	_update_eq_list()
 
 # -- button callbacks --
 # when the show hull button is HELD, show the convex hull
@@ -300,3 +466,30 @@ func _on_play_level_button_pressed():
 		"poly_vertices" : initial_vertices
 	}
 	play_level.emit(data)
+
+func _on_equations_button_pressed():
+	EQ_MENU.visible = true
+	get_tree().paused = true
+	_update_eq_list()
+
+func _on_eq_x_pressed():
+	EQ_MENU.visible = false
+	get_tree().paused = false
+
+func _on_add_eq_btn_pressed():
+	var new_eq = LEVEL_EDITOR_EQUATION_INPUT_SCENE.instantiate()
+	EQ_LIST.add_child(new_eq)
+	EQ_LIST.move_child(new_eq, EQ_LIST.get_child_count() - 2) # ...why can't i add a child at a given index?
+	new_eq.changed_input.connect(_on_eq_changed_input)
+	new_eq.eq_deleted.connect(_on_eq_deleted)
+	_on_eq_changed_input()
+
+func _on_make_level_btn_pressed():
+	var verts = []
+	var validation_results = validate_eqs()
+	if validation_results[0]:
+		verts = validation_results[2]
+		for vert in verts:
+			try_to_add_vert(vert)
+	EQ_MENU.visible = false
+	get_tree().paused = false
