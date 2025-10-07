@@ -70,5 +70,5 @@ func _on_C_text_changed(new_text: String):
 	changed_input.emit()
 
 func _on_delete_btn_pressed():
-	eq_deleted.emit()
 	queue_free()
+	eq_deleted.emit()

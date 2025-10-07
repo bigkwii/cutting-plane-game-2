@@ -11,6 +11,8 @@ script = ExtResource("2_6suwm")
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 placeholder_text = "A"
+context_menu_enabled = false
+emoji_menu_enabled = false
 
 [node name="x +" type="Label" parent="."]
 layout_mode = 2
@@ -20,6 +22,8 @@ text = "x + "
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 placeholder_text = "B"
+context_menu_enabled = false
+emoji_menu_enabled = false
 
 [node name="y <" type="Label" parent="."]
 layout_mode = 2
@@ -29,6 +33,8 @@ text = "y <"
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 placeholder_text = "C"
+context_menu_enabled = false
+emoji_menu_enabled = false
 
 [node name="delete_btn" type="Button" parent="."]
 layout_mode = 2

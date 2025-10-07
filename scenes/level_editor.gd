@@ -41,6 +41,11 @@ var is_m1_dragging: bool = false
 var clicked_pos_at_drag_start: Vector2 = Vector2(0, 0)
 ## flag to determine if the invalidation timer timed out
 var invalidation_timer_timed_out: bool = false
+# equation input and validation vars
+## global centroid for comparator
+var __hpi_centroid = Vector2()
+## big number for unbounded results
+const HPI_BIG = 1e9
 
 # - child nodes -
 @onready var OPEN_MENU = $CanvasLayer/HUD/open_menu
@@ -279,21 +284,6 @@ func update_polygon_editor():
 	POLYGON_EDITOR.build_polygon(packed_vertices)
 	POLYGON_EDITOR.queue_redraw()
 
-## returns the intersection between to lines [A,B,C] (null if parallel)
-func _line_intersection(l1: Array, l2: Array):
-	var A1: float = l1[0]
-	var B1: float = l1[1]
-	var C1: float = l1[2]
-	var A2: float = l2[0]
-	var B2: float = l2[1]
-	var C2: float = l2[2]
-	var det: float = A1 * B2 - A2 * B1
-	if abs(det) < GLOBALS.GEOMETRY_EPSILON:
-		return null
-	var x: float = (C1 * B2 - C2 * B1) / det
-	var y: float = (A1 * C2 - A2 * C1) / det
-	return Vector2(x, y)
-
 ## returns true if a point satisfies A*x + B*y <= C (line represented by [A,B,C])
 func _inside(point, line) -> bool:
 	var A = line[0]
@@ -301,64 +291,97 @@ func _inside(point, line) -> bool:
 	var C = line[2]
 	return A * point.x + B * point.y <= C + GLOBALS.GEOMETRY_EPSILON
 
-## clips polygon against a half-plane defined by a line [A,B,C] Ax+By<C
-func _clip_poly(poly, line):
-	if poly == []:
-		return []
-	var output = []
-	var n = len(poly)
-	for i in range(n):
-		var cur = poly[i]
-		var nxt = poly[(i+1) % n]
-		var A = nxt.y - cur.y
-		var B = cur.x - nxt.x
-		var C = A * cur.x + B * cur.y
-		var cur_in = _inside(cur, line)
-		var nxt_in = _inside(nxt, line)
-		if cur_in and nxt_in:
-			output.append(nxt)
-		elif cur_in and not nxt_in:
-			var inter = _line_intersection(line, [A, B, C])
-			if inter != null:
-				output.append(inter)
-		elif not cur_in and nxt_in:
-			var inter = _line_intersection(line, [A, B, C])
-			if inter != null:
-				output.append(inter)
-			output.append(nxt)
-	return output
+# solve intersection of two infinite lines l1=[A1,B1,C1], l2=[A2,B2,C2]
+# returns null if parallel, else Vector2
+func _line_intersection_point(l1: Array, l2: Array):
+	var A1 = l1[0]; var B1 = l1[1]; var C1 = l1[2]
+	var A2 = l2[0]; var B2 = l2[1]; var C2 = l2[2]
+	var det = A1 * B2 - A2 * B1
+	if abs(det) < GLOBALS.GEOMETRY_EPSILON:
+		return null
+	var x = (C1 * B2 - C2 * B1) / det
+	var y = (A1 * C2 - A2 * C1) / det
+	return Vector2(x, y)
 
-## returns an array of Vector2 representing a closed polygon, given a bunch of lines [A,B,C]: Ax + By <= C
-## [br][br]
-## (returns [] if no such polygon is possible)
-func _polygon_from_lines(lines: Array) -> Array:
-	# start with biggest bounding box
-	var poly = [Vector2(-1e9, -1e9), Vector2(1e9, -1e9), Vector2(1e9, 1e9), Vector2(-1e9, 1e9)] # TODO maybe replace 1e9 with editor bound max_x and max_y
+# True if point satisfies ALL half-planes (with small epsilon)
+func _satisfies_all(point: Vector2, lines: Array) -> bool:
 	for line in lines:
-		poly = _clip_poly(poly, line)
-		if poly == []: # empty intersection
-			return []
-	# if still unbounded
-	for point in poly:
-		if abs(point.x) > 5e8 or abs(point.y) > 5e8: # TODO maybe replace 5e8 with editor bound max_x and max_y
-			return []
-	# remove duplicates
-	var unique_points = []
-	for p in poly:
-		var is_unique = true
-		for q in unique_points:
-			if p.distance_to(q) < GLOBALS.EDIT_CLICK_RANGE:
-				is_unique = false
+		if line.size() < 3:
+			continue
+		var A = line[0]; var B = line[1]; var C = line[2]
+		if A * point.x + B * point.y > C + GLOBALS.GEOMETRY_EPSILON:
+			return false
+	return true
+
+## deduplicate points by distance threshold
+func _dedup_points(points: Array, tol: float) -> Array:
+	var uniq: Array = []
+	for p in points:
+		var found = false
+		for q in uniq:
+			if p.distance_to(q) < tol:
+				found = true
 				break
-		if is_unique:
-			unique_points.append(p)
-	# check if polygon is valid
-	if len(unique_points) < 3:
-		return []
-	# rounding to prevent floating point nonsense
-	for i in range(len(unique_points)): # TODO: SOMETIMES IT STILL BREAKS WHEN VERY CLOSE TO level_max_y OR level_max_x (finge case, prbably not important)
-		unique_points[i] = unique_points[i].snapped(Vector2(GLOBALS.CLICK_EPSILON, GLOBALS.CLICK_EPSILON))
-	return unique_points
+		if not found:
+			uniq.append(p)
+	return uniq
+
+## comparator for angle sort
+func _angle_compare(a, b):
+	var ca = atan2(a.y - __hpi_centroid.y, a.x - __hpi_centroid.x)
+	var cb = atan2(b.y - __hpi_centroid.y, b.x - __hpi_centroid.x)
+	if ca < cb:
+		return -1
+	elif ca > cb:
+		return 1
+	return 0
+
+## sort points CCW around centroid
+func _sort_ccw(points: Array) -> Array:
+	__hpi_centroid = Vector2(0, 0)
+	for p in points:
+		__hpi_centroid += p
+	__hpi_centroid /= float(points.size())
+	points.sort_custom(_angle_compare)
+	return points
+
+## Compute polygon from lines via pairwise intersections
+## [br][br]
+## returns [verts: Array[Vector2], err_mgs: String]
+func _polygon_from_lines(lines: Array) -> Array:
+	if lines == []:
+		return [[], "[ERROR] No lines given."]
+	# 1) collect all pairwise intersections
+	var cand: Array = []
+	for i in range(lines.size()):
+		for j in range(i + 1, lines.size()):
+			var p = _line_intersection_point(lines[i], lines[j])
+			if p == null:
+				continue
+			if abs(p.x) > HPI_BIG or abs(p.y) > HPI_BIG:
+				continue
+			cand.append(p)
+	# 2) filter by all inequalities
+	var feasible: Array = []
+	for p in cand:
+		if _satisfies_all(p, lines):
+			feasible.append(p)
+	if feasible == []:
+		return [[], "[ERROR] No feasable vertices."]
+	# 3) dedup
+	feasible = _dedup_points(feasible, GLOBALS.EDIT_CLICK_RANGE)
+	if feasible.size() < 3:
+		return [[], "[ERROR] Polygon has less than 3 vertices (or they may be too close)."]
+	# 4) order CCW
+	feasible = _sort_ccw(feasible)
+	# 5) sanity checks
+	for p in feasible:
+		if abs(p.x) > HPI_BIG or abs(p.y) > HPI_BIG:
+			return [[], "[ERROR] Polygon isn't closed."]
+	for i in range(feasible.size()):
+		feasible[i] = feasible[i].snapped(Vector2(GLOBALS.CLICK_EPSILON, GLOBALS.CLICK_EPSILON))
+	return [feasible, ""]
+
 
 ## returns [valid: bool, error_msg: String, verts: Array[Vector2]]
 func validate_eqs() -> Array:
@@ -366,6 +389,9 @@ func validate_eqs() -> Array:
 	# check for invalid line eqs
 	for idx in range(EQ_LIST.get_child_count() - 1):
 		var eq = EQ_LIST.get_child(idx)
+		# ignore eqs that were queue_free'd (they are going to be deleted at the and of this frame)
+		if eq.is_queued_for_deletion():
+			continue
 		if eq.A == 0.0 and eq.B == 0.0 and eq.C == 0.0:
 			return [false, "[WARNING] @ equation %s: A, B and C can't all be zero." % [idx + 1], []]
 		if eq.A == 0.0 and eq.B == 0.0:
@@ -374,11 +400,16 @@ func validate_eqs() -> Array:
 	var eqs: Array[Array] = []
 	for idx in range(EQ_LIST.get_child_count() - 1):
 		var eq = EQ_LIST.get_child(idx)
+		# ignore eqs that were queue_free'd (they are going to be deleted at the and of this frame)
+		if eq.is_queued_for_deletion():
+			continue
 		eqs.append([eq.A, eq.B, eq.C])
-	# check if the lines define a closed polygon
-	verts = _polygon_from_lines(eqs)
+	# try to make polygon from lines
+	var poly_res = _polygon_from_lines(eqs)
+	verts = poly_res[0]
+	var err_mgs = poly_res[1]
 	if verts == []:
-		return [false, "[ERROR] Invalid Polygon.", verts]
+		return [false, err_mgs, verts]
 	# don't go over MAX_VERTS
 	if len(verts) + VERTS.get_child_count() > MAX_VERTS:
 		return [false, "[ERROR] Adding this many vertices: %s would go over the maximum." % [len(verts)], verts]
@@ -415,6 +446,7 @@ func _on_eq_changed_input():
 	_update_eq_list()
 
 func _on_eq_deleted():
+	DEBUG.log("level_editor.on_eq_deleted: eq deleted, updating...")
 	var eq_count: int = EQ_LIST.get_child_count() - 1
 	if eq_count == 2:
 		EQ_LIST.get_child(0).disable_delete_btn()
