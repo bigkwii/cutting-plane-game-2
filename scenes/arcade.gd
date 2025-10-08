@@ -200,7 +200,7 @@ func _on_submit_btn_pressed():
 	var username: String = "Anonymous" if SUBMIT_SCORE_NAME.text == "" else SUBMIT_SCORE_NAME.text
 	await Talo.players.identify("username", username)
 	DEBUG.log("username identified")
-	var submit_response = await Talo.leaderboards.add_entry("tcpg-arcade", total_score, {"leaderboard_code" : SUBMIT_SCORE_CODE.text.to_upper()})
+	var submit_response = await Talo.leaderboards.add_entry("tcpg-arcade", total_score, {"leaderboard_code" : SUBMIT_SCORE_CODE.text.to_upper(), "os": OS.get_name()})
 	if submit_response != null:
 		DEBUG.log("score submitted")
 		SUBMIT_SCORE_BTN.disabled = true

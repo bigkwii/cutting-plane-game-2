@@ -213,19 +213,19 @@ func _on_toggle_fullscreen_pressed():
 func _on_see_speedrun_leaderboard_pressed():
 	if SPEEDRUN_LEADERBOARD == null:
 		SPEEDRUN_LEADERBOARD = SPEEDRUN_LEADERBOARD_UI_SCENE.instantiate()
+		SPEEDRUN_LEADERBOARD.leaderboard_code = LEADERBOARD_CODE.text
 		LEADERBOARDS_CONTROL_NODE.add_child(SPEEDRUN_LEADERBOARD)
 	SPEEDRUN_LEADERBOARD.visible = true
 	CLOSE_LEADERBOARDS_BTN.visible = true
-	SPEEDRUN_LEADERBOARD.leaderboard_code = LEADERBOARD_CODE.text
 
 ## opens the speedrun leaderboard
 func _on_see_arcade_leaderboard_pressed():
 	if ARCADE_LEADERBOARD == null:
 		ARCADE_LEADERBOARD = ARCADE_LEADERBOARD_UI_SCENE.instantiate()
+		ARCADE_LEADERBOARD.leaderboard_code = LEADERBOARD_CODE.text
 		LEADERBOARDS_CONTROL_NODE.add_child(ARCADE_LEADERBOARD)
 	ARCADE_LEADERBOARD.visible = true
 	CLOSE_LEADERBOARDS_BTN.visible = true
-	ARCADE_LEADERBOARD.leaderboard_code = LEADERBOARD_CODE.text
 
 ## closes both leaderboards
 func _on_close_leaderboards_btn_pressed():

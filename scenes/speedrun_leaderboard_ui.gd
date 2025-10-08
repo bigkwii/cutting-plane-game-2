@@ -25,7 +25,10 @@ func refresh_scores():
 	@warning_ignore("integer_division")
 	var talo_options_subpage: int = int((score_offset % 50) / score_limit)
 	talo_options.page = talo_options_page
-	
+	if leaderboard_code:
+		talo_options.prop_key = "leaderboard_code"
+		talo_options.prop_value = leaderboard_code
+
 	DEBUG.log("getting talo entries...")
 	score_list.clear()
 	prev_button.disabled = true
@@ -33,8 +36,6 @@ func refresh_scores():
 	
 	var talo_res := await Talo.leaderboards.get_entries(leaderboard_id, talo_options)
 	var talo_entries: Array[TaloLeaderboardEntry] = talo_res.entries
-	if leaderboard_code != "":
-		talo_entries = talo_entries.filter(func (entry: TaloLeaderboardEntry): return entry.get_prop("leaderboard_code") == leaderboard_code)
 	var talo_count: int = talo_res.count
 	var talo_is_last_page = talo_res.is_last_page
 	var talo_is_last_subpage = talo_is_last_page and (talo_options_subpage + 1) * score_limit >= len(talo_entries)

@@ -230,7 +230,7 @@ func _on_submit_btn_pressed():
 	var username: String = "Anonymous" if SUBMIT_TIME_NAME.text == "" else SUBMIT_TIME_NAME.text
 	await Talo.players.identify("username", username)
 	DEBUG.log("username identified")
-	var submit_response = await Talo.leaderboards.add_entry("tcpg-speedrun", total_time, {"formated_time" : time_str, "leaderboard_code" : SUBMIT_TIME_CODE.text.to_upper()})
+	var submit_response = await Talo.leaderboards.add_entry("tcpg-speedrun", total_time, {"formated_time" : time_str, "leaderboard_code" : SUBMIT_TIME_CODE.text.to_upper(), "os": OS.get_name()})
 	if submit_response != null:
 		DEBUG.log("score submitted")
 		SUBMIT_TIME_BTN.disabled = true
