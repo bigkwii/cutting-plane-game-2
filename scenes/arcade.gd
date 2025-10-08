@@ -42,8 +42,9 @@ var results: Array[Dictionary] = []
 @onready var NEXT_LEVEL_BTN = $CanvasLayer/LEVEL_FINISH_POPUP/panel/next_level_btn
 @onready var GAME_FINISH_POPUP = $CanvasLayer/GAME_FINISH_POPUP
 
-@onready var SUBMIT_SCORE_BTN = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/HBoxContainer/submit_btn
-@onready var SUBMIT_SCORE_NAME = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/HBoxContainer/name_entry
+@onready var SUBMIT_SCORE_BTN = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/VBoxContainer/HBoxContainer/submit_btn
+@onready var SUBMIT_SCORE_NAME = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/VBoxContainer/HBoxContainer/name_entry
+@onready var SUBMIT_SCORE_CODE = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/VBoxContainer/leaderboard_code
 
 @onready var GAME_FINISH_TOTAL_SCORE = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/scoreHBoxContainer2/score_label
 @onready var GAME_FINISH_EXIT_BTN = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/exit
@@ -177,6 +178,16 @@ func _on_name_entry_text_changed(new_text:String):
 	SUBMIT_SCORE_NAME.text = filtered_text
 	SUBMIT_SCORE_NAME.caret_column = old_caret_pos
 
+func _on_leaderboard_code_text_changed(new_text):
+	var allowed_chars = "0123456789+-_QWERTYUIOPASDFGHJKLZXCVBNM"
+	var old_caret_pos = SUBMIT_SCORE_CODE.caret_column
+	var filtered_text = ""
+	for character in new_text:
+		if allowed_chars.find(character.to_upper()) != -1:
+			filtered_text += character
+	SUBMIT_SCORE_CODE.text = filtered_text.to_upper()
+	SUBMIT_SCORE_CODE.caret_column = old_caret_pos
+
 func _on_submit_btn_pressed():
 	if cheat_check():
 		DEBUG.log("CHEATING DETECTED! reported score: %s, expected score: %s, anticheat mult: %s, times score: %s" 
@@ -189,7 +200,7 @@ func _on_submit_btn_pressed():
 	var username: String = "Anonymous" if SUBMIT_SCORE_NAME.text == "" else SUBMIT_SCORE_NAME.text
 	await Talo.players.identify("username", username)
 	DEBUG.log("username identified")
-	var submit_response = await Talo.leaderboards.add_entry("tcpg-arcade", total_score)
+	var submit_response = await Talo.leaderboards.add_entry("tcpg-arcade", total_score, {"leaderboard_code" : SUBMIT_SCORE_CODE.text.to_upper()})
 	if submit_response != null:
 		DEBUG.log("score submitted")
 		SUBMIT_SCORE_BTN.disabled = true

@@ -48,8 +48,9 @@ var results: Array[Dictionary] = []
 @onready var NEXT_LEVEL_BTN = $CanvasLayer/LEVEL_FINISH_POPUP/panel/next_level_btn
 @onready var GAME_FINISH_POPUP = $CanvasLayer/GAME_FINISH_POPUP
 
-@onready var SUBMIT_TIME_BTN = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/HBoxContainer/submit_btn
-@onready var SUBMIT_TIME_NAME = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/HBoxContainer/name_entry
+@onready var SUBMIT_TIME_BTN = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/VBoxContainer/HBoxContainer/submit_btn
+@onready var SUBMIT_TIME_NAME = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/VBoxContainer/HBoxContainer/name_entry
+@onready var SUBMIT_TIME_CODE = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/VBoxContainer/leaderboard_code
 
 @onready var GAME_FINISH_TOTAL_TIME = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/timeHBoxContainer2/score_label
 @onready var GAME_FINISH_EXIT_BTN = $CanvasLayer/GAME_FINISH_POPUP/panel/VBoxContainer/exit
@@ -210,6 +211,16 @@ func _on_name_entry_text_changed(new_text:String):
 	SUBMIT_TIME_NAME.text = filtered_text
 	SUBMIT_TIME_NAME.caret_column = old_caret_pos
 
+func _on_leaderboard_code_text_changed(new_text: String):
+	var allowed_chars = "0123456789+-_QWERTYUIOPASDFGHJKLZXCVBNM"
+	var old_caret_pos = SUBMIT_TIME_CODE.caret_column
+	var filtered_text = ""
+	for character in new_text:
+		if allowed_chars.find(character.to_upper()) != -1:
+			filtered_text += character
+	SUBMIT_TIME_CODE.text = filtered_text.to_upper()
+	SUBMIT_TIME_CODE.caret_column = old_caret_pos
+
 func _on_submit_btn_pressed():
 	DEBUG.log("submitting score...")
 	SUBMIT_TIME_BTN.disabled = true
@@ -219,7 +230,7 @@ func _on_submit_btn_pressed():
 	var username: String = "Anonymous" if SUBMIT_TIME_NAME.text == "" else SUBMIT_TIME_NAME.text
 	await Talo.players.identify("username", username)
 	DEBUG.log("username identified")
-	var submit_response = await Talo.leaderboards.add_entry("tcpg-speedrun", total_time, {"formated_time" : time_str})
+	var submit_response = await Talo.leaderboards.add_entry("tcpg-speedrun", total_time, {"formated_time" : time_str, "leaderboard_code" : SUBMIT_TIME_CODE.text.to_upper()})
 	if submit_response != null:
 		DEBUG.log("score submitted")
 		SUBMIT_TIME_BTN.disabled = true
@@ -228,3 +239,4 @@ func _on_submit_btn_pressed():
 		SUBMIT_TIME_BTN.text = "FAILED.\nTRY AGAIN"
 		SUBMIT_TIME_BTN.disabled = false
 		DEBUG.log("score not submitted")
+

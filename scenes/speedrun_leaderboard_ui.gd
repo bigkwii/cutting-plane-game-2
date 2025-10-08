@@ -33,6 +33,8 @@ func refresh_scores():
 	
 	var talo_res := await Talo.leaderboards.get_entries(leaderboard_id, talo_options)
 	var talo_entries: Array[TaloLeaderboardEntry] = talo_res.entries
+	if leaderboard_code != "":
+		talo_entries = talo_entries.filter(func (entry: TaloLeaderboardEntry): return entry.get_prop("leaderboard_code") == leaderboard_code)
 	var talo_count: int = talo_res.count
 	var talo_is_last_page = talo_res.is_last_page
 	var talo_is_last_subpage = talo_is_last_page and (talo_options_subpage + 1) * score_limit >= len(talo_entries)

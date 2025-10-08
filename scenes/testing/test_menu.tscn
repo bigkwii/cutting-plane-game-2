@@ -95,14 +95,15 @@ offset_bottom = 240.0
 grow_vertical = 2
 theme_override_fonts/font = ExtResource("5_ba3wp")
 theme_override_font_sizes/font_size = 30
-text = "NOTICE 2025-09-04:
-Leaderboards are avilable again, but
-unfortunately, old score data was lost
-along with Quiver, the old leaderboard
-backend which suddenly shut down in july.
-An attempt was made to recover the data,
-but there hasn't been a response from
-Quiver's end yet.
+text = "NOTICE 2025-10-08:
+New features!
+    - You can now make levels using line
+    equations in the Level Editor Mode.
+    - Added secret Leaderboard codes for
+    filtering scores in the Arcade and
+    Speedrun Modes.
+Regarding the old Leaderboard data,
+there's been no answer from Quiver yet.
 Thank you for understanding.
 -TCPG dev team."
 vertical_alignment = 1
@@ -586,7 +587,17 @@ offset_right = 548.0
 offset_bottom = 117.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 64
+theme_override_constants/separation = 32
+
+[node name="leaderboard_code" type="LineEdit" parent="CanvasLayer/UI/leaderboards_popup/HBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("5_ba3wp")
+theme_override_font_sizes/font_size = 30
+placeholder_text = "Secret Leaderboard Code (leave blank to see all entries)"
+alignment = 1
+max_length = 16
+context_menu_enabled = false
+emoji_menu_enabled = false
 
 [node name="see_arcade_leaderboard" type="Button" parent="CanvasLayer/UI/leaderboards_popup/HBoxContainer"]
 layout_mode = 2
@@ -727,6 +738,7 @@ position = Vector2(960, 576)
 [connection signal="pressed" from="CanvasLayer/UI/editor_mode_popup/editor_x_btn" to="." method="_on_editor_x_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/speedrun_mode_popup/start_speedrun" to="." method="_on_start_speedrun_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/speedrun_mode_popup/speedrun_x_btn" to="." method="_on_speedrun_x_btn_pressed"]
+[connection signal="text_changed" from="CanvasLayer/UI/leaderboards_popup/HBoxContainer/leaderboard_code" to="." method="_on_leaderboard_code_text_changed"]
 [connection signal="pressed" from="CanvasLayer/UI/leaderboards_popup/HBoxContainer/see_arcade_leaderboard" to="." method="_on_see_arcade_leaderboard_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/leaderboards_popup/HBoxContainer/see_speedrun_leaderboard" to="." method="_on_see_speedrun_leaderboard_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/leaderboards_popup/leaderboards_x_btn" to="." method="_on_leaderboards_x_btn_pressed"]

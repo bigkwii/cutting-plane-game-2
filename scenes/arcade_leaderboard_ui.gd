@@ -20,6 +20,8 @@ extends Control
 ## Only applicable when the leaderboard is using the "All scores" update strategy.
 ## The color to highlight the current player's scores.
 @export var current_player_highlight_color := Color("#005216")
+## Secret Leaderboard Code
+@export var leaderboard_code: String = ""
 
 @onready var next_button := %NextButton
 @onready var prev_button := %PrevButton
@@ -60,6 +62,8 @@ func refresh_scores():
 	
 	var talo_res := await Talo.leaderboards.get_entries(leaderboard_id, talo_options)
 	var talo_entries: Array[TaloLeaderboardEntry] = talo_res.entries
+	if leaderboard_code != "":
+		talo_entries = talo_entries.filter(func (entry: TaloLeaderboardEntry): return entry.get_prop("leaderboard_code") == leaderboard_code)
 	var talo_count: int = talo_res.count
 	var talo_is_last_page = talo_res.is_last_page
 	var talo_is_last_subpage = talo_is_last_page and (talo_options_subpage + 1) * score_limit >= len(talo_entries)

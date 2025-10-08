@@ -14,6 +14,7 @@ extends Node2D
 @onready var CRT_TOGGLE_BTN = $CanvasLayer/UI/HBoxContainer/toggle_crt
 @onready var FULLSCREEN_TOGGLE_BTN = $CanvasLayer/UI/HBoxContainer/toggle_fullscreen
 
+@onready var LEADERBOARD_CODE = $CanvasLayer/UI/leaderboards_popup/HBoxContainer/leaderboard_code
 @onready var ARCADE_LEADERBOARD = null
 @onready var SPEEDRUN_LEADERBOARD = null
 @onready var LEADERBOARDS_CONTROL_NODE = $CanvasLayer/UI/leaderboards
@@ -173,6 +174,7 @@ func _on_start_speedrun_pressed():
 func _on_leaderboards_btn_pressed():
 	if not LEADERBOARDS_POPUP.visible:
 		LEADERBOARDS_POPUP.visible = true
+		LEADERBOARD_CODE.text = ""
 
 func _on_leaderboards_x_btn_pressed():
 	if LEADERBOARDS_POPUP.visible:
@@ -214,6 +216,7 @@ func _on_see_speedrun_leaderboard_pressed():
 		LEADERBOARDS_CONTROL_NODE.add_child(SPEEDRUN_LEADERBOARD)
 	SPEEDRUN_LEADERBOARD.visible = true
 	CLOSE_LEADERBOARDS_BTN.visible = true
+	SPEEDRUN_LEADERBOARD.leaderboard_code = LEADERBOARD_CODE.text
 
 ## opens the speedrun leaderboard
 func _on_see_arcade_leaderboard_pressed():
@@ -222,6 +225,7 @@ func _on_see_arcade_leaderboard_pressed():
 		LEADERBOARDS_CONTROL_NODE.add_child(ARCADE_LEADERBOARD)
 	ARCADE_LEADERBOARD.visible = true
 	CLOSE_LEADERBOARDS_BTN.visible = true
+	ARCADE_LEADERBOARD.leaderboard_code = LEADERBOARD_CODE.text
 
 ## closes both leaderboards
 func _on_close_leaderboards_btn_pressed():
@@ -230,3 +234,15 @@ func _on_close_leaderboards_btn_pressed():
 	if SPEEDRUN_LEADERBOARD != null:
 		SPEEDRUN_LEADERBOARD.queue_free()
 	CLOSE_LEADERBOARDS_BTN.visible = false
+
+## input for secret leaderboard code
+func _on_leaderboard_code_text_changed(new_text: String):
+	var allowed_chars = "0123456789+-_QWERTYUIOPASDFGHJKLZXCVBNM"
+	var old_caret_pos = LEADERBOARD_CODE.caret_column
+	var filtered_text = ""
+	for character in new_text:
+		if allowed_chars.find(character.to_upper()) != -1:
+			filtered_text += character
+	LEADERBOARD_CODE.text = filtered_text.to_upper()
+	LEADERBOARD_CODE.caret_column = old_caret_pos
+
